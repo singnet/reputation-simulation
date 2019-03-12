@@ -11,12 +11,14 @@ import datetime as dt
 import time
 import operator
 from scipy.stats import truncnorm
-from ReputationAgent import ReputationAgent
 import math
 from Aigents import Aigents
 from random import shuffle
-from reputation.agency.puthon.src.aigents_reputation_api import AigentsAPIReputationService
-from reputation_service_api import PythonReputationService
+
+from ReputationAgent import ReputationAgent
+
+#from reputation.agency.python.src.aigents_reputation_api import AigentsAPIReputationService
+#from reputation.agency.python.src.reputation_service_api import PythonReputationService
 
 
 from mesa import Model

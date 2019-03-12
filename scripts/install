@@ -5,6 +5,13 @@ PARENT_PATH=$(dirname $(cd $(dirname $0); pwd -P))
 
 pushd $PARENT_PATH
 
-pip3 install -e .
+rm -rf reputation
+git clone https://github.com/singnet/reputation.git
+cd reputation
+python3 setup.py develop
+#pip3 install git+https://github.com/singnet/reputation.git#egg=reputation
+cd ..
+rm -rf reputation
+pip3 install -e . 
 
 popd

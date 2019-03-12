@@ -26,7 +26,7 @@ setup(
       'requests',
       'scipy',
       'mesa',
-      'reputation'
+      'reputation @ git+https://github.com/singnet/reputation.git'
     ],
     #entry_points={
     #  'console_scripts': ['snsim-cli=snsim:reputation'],
