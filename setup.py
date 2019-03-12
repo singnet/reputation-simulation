@@ -26,7 +26,7 @@ setup(
       'requests',
       'scipy',
       'mesa',
-      'reputation @ git+https://github.com/singnet/reputation.git'
+      #'agency @ git+https://github.com/singnet/reputation.git@folder-soft-refactor'
     ],
     #entry_points={
     #  'console_scripts': ['snsim-cli=snsim:reputation'],

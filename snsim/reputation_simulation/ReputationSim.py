@@ -12,13 +12,14 @@ import time
 import operator
 from scipy.stats import truncnorm
 import math
-from Aigents import Aigents
 from random import shuffle
 
+from Aigents import Aigents
 from ReputationAgent import ReputationAgent
 
-from reputation.agency.python.src.aigents_reputation_api import AigentsAPIReputationService
-from reputation.agency.python.src.reputation_service_api import PythonReputationService
+from agency import AigentsAPIReputationService
+
+
 
 
 from mesa import Model

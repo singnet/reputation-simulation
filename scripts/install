@@ -5,8 +5,9 @@ PARENT_PATH=$(dirname $(cd $(dirname $0); pwd -P))
 
 pushd $PARENT_PATH
 
-rm -rf reputation
-git clone https://github.com/singnet/reputation.git
-pip3 install -e . 
+pip3 install --no-cache -e . 
 
-popd
+rm -rf src
+pip3 install -e git+https://github.com/singnet/reputation.git@folder-soft-refactor#egg=agency
+
+popd  

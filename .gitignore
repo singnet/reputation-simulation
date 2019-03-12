@@ -1,5 +1,7 @@
 .DS_Store
-/reputation/
+.vscode/
+reputation-0.0.1-py3-none-any.whl
+/src/agency
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
