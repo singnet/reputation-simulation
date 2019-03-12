@@ -1,6 +1,0 @@
-setup.py
-reputation_simulation.egg-info/PKG-INFO
-reputation_simulation.egg-info/SOURCES.txt
-reputation_simulation.egg-info/dependency_links.txt
-reputation_simulation.egg-info/requires.txt
-reputation_simulation.egg-info/top_level.txt
