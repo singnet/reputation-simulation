@@ -17,8 +17,8 @@ from random import shuffle
 
 from ReputationAgent import ReputationAgent
 
-#from reputation.agency.python.src.aigents_reputation_api import AigentsAPIReputationService
-#from reputation.agency.python.src.reputation_service_api import PythonReputationService
+from reputation.agency.python.src.aigents_reputation_api import AigentsAPIReputationService
+from reputation.agency.python.src.reputation_service_api import PythonReputationService
 
 
 from mesa import Model
