@@ -1204,11 +1204,12 @@
       "logranks": false,
       "downrating": false,
       "update_period": 1,
-      "aggregation": false
+      "aggregation": false,
+      "denomination": false
     },
     "use_java": true,
-    "port": 1183,
-    "output_path": "conserv_equil_norep/",
+    "port": 1182,
+    "output_path": "conserv_equil_fix_norep/",
     "seed": 3273,
     "observer_mode": true,
     "randomize_initial_needs": true,
@@ -1225,8 +1226,9 @@
       "rating": ""
     },
     "suppliers_are_consumers": false,
+
     "criminal_agent_ring_size": [
-      8,
+      50,
       2,
       2,
       100
@@ -1256,123 +1258,123 @@
       "shrimp": [
         1,
         0.2,
-        1,
+        0.1,
         100
       ],
       "oysters": [
         2,
         0.3,
-        1,
+        0.1,
         100
       ],
       "codfish": [
         4,
         0.5,
-        1,
+        0.1,
         200
       ],
       "salamanders": [
         2,
         0.3,
-        1,
+        0.1,
         100
       ],
       "turtles": [
         1,
         0.3,
-        1,
+        0.1,
         100
       ],
       "pufferfish": [
-        100,
         10,
         1,
+        0.1,
         1000
       ],
       "orca": [
-        100,
-        20,
-        1,
+        10,
+        2,
+        0.1,
         1000
       ],
       "bluewhale": [
-        10000,
-        2000,
-        1,
+        1000,
+        200,
+        0.1,
         100000
       ],
       "walrus": [
-        500,
-        100,
-        1,
+        50,
+        10,
+        0.1,
         10000
       ],
       "rocklobster": [
-        100,
-        20,
-        1,
+        10,
+        2,
+        0.1,
         1000
       ]
     },
     "criminal_prices": {
-      "shrimp": [
-        10,
-        2,
+       "shrimp": [
         1,
+        0.2,
+        0.1,
         100
       ],
       "oysters": [
-        20,
-        3,
-        1,
+        2,
+        0.3,
+        0.1,
         100
       ],
       "codfish": [
-        40,
-        5,
-        1,
+        4,
+        0.5,
+        0.1,
         200
       ],
       "salamanders": [
-        20,
-        3,
-        1,
+        2,
+        0.3,
+        0.1,
         100
       ],
       "turtles": [
-        10,
-        3,
         1,
+        0.3,
+        0.1,
         100
       ],
       "pufferfish": [
-        100,
         10,
         1,
+        0.1,
         1000
       ],
       "orca": [
-        100,
-        20,
-        1,
+        10,
+        2,
+        0.1,
         1000
       ],
       "bluewhale": [
-        10000,
-        2000,
-        1,
+        1000,
+        200,
+        0.1,
         100000
       ],
       "walrus": [
-        500,
-        100,
-        1,
+        50,
+        10,
+        0.1,
         10000
       ],
       "rocklobster": [
-        100,
-        20,
-        1,
+        10,
+        2,
+        0.1,
         1000
       ]
     },
@@ -1500,33 +1502,30 @@
         1000
       ]
     },
-
- "chance_of_supplying": {
-      "shrimp": 0.004,
-      "oysters": 0.004,
-      "codfish": 0.004,
-      "salamanders": 0.004,
-      "turtles": 0.002,
-      "pufferfish": 0.012,
-      "orca": 0.02,
-      "bluewhale": 0.02,
-      "walrus": 0.02,
-      "rocklobster": 0.01
+ "chance_of_supplying":{
+      "shrimp":0.01,
+      "oysters":0.021,
+      "codfish":0.02,
+      "salamanders":0.02,
+      "turtles":0.01,
+      "pufferfish":0.01,
+      "orca":0.002,
+      "bluewhale":0.003,
+      "walrus":0.002,
+      "rocklobster":0.002
     },
-
     "criminal_chance_of_supplying":{
       "shrimp":0.02,
       "oysters":0.02,
-      "codfish":0.02,
+      "codfish":0.01,
       "salamanders":0.02,
-      "turtles":0.02,
+      "turtles":0.03,
       "pufferfish":0.0,
       "orca":0.0,
       "bluewhale":0.0,
       "walrus":0.0,
       "rocklobster":0.0
     },
-
     "cobb_douglas_utilities": {
       "shrimp": [
         0.05,

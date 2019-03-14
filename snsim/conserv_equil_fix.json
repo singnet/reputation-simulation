@@ -1204,7 +1204,8 @@
       "logranks": false,
       "downrating": false,
       "update_period": 1,
-      "aggregation": false
+      "aggregation": false,
+      "denomination": false
     },
     "use_java": true,
     "port": 1187,
