@@ -17,7 +17,7 @@ from random import shuffle
 from Aigents import Aigents
 from ReputationAgent import ReputationAgent
 
-from agency import AigentsAPIReputationService
+from reputation import AigentsAPIReputationService
 
 
 
