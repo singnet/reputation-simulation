@@ -80,6 +80,7 @@ class ReputationAgent(Agent):
                     self.days_until_shop[good] = random.randint(0,round(self.shopping_pattern[good]) )
         else:
             if supply_list is not None and len(supply_list) > 0:
+                #There will be overlap in the criminal rings that criminals go to
                 self.num_criminal_consumers = {good:int(self.model.criminal_agent_ring_size_distribution.rvs()) for good in supply_list}
                 self.criminal_consumers = {good:set() for good in supply_list}
             for good, needrv in self.model.criminal_need_cycle_distributions.items():

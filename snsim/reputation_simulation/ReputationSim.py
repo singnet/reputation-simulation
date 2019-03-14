@@ -41,7 +41,8 @@ class ReputationSim(Model):
         transaction_number = 0
         # print(json.dumps(config['ontology'], indent=2))
         self.parameters = config['parameters']
-        super().__init__(self.parameters['seed'])
+        super().__init__()
+        super().reset_randomizer(self.parameters['seed'])
 
         self.time = dt.datetime.now().isoformat()
         #filename = self.parameters['output_path'] + 'params_' + self.parameters['param_str'] + self.time[0:10] + '.json'
@@ -552,7 +553,8 @@ def call( combolist, configfile, rs=None,  param_str = ""):
         configfile['parameters']['seed'] = configfile['parameters']['seed'] + 1
         set_param( configfile, {"param_str": param_str })
         repsim = ReputationSim(study_path =configfile, rs=rs, opened_config = True)
-       # print ("{0} : {1}  port:{2} ".format(configfile['parameters']['output_path'],param_str,configfile['parameters']['port']))
+        if configfile['parameters']['use_java']:
+            print ("{0} : {1}  port:{2} ".format(configfile['parameters']['output_path'],param_str,configfile['parameters']['port']))
         print("{0} : {1}".format(configfile['parameters']['output_path'], param_str))
 
         repsim.go()
@@ -586,7 +588,8 @@ def main():
                      'logranks': config['parameters']['reputation_parameters']['logranks'] ,
                      'downrating': config['parameters']['reputation_parameters']['downrating'],
                      'update_period': config['parameters']['reputation_parameters']['update_period'],
-                     'aggregation': config['parameters']['reputation_parameters']['aggregation']
+                     'aggregation': config['parameters']['reputation_parameters']['aggregation'],
+                     'denomination': config['parameters']['reputation_parameters']['denomination']
 
                 })
             call(config['batch']['parameter_combinations'], config,rs=rs)
