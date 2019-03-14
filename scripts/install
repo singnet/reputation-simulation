@@ -8,6 +8,6 @@ pushd $PARENT_PATH
 pip3 install --no-cache -e . 
 
 rm -rf src
-pip3 install -e git+https://github.com/singnet/reputation.git@folder-hard-refactor#egg=reputation
+pip3 install -e git+https://github.com/singnet/reputation.git#egg=reputation
 
 popd  
