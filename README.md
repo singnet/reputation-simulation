@@ -21,5 +21,5 @@ $ bash scripts/install
 ## Usage
 
 ```sh
-$ python3 snsim/reputation_simulation/ReputationSim.py snsim/conserv_equil_fix.json
+$ python3 /reputation-simulation/snsim/reputation_simulation/ReputationSim.py /reputation-simulation/unratedDenomConserv5SAP10.json
 ```
