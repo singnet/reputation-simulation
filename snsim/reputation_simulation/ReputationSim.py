@@ -14,7 +14,7 @@ from scipy.stats import truncnorm
 from ReputationAgent import ReputationAgent
 from Adapters import Adapters
 import math
-from reputation import Aigents
+#from reputation import Aigents
 from random import shuffle
 from reputation import AigentsAPIReputationService
 from reputation import PythonReputationService
