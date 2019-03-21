@@ -1,0 +1,501 @@
+{
+  "macro_views": {
+    "antons_view": {
+      "adapter": "antons_view",
+      "parameters": {
+        "CRg": 9,
+        "CRb": 9,
+        "GR": 19,
+        "NTg": 10,
+        "NTb": 10,
+        "NIg": 1,
+        "NIb": 1,
+        "NA": 1000,
+        "D": 180,
+        "SP": 182,
+        "SIP": 0,
+        "PLRg": 60,
+        "PLRb": 60,
+        "PR": 10,
+        "NP": 2,
+        "Pmin": 50,
+        "Pmax": 150
+      },
+      "supplement": {
+        "amounts_stdev" : 0.01,
+        "amounts_min" :  0,
+        "amounts_max" :  1000,
+        "cobb_douglas_stdev" :  0.01,
+        "need_cycle_stdev" : 0.01,
+        "need_cycle_min" :  0,
+        "need_cycle_max" :  1000,
+        "price_stdev" : 0.01,
+        "zipf_parameter":  1.1
+      }
+    }
+  },
+  "tests": {
+    "r_1_1": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_1_0.5": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_1_0.1": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    }
+  },
+  "batch": {
+    "on": true,
+    "parameter_combinations": {
+      "ratings": {
+        "r_1": {
+          "include_ratings": true
+        }
+      },
+
+      "num_transactions": {
+        "1": {
+          "criminal_transactions_per_day": [
+            10,
+            1,
+            0,
+            1000
+          ]
+        },
+        "0.5": {
+          "criminal_transactions_per_day": [
+            50,
+            1,
+            0,
+            1000
+          ]
+        },
+        "0.1": {
+          "criminal_transactions_per_day": [
+            100,
+            1,
+            0,
+            1000
+          ]
+        }
+      }
+    }
+  },
+  "parameters": {
+    "reputation_parameters": {
+      "precision": 0.01,
+      "default": 0.5,
+      "conservatism": 0.5,
+      "fullnorm": true,
+      "weighting": true,
+      "logratings": false,
+      "decayed": 0.5,
+      "liquid": false,
+      "logranks": false,
+      "downrating": false,
+      "update_period": 1,
+      "aggregation": false,
+      "denomination": false,
+      "unrated": false
+    },
+    "macro_view": "antons_view",
+    "use_java": true,
+    "port": 1181,
+    "output_path": "noUnratednoDenomConserv5SAP182/",
+    "seed": 5573,
+    "observer_mode": false,
+    "randomize_initial_needs": true,
+    "ranks_update_period": 1,
+    "error_log": false,
+    "deterministic_mode": true,
+    "num_users": 1000,
+    "initial_date": "01.01.2018 11:05:02",
+    "final_date": "30.06.2018 11:05:02",
+    "days_per_tick": 1.0,
+    "network": "singularity",
+    "types_and_units": {
+      "payment": "AGI",
+      "rating": ""
+    },
+    "suppliers_are_consumers": false,
+    "scam_period": 15,
+    "scam_inactive_period": 10,
+    "criminal_agent_ring_size": [
+      50,
+      2,
+      2,
+      100
+    ],
+    "open_to_new_experiences": [
+      0.5,
+      0.1
+    ],
+    "fire_supplier_threshold": [
+      0.3,
+      0.1
+    ],
+    "reputation_system_threshold": [
+      40,
+      1,
+      1,
+      1000
+    ],
+    "average_reputation_system_threshold": false,
+    "choice_method": "roulette_wheel",
+    "forget_discount": [
+      0.99,
+      0.02
+    ],
+    "param_str": "p_20_0.1_",
+    "prices": {
+      "milk": [
+        1,
+        0.2,
+        1,
+        100
+      ],
+      "honey": [
+        2,
+        0.3,
+        1,
+        100
+      ]
+    },
+    "criminal_prices": {
+      "milk": [
+        1,
+        0.2,
+        1,
+        100
+      ],
+      "honey": [
+        2,
+        0.3,
+        1,
+        100
+      ]
+    },
+    "amounts": {
+      "milk": [
+        20.0,
+        1.0,
+        1,
+        1000
+      ],
+      "honey": [
+        20.0,
+        1.0,
+        1,
+        1000
+      ]
+    },
+    "criminal_amounts": {
+      "milk": [
+        1.0,
+        0.01,
+        1,
+        1000
+      ],
+      "honey": [
+        1.0,
+        0.01,
+        1,
+        1000
+      ]
+    },
+    "chance_of_supplying": {
+      "milk": 0.05,
+      "honey": 0.05
+    },
+    "criminal_chance_of_supplying": {
+      "milk": 0.06,
+      "honey": 0.04
+    },
+    "cobb_douglas_constant": 1.5,
+    "cobb_douglas_utilities": {
+      "milk": [
+        0.05,
+        0.01
+      ],
+      "honey": [
+        0.1,
+        0.3
+      ]
+    },
+    "need_cycle": {
+      "milk": [
+        2,
+        1,
+        0,
+        20
+      ],
+      "honey": [
+        1,
+        2,
+        0,
+        30
+      ]
+    },
+    "criminal_need_cycle": {
+      "milk": [
+        0,
+        0.2
+      ],
+      "honey": [
+        0,
+        0.2
+      ]
+    },
+    "random_change_suppliers": 0.01,
+    "include_ratings": false,
+    "chance_of_criminal": 0.05,
+    "goodness": [
+      0.75,
+      0.15
+    ],
+    "criminal_goodness": [
+      0.0,
+      0.03
+    ],
+    "transactions_per_day": [
+      10,
+      1,
+      0,
+      1000
+    ],
+    "criminal_transactions_per_day": [
+      100,
+      1,
+      0,
+      1000
+    ],
+    "ratings_goodness_thresholds": {
+      "0.0": 0.25,
+      "1.0": 1.0
+    },
+    "rating_perception": [
+      0,
+      0.01,
+      -1,
+      1
+    ],
+    "chance_of_rating_good2good": 0.6,
+    "chance_of_rating_good2bad": 0.6,
+    "criminal_chance_of_rating": 1.0,
+    "non_rating_val": ""
+  }
+} 
