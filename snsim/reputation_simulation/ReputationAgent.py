@@ -158,7 +158,7 @@ class ReputationAgent(Agent):
 
         if (self.p['suppliers_are_consumers'] or len(self.supplying)>= 1):
             self.scam_cycle_day += 1
-            if self.scam_cycle_day % self.p['scam_period']:
+            if (self.scam_cycle_day % self.p['scam_period'])==0:
                 self.scam_cycle_day = 0
         # kick out suppliers. See how many trades you will make.
         # initialize todays goods
@@ -437,7 +437,7 @@ class ReputationAgent(Agent):
                         else:
 
                             supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
-                            if supplier_agent.scam_cycle_day >= self.p['scam_inactive_period']:
+                            if supplier_agent.scam_cycle_day == self.p['scam_inactive_period']:
                                 #gen number * num_agents + agent number for the bad guys
                                 generation_increment = (self.model.daynum // self.p['scam_period'])* self.p['num_users']
                                 consumer_id = generation_increment + self.unique_id
