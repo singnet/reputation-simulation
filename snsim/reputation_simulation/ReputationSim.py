@@ -11,8 +11,8 @@ import datetime as dt
 import time
 import operator
 from scipy.stats import truncnorm
-from reputation.ReputationAgent import ReputationAgent
-from reputation.Adapters import Adapters
+from ReputationAgent import ReputationAgent
+from Adapters import Adapters
 import math
 from reputation import Aigents
 from random import shuffle
