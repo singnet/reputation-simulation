@@ -11,15 +11,13 @@ import datetime as dt
 import time
 import operator
 from scipy.stats import truncnorm
+from reputation.ReputationAgent import ReputationAgent
+from reputation.Adapters import Adapters
 import math
+from reputation import Aigents
 from random import shuffle
-
-from Aigents import Aigents
-from ReputationAgent import ReputationAgent
-
 from reputation import AigentsAPIReputationService
-
-
+from reputation import PythonReputationService
 
 
 from mesa import Model
@@ -27,8 +25,27 @@ from mesa.time import StagedActivation
 
 class ReputationSim(Model):
 
-    def __init__(self,study_path='study.json',rs=None,  opened_config= False):
 
+    # def __new__(cls, *args, **kwargs):
+    #     print ("first line of __new__")
+    #     if kwargs['opened_config']:
+    #         config = kwargs['study_path']
+    #     else:
+    #         with open(kwargs['study_path']) as json_file:
+    #
+    #             config = json.load(json_file, object_pairs_hook=OrderedDict)
+    #
+    #         # save the config with the output
+    #
+    #     print("calling super __init__")
+    #     kwargs['seed']= config['parameters']['seed']
+    #
+    #
+    #     return super(ReputationSim, cls).__new__(cls, *args, **kwargs)
+
+
+    def __init__(self,study_path='study.json',rs=None,  opened_config= False):
+       # print('First line of init in RepuationSim, study path is ${0}'.format(study_path))
         if opened_config:
             config = study_path
         else:
@@ -42,13 +59,16 @@ class ReputationSim(Model):
         transaction_number = 0
         # print(json.dumps(config['ontology'], indent=2))
         self.parameters = config['parameters']
+        #super().__init__(config['parameters']['seed'])
         super().__init__()
         super().reset_randomizer(self.parameters['seed'])
+
+        self.orig = {i:i for i in range(config['parameters']['num_users'])}
 
         self.time = dt.datetime.now().isoformat()
 
         if not os.path.exists(self.parameters['output_path']):
-        #    raise Exception('Directory {0} exists'.format(self.parameters['output_path']))
+        #   raise Exception('Directory {0} exists'.format(self.parameters['output_path']))
         #else:
             os.makedirs(self.parameters['output_path'])
         #filename = self.parameters['output_path'] + 'params_' + self.parameters['param_str'] + self.time[0:10] + '.json'
@@ -142,7 +162,7 @@ class ReputationSim(Model):
             for good, chance in self.parameters['criminal_chance_of_supplying'].items():
                 chance_of_supplier += chance
 
-            num_suppliers1 = round(num_criminals * chance_of_supplier)
+            num_suppliers1 = int(round(num_criminals * chance_of_supplier))
             sorted_suppliers = sorted(self.parameters['criminal_chance_of_supplying'].items(), key=lambda x: x[1], reverse=True)
 
             sup_count = 0
@@ -150,7 +170,7 @@ class ReputationSim(Model):
             for good,chance in sorted_suppliers:
                 if sup_count < num_suppliers1:
                     normalized = chance/chance_of_supplier
-                    rounded = round(num_suppliers1 * normalized)
+                    rounded = int(round(num_suppliers1 * normalized))
                     num_sup_this_good =  rounded if rounded > 0 else 1
                     num_sup_this_good = min (num_sup_this_good,(num_suppliers1-sup_count))
                     sup_count = sup_count + num_sup_this_good
@@ -174,7 +194,7 @@ class ReputationSim(Model):
             for good, chance in self.parameters['chance_of_supplying'].items():
                 chance_of_supplier += chance
 
-            num_suppliers1 = round((self.parameters['num_users'] -num_criminals) * chance_of_supplier)
+            num_suppliers1 = int(round((self.parameters['num_users'] -num_criminals) * chance_of_supplier))
             sorted_suppliers = sorted(self.parameters['chance_of_supplying'].items(), key=lambda x: x[1], reverse=True)
 
             sup_count = 0
@@ -182,7 +202,7 @@ class ReputationSim(Model):
             for good,chance in sorted_suppliers:
                 if sup_count < num_suppliers1:
                     normalized = chance/chance_of_supplier
-                    rounded = round(num_suppliers1 * normalized)
+                    rounded = int(round(num_suppliers1 * normalized))
                     num_sup_this_good =  rounded if rounded > 0 else 1
                     num_sup_this_good = min (num_sup_this_good,(num_suppliers1-sup_count))
                     sup_count = sup_count + num_sup_this_good
@@ -280,7 +300,7 @@ class ReputationSim(Model):
         return(file)
 
     def write_rank_history_line(self):
-        time = round(self.schedule.time)
+        time = int(round(self.schedule.time))
         self.rank_history.write('{0}\t'.format(time))
         for i in range(len(self.schedule.agents)):
             id = str(self.schedule.agents[i].unique_id)
@@ -490,8 +510,14 @@ class ReputationSim(Model):
         rv = truncnorm((low - mean) / sd, (upp - mean) / sd, loc=mean, scale=sd)
         return rv
 
+    def get_ranks(self, prev_date):
+        self.ranks = self.reputation_system.get_ranks_dict({'date':prev_date})
+        #generation_increment = (self.model.daynum // self.p['scam_period']) * self.p['num_users']
+        #if self.p['scam_inactive_period']:  #there is a campaign in which ids are shifted, so subtract the increment
+
+
     def step(self):
-        present = round(self.schedule.time)
+        present = int(round(self.schedule.time))
         print('time {0}'.format(present))
         if self.error_log:
             self.error_log.write('time {0}\n'.format(self.schedule.time))
@@ -501,13 +527,13 @@ class ReputationSim(Model):
         #self.market_volume_report.flush()
         if self.error_log:
             self.error_log.flush()
-        self.daynum = round(self.schedule.time)
+        self.daynum = int(round(self.schedule.time))
         prev_date = self.since + dt.timedelta(days=(self.daynum - 1))
         if self.reputation_system:
             if self.daynum % self.parameters['ranks_update_period'] == 0:
                 self.reputation_system.update_ranks(prev_date)
             #if present > 60:
-                self.ranks = self.reputation_system.get_ranks_dict({'date':prev_date})
+                self.get_ranks(prev_date)
             self.write_rank_history_line()
             if self.error_log:
                 self.error_log.write("ranks: {0}\n".format(str(self.ranks)))
@@ -546,12 +572,14 @@ def call( combolist, configfile, rs=None,  param_str = ""):
             myconfigfile = copy.deepcopy(configfile)
             set_param(myconfigfile, setting)
             my_param_str = param_str + name + "_"
+            # for sttarting in the middle of a batch run
             #if not (
                     #my_param_str == 'r_20_1_'  or
                     #my_param_str == 'r_20_0.5_' or
                     #my_param_str == 'r_20_0.1_' or
-                    #my_param_str == 'r_10_1_'
-            #): #for sttarting in the middle of a batch run
+                    #my_param_str == 'r_10_1_' or
+                    #my_param_str == 'r_10_0.5_'
+            #):
             #if not my_param_str.startswith("r"):
 
             call(mycombolist, myconfigfile, rs, my_param_str)
@@ -571,6 +599,9 @@ def main():
     study_path = sys.argv[1] if len(sys.argv)>1 else 'study.json'
     with open(study_path) as json_file:
         config = json.load(json_file, object_pairs_hook=OrderedDict)
+        if config['parameters']['macro_view']:
+            config = Adapters(config).translate()
+
         if config['batch']['on']:
             now = dt.datetime.now()
             epoch = now.strftime('%s')
@@ -595,7 +626,8 @@ def main():
                      'downrating': config['parameters']['reputation_parameters']['downrating'],
                      'update_period': config['parameters']['reputation_parameters']['update_period'],
                      'aggregation': config['parameters']['reputation_parameters']['aggregation'],
-                     'denomination': config['parameters']['reputation_parameters']['denomination']
+                     'denomination': config['parameters']['reputation_parameters']['denomination'],
+                     'unrated': config['parameters']['reputation_parameters']['unrated']
 
                 })
             call(config['batch']['parameter_combinations'], config,rs=rs)

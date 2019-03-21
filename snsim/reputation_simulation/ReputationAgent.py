@@ -7,6 +7,7 @@ import operator
 from scipy.stats import truncnorm
 import math
 from random import shuffle
+import copy
 
 
 class ReputationAgent(Agent):
@@ -15,6 +16,7 @@ class ReputationAgent(Agent):
         super().__init__(unique_id, model)
         self.p = self.model.parameters  # convenience method:  its shorter
         self.wealth = 0
+        self.scam_cycle_day = 0
         self.good = random.uniform(0,1) > self.p['chance_of_criminal'] if criminal is None else not criminal
         self.goodness = self.model.goodness_distribution.rvs() if self.good else self.model.criminal_goodness_distribution.rvs()
         self.fire_supplier_threshold = self.model.fire_supplier_threshold_distribution.rvs()
@@ -44,7 +46,7 @@ class ReputationAgent(Agent):
             self.cobb_douglas_utilities[good] = rv  if cumulative + rv < 1 and count < length else (1-cumulative if 1-cumulative > 0 else 0)
             cumulative = cumulative + rv
 
-
+        self.cobb_douglas_utilities_original = copy.deepcopy(self.cobb_douglas_utilities)
         self.supplying = OrderedDict()
         supplying_chance_dist = self.p["chance_of_supplying"] if self.good else self.p["criminal_chance_of_supplying"]
         if supply_list is None:
@@ -83,6 +85,7 @@ class ReputationAgent(Agent):
                 #There will be overlap in the criminal rings that criminals go to
                 self.num_criminal_consumers = {good:int(self.model.criminal_agent_ring_size_distribution.rvs()) for good in supply_list}
                 self.criminal_consumers = {good:set() for good in supply_list}
+                self.scam_cycle_day = random.randint(0,self.p["scam_period"] )
             for good, needrv in self.model.criminal_need_cycle_distributions.items():
                 self.shopping_pattern[good] = needrv.rvs()
 
@@ -122,12 +125,41 @@ class ReputationAgent(Agent):
             sum = self.reputation_system_threshold
         return sum
 
+    def update_utility(self,good,utility):
+        #  cobb douglass need actual = cobb douglas need + K(days pass need met)(cobb douglassneed)
+        days_past_need_met = -self.days_until_shop[good] if self.days_until_shop[good] <= -1 else 0
+        utility = (self.cobb_douglas_utilities[good]
+                   + self.p['cobb_douglas_constant']*days_past_need_met*self.cobb_douglas_utilities[good])
+        return utility
+
+    def normalize_utilities(self,utilities):
+        #make all the utilities add to one
+
+        sum_utilities = sum(utilities.values())
+        utilities = {k:(v/sum_utilities) for k,v in utilities.items()}
+        return utilities
+
+    def update_utilities(self):
+        # cobb douglas utilities here represent the degree goods are needed.  The amount of time the good is late in
+        # getting resupplied is directly proportional to its bump in the list of needed.  The most needed are pursued
+        # first, which matters only when there are fewer transactions per day allowed than meets needs.
+
+        utilities = {k:self.update_utility(k,v) for k,v in self.cobb_douglas_utilities.items()}
+        self.cobb_douglas_utilities=self.normalize_utilities(utilities)
+
 
     def step(self):
         #print ("first line of ReputationAgent step")
         #first increment the  number of days that have taken place to shop for all goods
-        tempDict = {good: days-1 for good, days in self.days_until_shop.items() if days > 0 }
+        #tempDict = {good: days-1 for good, days in self.days_until_shop.items() if days > 0 }
+        tempDict = {good: days-1 for good, days in self.days_until_shop.items()  }
         self.days_until_shop.update(tempDict)
+
+
+        if (self.p['suppliers_are_consumers'] or len(self.supplying)>= 1):
+            self.scam_cycle_day += 1
+            if self.scam_cycle_day % self.p['scam_period']:
+                self.scam_cycle_day = 0
         # kick out suppliers. See how many trades you will make.
         # initialize todays goods
         # go through and make a list of needs in order
@@ -176,6 +208,7 @@ class ReputationAgent(Agent):
             #self.needs = sorted(utilities.items(), key=operator.itemgetter(1), reverse=True)
 
             if self.good:
+                self.update_utilities()
                 p = [v for v in list(self.cobb_douglas_utilities.values())if v > 0]
                 n = len(p)
                 keys = list(self.cobb_douglas_utilities.keys())[0:n]
@@ -277,7 +310,7 @@ class ReputationAgent(Agent):
                                            ) if  ratings_tuple[1] <= self.fire_supplier_threshold])if good in self.personal_experience else set()
                     non_criminal_experiences = {int(agent): rating for agent, rating in self.model.ranks.items() if
                                                 rating > self.reputation_system_threshold and good in
-                                                self.model.schedule.agents[int(agent)
+                                                self.model.schedule.agents[self.model.orig[int(agent)]
                                                 ].supplying and agent not in under_threshold}
                     ratings_sum = sum([rating for key, rating in non_criminal_experiences.items()])
                     roll = random.uniform(0, ratings_sum)
@@ -403,20 +436,29 @@ class ReputationAgent(Agent):
                                     price,good, self.p['types_and_units']['payment'] )
                         else:
 
-                            if self.p['include_ratings']:
-                                rating =  self.best_rating() if (
-                                    random.uniform(0,1) < self.p['criminal_chance_of_rating']) else self.p['non_rating_val']
-                                self.model.print_transaction_report_line(self.unique_id,supplier,
-                                    price,good, self.p['types_and_units']['rating'],
-                                    rating=rating , type = 'rating')
-                                self.model.send_trade_to_reputation_system(self.unique_id,supplier,
-                                    price,good, self.p['types_and_units']['rating'],
-                                    rating=rating , type = 'rating')
-                            else:
-                                self.model.print_transaction_report_line(self.unique_id,supplier,
-                                    price,good, self.p['types_and_units']['payment'] )
-                                self.model.send_trade_to_reputation_system(self.unique_id,supplier,
-                                    price,good, self.p['types_and_units']['payment'] )
+                            supplier_agent = self.model.schedule.agents[supplier]
+                            if supplier_agent.scam_cycle_day >= self.p['scam_inactive_period']:
+                                #gen number * num_agents + agent number for the bad guys
+                                generation_increment = (self.model.daynum // self.p['scam_period'])* self.p['num_users']
+                                consumer_id = generation_increment + self.unique_id
+                                supplier_id = generation_increment + supplier
+                                self.model.orig[consumer_id]= self.unique_id
+                                self.model.orig[supplier_id]= supplier
+                                if self.p['include_ratings']:
+                                    rating =  self.best_rating() if (
+                                        random.uniform(0,1) < self.p['criminal_chance_of_rating']) else self.p['non_rating_val']
+
+                                    self.model.print_transaction_report_line(consumer_id,supplier_id,
+                                        price,good, self.p['types_and_units']['rating'],
+                                        rating=rating , type = 'rating')
+                                    self.model.send_trade_to_reputation_system(consumer_id,supplier_id,
+                                        price,good, self.p['types_and_units']['rating'],
+                                        rating=rating , type = 'rating')
+                                else:
+                                    self.model.print_transaction_report_line(consumer_id,supplier_id,
+                                        price,good, self.p['types_and_units']['payment'] )
+                                    self.model.send_trade_to_reputation_system(consumer_id,supplier_id,
+                                        price,good, self.p['types_and_units']['payment'] )
 
                 if (self.p['suppliers_are_consumers'] or len(self.supplying) < 1):
 
@@ -430,8 +472,9 @@ class ReputationAgent(Agent):
                             for bad_supplier in bad_suppliers:
                                 supplierlist.remove(bad_supplier)
 
-            #if merchandise_recieved:  #commented out for unrestricted
-            self.days_until_shop[good]= self.shopping_pattern[good]
+            if merchandise_recieved:  #comment out for unrestricted
+                self.days_until_shop[good]= self.shopping_pattern[good]
+                self.cobb_douglas_utilities[good] = self.cobb_douglas_utilities_original[good]
 
     def best_rating(self):
         dd = self.p['ratings_goodness_thresholds']
@@ -455,7 +498,10 @@ class ReputationAgent(Agent):
         for rating_val, threshold in dd.items():
             if (perception < threshold or threshold == dd[next(reversed(dd))])and rating is None:
                 rating = rating_val
-        if rating is None or roll > self.p['chance_of_rating']:
+        if (rating is None or
+                (self.model.schedule.agents[supplier].good and roll > self.p['chance_of_rating_good2good']) or
+                ((not self.model.schedule.agents[supplier].good) and roll > self.p['chance_of_rating_good2bad'])
+            ):
             rating = self.p['non_rating_val']
 
         return (perception,rating)
