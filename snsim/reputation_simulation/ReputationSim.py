@@ -17,7 +17,7 @@ import math
 #from reputation import Aigents
 from random import shuffle
 from reputation import AigentsAPIReputationService
-from reputation import PythonReputationService
+#from reputation import PythonReputationService
 
 
 from mesa import Model
