@@ -1,4 +1,4 @@
-from reputation.ReputationAgent import ReputationAgent
+from ReputationAgent import ReputationAgent
 import datetime as dt
 import time
 import json
