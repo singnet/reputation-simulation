@@ -25,7 +25,7 @@ setup(
       'numpy',
       'requests',
       'scipy',
-      'mesa',
+      'mesa @ git+https://github.com/deborahduong/mesa',
     ],
     cmdclass={
         'develop': develop,
