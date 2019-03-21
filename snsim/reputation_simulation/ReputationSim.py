@@ -47,9 +47,9 @@ class ReputationSim(Model):
 
         self.time = dt.datetime.now().isoformat()
 
-        if os.path.exists(self.parameters['output_path']):
-            raise Exception('Directory {0} exists'.format(self.parameters['output_path']))
-        else:
+        if not os.path.exists(self.parameters['output_path']):
+        #    raise Exception('Directory {0} exists'.format(self.parameters['output_path']))
+        #else:
             os.makedirs(self.parameters['output_path'])
         #filename = self.parameters['output_path'] + 'params_' + self.parameters['param_str'] + self.time[0:10] + '.json'
         filename = self.parameters['output_path'] + 'params_' + self.parameters['param_str'][:-1] + '.json'
