@@ -1,5 +1,5 @@
 # reputation-simulation
-Market simulation based on Reputation System 
+Market simulation to test the Reputation System 
 
 
 ## Development 
@@ -11,7 +11,7 @@ $ git clone https://github.com/singnet/reputation-simulation
 ```
 
 
-* Install dependencies
+* Install dependencies from inside reputation-simulation directory
 
 ```sh
 $ bash scripts/install
@@ -23,3 +23,4 @@ $ bash scripts/install
 ```sh
 $ python3 /reputation-simulation/snsim/reputation_simulation/ReputationSim.py /reputation-simulation/unratedDenomConserv5SAP10.json
 ```
+
