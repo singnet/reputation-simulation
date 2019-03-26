@@ -59,7 +59,7 @@ class ContinuousRankByGoodTests(unittest.TestCase):
 
     def is_honest(self, code, agent):
         this_agent = self.boolean_users[code][self.boolean_users[code][0] == agent]
-        is_honest = True if this_agent.iloc[0, 1] == 1 else False
+        is_honest = True if (not this_agent.empty) and this_agent.iloc[0, 1] == 1 else False
         return (is_honest)
 
     def test_correlation_by_good_continuous(self):

@@ -17,6 +17,7 @@ class ReputationAgent(Agent):
         self.p = self.model.parameters  # convenience method:  its shorter
         self.wealth = 0
         self.scam_cycle_day = 0
+        self.orig_scam_cycle_day = 0
         self.good = random.uniform(0,1) > self.p['chance_of_criminal'] if criminal is None else not criminal
         self.goodness = self.model.goodness_distribution.rvs() if self.good else self.model.criminal_goodness_distribution.rvs()
         self.fire_supplier_threshold = self.model.fire_supplier_threshold_distribution.rvs()
@@ -86,6 +87,7 @@ class ReputationAgent(Agent):
                 self.num_criminal_consumers = {good:int(self.model.criminal_agent_ring_size_distribution.rvs()) for good in supply_list}
                 self.criminal_consumers = {good:set() for good in supply_list}
                 self.scam_cycle_day = random.randint(0,self.p["scam_period"] )
+                self.orig_scam_cycle_day = self.scam_cycle_day
             for good, needrv in self.model.criminal_need_cycle_distributions.items():
                 self.shopping_pattern[good] = needrv.rvs()
 
@@ -100,7 +102,8 @@ class ReputationAgent(Agent):
         supplier = None
         possible_suppliers = [supplier for supplier in self.model.criminal_suppliers[good] if (
                 supplier != self.unique_id and
-                self.needs_criminal_consumer(supplier, good)) ]
+                self.needs_criminal_consumer(supplier, good))  and
+                not self.supplier_inactive(supplier) ]
         if len(possible_suppliers) > 0:
             supplier = possible_suppliers[random.randint(0,len(possible_suppliers)-1)]
             supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
@@ -250,7 +253,8 @@ class ReputationAgent(Agent):
 
                 over_threshold = [key for key, ratings_tuple in
                                             self.personal_experience[good].items(
-                                            ) if ratings_tuple[1] > self.fire_supplier_threshold]
+                                            ) if (ratings_tuple[1] > self.fire_supplier_threshold
+                                                        and not self.supplier_inactive(ratings_tuple[0]))]
                 if len(over_threshold):
                     roll = np.random.randint(0, len(over_threshold))
                     winner = int(over_threshold[roll])
@@ -264,7 +268,8 @@ class ReputationAgent(Agent):
                                        )if good in self.personal_experience else set()
                 over_threshold = [agent for agent, rating in self.model.ranks.items() if
                                   rating > self.reputation_system_threshold and good in self.model.schedule.agents[
-                                      self.model.orig[int(agent)]].supplying and agent not in under_threshold]
+                                      self.model.orig[int(agent)]].supplying and agent not in under_threshold
+                                                        and not self.supplier_inactive(int(agent))]
                 if len(over_threshold):
                     roll = np.random.randint(0, len(over_threshold))
                     winner = int(over_threshold[roll])
@@ -276,7 +281,8 @@ class ReputationAgent(Agent):
                 if self.p['observer_mode']:
                     non_criminal_experiences = {key: ratings_tuple for key, ratings_tuple in
                                                 self.personal_experience[good].items(
-                                                ) if ratings_tuple[1] > self.fire_supplier_threshold}
+                                                ) if (ratings_tuple[1] > self.fire_supplier_threshold
+                                                        and not self.supplier_inactive(ratings_tuple[0]))}
                     sorted_suppliers = sorted(non_criminal_experiences.items(), key=lambda x: x[1][1], reverse=True)
                     if len(sorted_suppliers):
                         winner = sorted_suppliers[0][0]
@@ -286,7 +292,8 @@ class ReputationAgent(Agent):
                     non_criminal_experiences = {int(agent): rating for agent, rating in self.model.ranks.items() if
                                                 rating > self.reputation_system_threshold and good in
                                                 self.model.schedule.agents[self.model.orig[int(agent)]
-                                                ].supplying}
+                                                ].supplying
+                                                        and not self.supplier_inactive(int(agent))}
                     sorted_suppliers = sorted(non_criminal_experiences.items(), key=lambda x: x[1], reverse=True)
                     if len(sorted_suppliers):
                         winner = sorted_suppliers[0][0]
@@ -294,7 +301,8 @@ class ReputationAgent(Agent):
                 if self.p['observer_mode']:
                     non_criminal_experiences = {key: ratings_tuple for key, ratings_tuple in
                                                 self.personal_experience[good].items(
-                                                ) if ratings_tuple[1] > self.fire_supplier_threshold}
+                                                ) if (ratings_tuple[1] > self.fire_supplier_threshold
+                                                        and not self.supplier_inactive(ratings_tuple[0]))}
                     ratings_sum = sum([ratings_tuple[1] for key, ratings_tuple in non_criminal_experiences.items()])
                     roll = random.uniform(0, ratings_sum)
                     cumul = 0
@@ -311,7 +319,8 @@ class ReputationAgent(Agent):
                     non_criminal_experiences = {int(agent): rating for agent, rating in self.model.ranks.items() if
                                                 rating > self.reputation_system_threshold and good in
                                                 self.model.schedule.agents[self.model.orig[int(agent)]
-                                                ].supplying and agent not in under_threshold}
+                                                ].supplying and agent not in under_threshold
+                                                        and not self.supplier_inactive(int(agent))}
                     ratings_sum = sum([rating for key, rating in non_criminal_experiences.items()])
                     roll = random.uniform(0, ratings_sum)
                     cumul = 0
@@ -322,6 +331,13 @@ class ReputationAgent(Agent):
                                 winner = key
 
         return winner
+
+    def supplier_inactive(self, supplier):
+        inactive = True
+        supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
+        if supplier_agent.good or (supplier_agent.scam_cycle_day >= self.p['scam_inactive_period']):
+            inactive = False
+        return inactive
 
 
     def choose_partners(self):
@@ -343,6 +359,8 @@ class ReputationAgent(Agent):
                 if self.good:
 
                     for supplier in self.suppliers[good]:
+                        if self.supplier_inactive(supplier):
+                            self.suppliers[good].remove(supplier)
                         if (good in self.personal_experience and supplier in self.personal_experience[good]
                             and len(self.personal_experience[good][supplier]) > 0):
                             if self.personal_experience[good][supplier][1] < self.fire_supplier_threshold:
@@ -367,9 +385,9 @@ class ReputationAgent(Agent):
                             roll = random.uniform (0,1)
                             if roll < self.open_to_new_experiences:
 
-                                unknowns = [supplier for supplier in self.model.suppliers[good] if (supplier != self.unique_id and
+                                unknowns = [supplier for supplier in self.model.suppliers[good] if ((supplier != self.unique_id and
                                     (good not in self.personal_experience or supplier not in self.personal_experience[good]  )
-                                    )] if self.good else [supplier for supplier in self.criminal_consumers[good] if (
+                                    )and not self.supplier_inactive(supplier))] if self.good else [supplier for supplier in self.criminal_consumers[good] if (
                                      (supplier != self.unique_id ) and
                                     ((good not in self.personal_experience )or supplier not in self.personal_experience[good]  )
                                     )] if (good in self.criminal_consumers) else []
@@ -389,10 +407,10 @@ class ReputationAgent(Agent):
                                 self.suppliers[good].append(new_supplier)
                     if len(self.suppliers[good]) < 1:
                         #youve got no choice but to try someone new at random
-                        unknowns = [supplier for supplier in self.model.suppliers[good] if (
+                        unknowns = [supplier for supplier in self.model.suppliers[good] if ((
                                  supplier != self.unique_id and
                                 (good not in self.personal_experience or supplier not in self.personal_experience[good] )
-                                )]if self.good else [supplier for supplier in self.criminal_consumers[good] if (supplier != self.unique_id and
+                                )and not self.supplier_inactive(supplier))]if self.good else [supplier for supplier in self.criminal_consumers[good] if (supplier != self.unique_id and
                             (good not in self.personal_experience or supplier not in self.personal_experience[good]  )
                             )]if (good in self.criminal_consumers) else []
                         if len(unknowns) :
@@ -401,7 +419,21 @@ class ReputationAgent(Agent):
 
 
                     if len(self.suppliers[good])> 0:
-                        supplier = self.suppliers[good][0]
+                        #supplier = self.suppliers[good][0]
+                        supplier_idx = random.randint(0,len(self.suppliers[good] )-1)
+                        supplier = self.suppliers[good][supplier_idx]
+
+                        supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
+                        #if supplier_agent.scam_cycle_day >= self.p['scam_inactive_period']:
+                            # gen number * num_agents + agent number for the bad guys
+                        our_day = self.model.daynum + supplier_agent.orig_scam_cycle_day
+                        generation_increment = (our_day // self.p['scam_period']) * self.p['num_users']
+
+                        consumer_id =self.unique_id if self.good  else generation_increment + self.unique_id
+                        supplier_id =self.model.orig[supplier] if self.good  else generation_increment + self.model.orig[supplier]
+                        self.model.orig[consumer_id] = self.unique_id
+                        self.model.orig[supplier_id] = self.model.orig[supplier]
+
                         amount = self.model.amount_distributions[good].rvs() if self.good else self.model.criminal_amount_distributions[good].rvs()
                         price = amount * self.model.schedule.agents[self.model.orig[supplier]].supplying[good]
 
@@ -420,30 +452,24 @@ class ReputationAgent(Agent):
                             perception, rating = self.rate(supplier)
                             if self.model.schedule.agents[self.model.orig[supplier]].good:
                                 merchandise_recieved = True
-                            self.update_personal_experience(good, supplier, perception)
-                            if self.p['include_ratings']:
-                                self.model.print_transaction_report_line(self.unique_id,supplier,
+                            self.update_personal_experience(good, supplier_id, perception)
+                            if self.p['include_ratings'] and rating and rating != "":
+                                self.model.print_transaction_report_line(consumer_id,supplier_id,
                                     price,good, self.p['types_and_units']['rating'],
                                     rating=rating, type = 'rating' )
 
-                                self.model.send_trade_to_reputation_system(self.unique_id,supplier,
+                                self.model.send_trade_to_reputation_system(consumer_id,supplier_id,
                                     price,good, self.p['types_and_units']['rating'],
                                     rating=rating, type = 'rating' )
-                            else:
-                                self.model.print_transaction_report_line(self.unique_id,supplier,
+                            elif not self.p['include_ratings'] :
+                                self.model.print_transaction_report_line(consumer_id,supplier_id,
                                     price,good, self.p['types_and_units']['payment'] )
-                                self.model.send_trade_to_reputation_system(self.unique_id,supplier,
+                                self.model.send_trade_to_reputation_system(consumer_id,supplier_id,
                                     price,good, self.p['types_and_units']['payment'] )
                         else:
 
-                            supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
-                            if supplier_agent.scam_cycle_day == self.p['scam_inactive_period']:
-                                #gen number * num_agents + agent number for the bad guys
-                                generation_increment = (self.model.daynum // self.p['scam_period'])* self.p['num_users']
-                                consumer_id = generation_increment + self.unique_id
-                                supplier_id = generation_increment + self.model.orig[supplier]
-                                self.model.orig[consumer_id]= self.unique_id
-                                self.model.orig[supplier_id]= self.model.orig[supplier]
+                            if not self.supplier_inactive(supplier_id):
+
                                 if self.p['include_ratings']:
                                     rating =  self.best_rating() if (
                                         random.uniform(0,1) < self.p['criminal_chance_of_rating']) else self.p['non_rating_val']
