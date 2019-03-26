@@ -420,7 +420,7 @@ class ReputationAgent(Agent):
 
                     if len(self.suppliers[good])> 0:
                         #supplier = self.suppliers[good][0]
-                        supplier_idx = random.randint(0,len(self.suppliers[good] )-1)
+                        supplier_idx = 0 if len(self.suppliers[good] ) == 1 else random.randint(0,len(self.suppliers[good] )-1)
                         supplier = self.suppliers[good][supplier_idx]
 
                         supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
