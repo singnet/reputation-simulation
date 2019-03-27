@@ -167,6 +167,16 @@ class ReputationAgent(Agent):
         # initialize todays goods
         # go through and make a list of needs in order
 
+        if len(self.supplying)>= 1 and not self.good:
+            our_day = self.model.daynum + self.orig_scam_cycle_day
+            generation_increment = (our_day // self.p['scam_period']) * self.p['num_users']
+
+            supplier_id = generation_increment + self.unique_id
+            self.model.orig[supplier_id] = self.unique_id
+            for good,price in self.supplying.items():
+                if not supplier_id in self.model.suppliers[good]:
+                    self.model.suppliers[good].append(supplier_id)
+
         if (self.p['suppliers_are_consumers'] or len(self.supplying)< 1):
 
             # if self.good:
@@ -254,7 +264,7 @@ class ReputationAgent(Agent):
                 over_threshold = [key for key, ratings_tuple in
                                             self.personal_experience[good].items(
                                             ) if (ratings_tuple[1] > self.fire_supplier_threshold
-                                                        and not self.supplier_inactive(ratings_tuple[0]))]
+                                                        and not self.supplier_inactive(key))]
                 if len(over_threshold):
                     roll = np.random.randint(0, len(over_threshold))
                     winner = int(over_threshold[roll])
@@ -282,7 +292,7 @@ class ReputationAgent(Agent):
                     non_criminal_experiences = {key: ratings_tuple for key, ratings_tuple in
                                                 self.personal_experience[good].items(
                                                 ) if (ratings_tuple[1] > self.fire_supplier_threshold
-                                                        and not self.supplier_inactive(ratings_tuple[0]))}
+                                                        and not self.supplier_inactive(key))}
                     sorted_suppliers = sorted(non_criminal_experiences.items(), key=lambda x: x[1][1], reverse=True)
                     if len(sorted_suppliers):
                         winner = sorted_suppliers[0][0]
@@ -302,7 +312,7 @@ class ReputationAgent(Agent):
                     non_criminal_experiences = {key: ratings_tuple for key, ratings_tuple in
                                                 self.personal_experience[good].items(
                                                 ) if (ratings_tuple[1] > self.fire_supplier_threshold
-                                                        and not self.supplier_inactive(ratings_tuple[0]))}
+                                                        and not self.supplier_inactive(key))}
                     ratings_sum = sum([ratings_tuple[1] for key, ratings_tuple in non_criminal_experiences.items()])
                     roll = random.uniform(0, ratings_sum)
                     cumul = 0
@@ -317,10 +327,10 @@ class ReputationAgent(Agent):
                                            self.personal_experience[good].items(
                                            ) if  ratings_tuple[1] <= self.fire_supplier_threshold])if good in self.personal_experience else set()
                     non_criminal_experiences = {int(agent): rating for agent, rating in self.model.ranks.items() if
-                                                rating > self.reputation_system_threshold and good in
+                                                (rating > self.reputation_system_threshold) and (good in
                                                 self.model.schedule.agents[self.model.orig[int(agent)]
-                                                ].supplying and agent not in under_threshold
-                                                        and not self.supplier_inactive(int(agent))}
+                                                ].supplying )and (not int(agent) in under_threshold)
+                                                        and (not self.supplier_inactive(int(agent)))}
                     ratings_sum = sum([rating for key, rating in non_criminal_experiences.items()])
                     roll = random.uniform(0, ratings_sum)
                     cumul = 0
@@ -430,9 +440,11 @@ class ReputationAgent(Agent):
                         generation_increment = (our_day // self.p['scam_period']) * self.p['num_users']
 
                         consumer_id =self.unique_id if self.good  else generation_increment + self.unique_id
-                        supplier_id =self.model.orig[supplier] if self.good  else generation_increment + self.model.orig[supplier]
+                        supplier_id =self.model.orig[supplier] if supplier_agent.good else generation_increment + self.model.orig[supplier]
                         self.model.orig[consumer_id] = self.unique_id
                         self.model.orig[supplier_id] = self.model.orig[supplier]
+                        if not supplier_id in self.model.suppliers[good]:
+                            self.model.suppliers[good].append(supplier_id)
 
                         amount = self.model.amount_distributions[good].rvs() if self.good else self.model.criminal_amount_distributions[good].rvs()
                         price = amount * self.model.schedule.agents[self.model.orig[supplier]].supplying[good]
