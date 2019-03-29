@@ -60,8 +60,8 @@ class Adapters():
         self.config['parameters']['chance_of_rating_good2good']=plrg * 0.01
         self.config['parameters']['chance_of_rating_good2bad']=plrb * 0.01
 
-        self.config['parameters']["scam_period"] = sp
-        self.config['parameters']["scam_inactive_period"] = sip
+        self.config['parameters']["scam_parameters"]["scam_period"] = sp
+        self.config['parameters']["scam_parameters"]["scam_inactive_period"] = sip
 
 
         product_list = ["product{0}".format(i) for i in range(npr)]

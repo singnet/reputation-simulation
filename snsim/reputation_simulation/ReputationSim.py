@@ -627,7 +627,9 @@ def main():
                      'update_period': config['parameters']['reputation_parameters']['update_period'],
                      'aggregation': config['parameters']['reputation_parameters']['aggregation'],
                      'denomination': config['parameters']['reputation_parameters']['denomination'],
-                     'unrated': config['parameters']['reputation_parameters']['unrated']
+                     'unrated': config['parameters']['reputation_parameters']['unrated'],
+                     'ratings': config['parameters']['reputation_parameters']['ratings'],
+                     'spendings': config['parameters']['reputation_parameters']['spendings']
 
                 })
             call(config['batch']['parameter_combinations'], config,rs=rs)

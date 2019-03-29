@@ -86,7 +86,7 @@ class ReputationAgent(Agent):
                 #There will be overlap in the criminal rings that criminals go to
                 self.num_criminal_consumers = {good:int(self.model.criminal_agent_ring_size_distribution.rvs()) for good in supply_list}
                 self.criminal_consumers = {good:set() for good in supply_list}
-                self.scam_cycle_day = random.randint(0,self.p["scam_period"] )
+                self.scam_cycle_day = random.randint(0,self.p['scam_parameters']["scam_period"] )
                 self.orig_scam_cycle_day = self.scam_cycle_day
             for good, needrv in self.model.criminal_need_cycle_distributions.items():
                 self.shopping_pattern[good] = needrv.rvs()
@@ -161,7 +161,7 @@ class ReputationAgent(Agent):
 
         if (self.p['suppliers_are_consumers'] or len(self.supplying)>= 1):
             self.scam_cycle_day += 1
-            if (self.scam_cycle_day % self.p['scam_period'])==0:
+            if (self.scam_cycle_day % self.p['scam_parameters']['scam_period'])==0:
                 self.scam_cycle_day = 0
         # kick out suppliers. See how many trades you will make.
         # initialize todays goods
@@ -169,7 +169,7 @@ class ReputationAgent(Agent):
 
         if len(self.supplying)>= 1 and not self.good:
             our_day = self.model.daynum + self.orig_scam_cycle_day
-            generation_increment = (our_day // self.p['scam_period']) * self.p['num_users']
+            generation_increment = (our_day // self.p['scam_parameters']['scam_period']) * self.p['num_users']
 
             supplier_id = generation_increment + self.unique_id
             self.model.orig[supplier_id] = self.unique_id
@@ -345,7 +345,7 @@ class ReputationAgent(Agent):
     def supplier_inactive(self, supplier):
         inactive = True
         supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
-        if supplier_agent.good or (supplier_agent.scam_cycle_day >= self.p['scam_inactive_period']):
+        if supplier_agent.good or (supplier_agent.scam_cycle_day >= self.p['scam_parameters']['scam_inactive_period']):
             inactive = False
         return inactive
 
@@ -437,7 +437,7 @@ class ReputationAgent(Agent):
                         #if supplier_agent.scam_cycle_day >= self.p['scam_inactive_period']:
                             # gen number * num_agents + agent number for the bad guys
                         our_day = self.model.daynum + supplier_agent.orig_scam_cycle_day
-                        generation_increment = (our_day // self.p['scam_period']) * self.p['num_users']
+                        generation_increment = (our_day // self.p['scam_parameters']['scam_period']) * self.p['num_users']
 
                         consumer_id =self.unique_id if self.good  else generation_increment + self.unique_id
                         supplier_id =self.model.orig[supplier] if supplier_agent.good else generation_increment + self.model.orig[supplier]
