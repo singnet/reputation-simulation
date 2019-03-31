@@ -73,7 +73,7 @@ class ContinuousRankTests(unittest.TestCase):
                 if agent_rank >= 0:
                     goodness_expected.append (agent_continuous)
                     goodness_calculated.append(agent_rank/100)
-            if (len(goodness_calculated) > 2):
+            if (len(goodness_calculated) >= 2):
                 corr1, p1 = pearsonr(goodness_expected, goodness_calculated)
                 corr2, p2 = spearmanr(goodness_expected, goodness_calculated)
                 bad_weights = [1-w for w in goodness_expected]

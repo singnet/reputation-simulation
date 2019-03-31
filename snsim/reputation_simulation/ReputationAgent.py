@@ -387,9 +387,27 @@ class ReputationAgent(Agent):
                         #choose your favorite supplier if hes over threshold.  if none over threshold
                         #try a random guy
                         if self.good and not self.p['observer_mode']:
-                            new_supplier = self.choose_with_threshold(good)
-                            if (new_supplier is not None):
-                                self.suppliers[good].append(new_supplier)
+
+                            roll = random.uniform (0,1)
+                            if roll < self.open_to_new_experiences:
+
+                                unknowns = [supplier for supplier in self.model.suppliers[good] if (
+                                    (supplier != self.unique_id and
+                                    (good not in self.personal_experience or supplier not in self.personal_experience[good]  )and
+                                    (supplier not in self.model.ranks)
+                                    )and not self.supplier_inactive(supplier))]
+                                if len(unknowns) :
+                                    supplier_index = random.randint(0,len(unknowns)-1)
+                                    self.suppliers[good].append(unknowns[supplier_index])
+                                else:
+                                    new_supplier = self.choose_with_threshold(good)
+                                    if (new_supplier is not None):
+                                        self.suppliers[good].append(new_supplier)
+
+                            else:
+                                new_supplier = self.choose_with_threshold(good)
+                                if (new_supplier is not None):
+                                    self.suppliers[good].append(new_supplier)
                         else:
 
                             roll = random.uniform (0,1)

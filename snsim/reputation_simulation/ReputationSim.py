@@ -14,10 +14,10 @@ from scipy.stats import truncnorm
 from ReputationAgent import ReputationAgent
 from Adapters import Adapters
 import math
-#from reputation import Aigents
+from reputation import Aigents
 from random import shuffle
-from reputation import AigentsAPIReputationService
-#from reputation import PythonReputationService
+from aigents_reputation_api import AigentsAPIReputationService
+from reputation_service_api import PythonReputationService
 
 
 from mesa import Model
@@ -599,6 +599,9 @@ def main():
     study_path = sys.argv[1] if len(sys.argv)>1 else 'study.json'
     with open(study_path) as json_file:
         config = json.load(json_file, object_pairs_hook=OrderedDict)
+        if config['parameters']['seed']:
+            np.random.seed(seed=config['parameters']['seed'])
+            random.seed(config['parameters']['seed'] )
         if config['parameters']['macro_view']:
             config = Adapters(config).translate()
 

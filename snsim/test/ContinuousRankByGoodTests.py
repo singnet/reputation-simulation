@@ -116,7 +116,7 @@ class ContinuousRankByGoodTests(unittest.TestCase):
                         if agent_rank >= 0:
                             goodness_expected.append (agent_continuous)
                             goodness_calculated.append(agent_rank/100)
-                if len(goodness_calculated) > 2:
+                if len(goodness_calculated) >= 2:
                     goodcorr1, p1 = pearsonr(goodness_expected, goodness_calculated)
                     goodcorr2, p2 = spearmanr(goodness_expected, goodness_calculated)
                     bad_weights = [1-w for w in goodness_expected]
@@ -233,6 +233,7 @@ class ContinuousRankByGoodTests(unittest.TestCase):
         self.output_tsv.write("code\trmsd_by_good\trmsdg_by_good\trmsdb_by_good")
         out_path = "../" + self.config['parameters']["output_path"] + "goods.tsv"
         self.goods_tsv = open(out_path, "w")
+        self.goods_tsv.write("code\tsupplier\tgood\tmarket_volume")
 
         for i, code in enumerate(self.codes):
             self.output_tsv.write("\n{0}\t".format(code))
