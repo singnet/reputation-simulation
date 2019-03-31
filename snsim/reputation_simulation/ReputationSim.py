@@ -14,10 +14,10 @@ from scipy.stats import truncnorm
 from ReputationAgent import ReputationAgent
 from Adapters import Adapters
 import math
-from reputation import Aigents
+#from reputation import Aigents
 from random import shuffle
-from aigents_reputation_api import AigentsAPIReputationService
-from reputation_service_api import PythonReputationService
+from reputation import AigentsAPIReputationService
+#from reputation import PythonReputationService
 
 
 from mesa import Model
