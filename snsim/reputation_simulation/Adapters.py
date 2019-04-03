@@ -67,6 +67,7 @@ class Adapters():
         product_list = ["product{0}".format(i) for i in range(npr)]
 
         x = np.arange(1, npr + 1)
+
         z = self.config['macro_views']['antons_view']['supplement']['zipf_parameter']
         weights = x ** (-z)
         weights /= weights.sum()
@@ -105,7 +106,7 @@ class Adapters():
 
         cycle_min = 1/(sample.max()*ntg)
         cycle_max = 1/(sample.min()*ntg)
-        price_factor = (pmax-pmin)/(cycle_max-cycle_min)
+        price_factor = 1 if cycle_min == cycle_max else (pmax-pmin)/(cycle_max-cycle_min)
         new_prices = {p:[pmin + ((1/(sample[i]*ntg) )- cycle_min)*price_factor,stdev, pmin, pmax] for i,p in enumerate(product_list)}
         self.config['parameters']['prices'] = new_prices
         new_prices_bad = copy.deepcopy(new_prices)

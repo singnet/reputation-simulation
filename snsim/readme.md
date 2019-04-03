@@ -26,12 +26,16 @@
 		
  (4)  To get metrics on the run, run unittests , which here are soft unittests for analysis purposes
   * Make sure the config file mentioned in the Tests of the test folder contains the tests that you want run on each parameter combination and the directory of the simulation run to be tested.
-    * Modify the test.json file to have the correct tests and correct directory, the rest of the file is ignored.
+    * Modify the test.json file to have the correct tests and correct directory, the rest of the file is ignored.  You can do this by copying the config file onto the file "test.json"
     * Alternatively, if needed, you can change the config file name in every test in the reputation/test folder to the current config file
-      * sed -i 's/test.json/noUnratednoDenomConserv5SAP182.json/g' *Tests.py
-    * Metric results will appear in the output file
-       * error_log.txt contains all the metrics, in appended timestamp mode to record metric changes over time
-       * For worksheet analysis, individual test results appear in tsv files
-         * These tsv files can be read into a jupyter notebook, that generates a composite tsv for analysis in a worksheet
-         * reputation_results-conserv_new_unrestricted_mem.ipynb is one example
+    
+    ```sed -i 's/test.json/noUnratednoDenomConserv5SAP182.json/g' *Tests.py```
+  * Run the unittests, pointing to the test directory 
+    
+    ```python -m unittest discover -s /home/reputation/snsim/reputation/test -t /home/reputation/snsim/reputation/test -p *Tests*```
+  * Metric results will appear in the output file
+    * error_log.txt contains all the metrics, in appended timestamp mode to record metric changes over time
+    * For worksheet analysis, individual test results appear in tsv files
+      * These tsv files can be read into a jupyter notebook, that generates a composite tsv for analysis in a worksheet
+      * reputation_results-conserv_new_unrestricted_mem.ipynb is one example
 			

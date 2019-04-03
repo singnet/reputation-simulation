@@ -309,18 +309,30 @@ class ReputationAgent(Agent):
                         winner = sorted_suppliers[0][0]
             elif self.p['choice_method'] == "roulette_wheel":
                 if self.p['observer_mode']:
-                    non_criminal_experiences = {key: ratings_tuple for key, ratings_tuple in
+                    # non_criminal_experiences = {key: ratings_tuple for key, ratings_tuple in
+                    #                             self.personal_experience[good].items(
+                    #                             ) if (ratings_tuple[1] > self.fire_supplier_threshold
+                    #                                     and not self.supplier_inactive(key))}
+
+                    criminal_experiences = {key: ratings_tuple for key, ratings_tuple in
                                                 self.personal_experience[good].items(
-                                                ) if (ratings_tuple[1] > self.fire_supplier_threshold
-                                                        and not self.supplier_inactive(key))}
-                    ratings_sum = sum([ratings_tuple[1] for key, ratings_tuple in non_criminal_experiences.items()])
-                    roll = random.uniform(0, ratings_sum)
-                    cumul = 0
-                    for key, ratings_tuple in non_criminal_experiences.items():
-                        if winner is None:
-                            cumul = cumul + ratings_tuple[1]
-                            if cumul > roll:
-                                winner = key
+                                                ) if ratings_tuple[1] < self.fire_supplier_threshold
+                                                        }
+                    non_criminals = [agent for agent in self.model.suppliers[good]
+                                     if  ((not int(agent) in criminal_experiences)
+                                                        and (not self.supplier_inactive(int(agent))))]
+                    roll = random.randint(0,len(non_criminals)-1)
+                    winner = non_criminals[roll]
+                    #ratings_sum = sum([ratings_tuple[1] for key, ratings_tuple in non_criminals.items()])
+                    # roll = random.uniform(0, ratings_sum)
+                    # cumul = 0
+                    # for key, ratings_tuple in non_criminals.items():
+                    #     if winner is None:
+                    #         cumul = cumul + ratings_tuple[1]
+                    #         if cumul > roll:
+                    #             winner = key
+
+
                 else:
 
                     under_threshold = set([key for key, ratings_tuple in
@@ -343,10 +355,19 @@ class ReputationAgent(Agent):
         return winner
 
     def supplier_inactive(self, supplier):
+        #inactive if agent is in SAP or if agents orig is in sap, or if the agent is hiding its name.
         inactive = True
+
         supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
-        if supplier_agent.good or (supplier_agent.scam_cycle_day >= self.p['scam_parameters']['scam_inactive_period']):
+        if supplier_agent.good:
             inactive = False
+        else:
+            our_day = self.model.daynum + supplier_agent.orig_scam_cycle_day
+            generation_increment = (our_day // self.p['scam_parameters']['scam_period']) * self.p['num_users']
+            if ((supplier_agent.scam_cycle_day >= self.p['scam_parameters']['scam_inactive_period'])or
+                    (supplier != self.model.orig[supplier]+generation_increment) ):
+                inactive = False
+
         return inactive
 
 
@@ -369,9 +390,9 @@ class ReputationAgent(Agent):
                 if self.good:
 
                     for supplier in self.suppliers[good]:
-                        if self.supplier_inactive(supplier):
-                            self.suppliers[good].remove(supplier)
-                        if (good in self.personal_experience and supplier in self.personal_experience[good]
+                        if self.p['random_change_suppliers'] == 1 or self.supplier_inactive(supplier):
+                                    self.suppliers[good].remove(supplier)
+                        elif (good in self.personal_experience and supplier in self.personal_experience[good]
                             and len(self.personal_experience[good][supplier]) > 0):
                             if self.personal_experience[good][supplier][1] < self.fire_supplier_threshold:
                                 self.suppliers[good].remove(supplier)
@@ -387,10 +408,8 @@ class ReputationAgent(Agent):
                         #choose your favorite supplier if hes over threshold.  if none over threshold
                         #try a random guy
                         if self.good and not self.p['observer_mode']:
-
                             roll = random.uniform (0,1)
                             if roll < self.open_to_new_experiences:
-
                                 unknowns = [supplier for supplier in self.model.suppliers[good] if (
                                     (supplier != self.unique_id and
                                     (good not in self.personal_experience or supplier not in self.personal_experience[good]  )and

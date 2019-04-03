@@ -66,6 +66,7 @@ class ReputationSim(Model):
         self.orig = {i:i for i in range(config['parameters']['num_users'])}
 
         self.time = dt.datetime.now().isoformat()
+        self.rank_history_heading = ""
 
         if not os.path.exists(self.parameters['output_path']):
         #   raise Exception('Directory {0} exists'.format(self.parameters['output_path']))
@@ -293,20 +294,70 @@ class ReputationSim(Model):
         #path = self.parameters['output_path'] + 'transactions_' +self.parameters['param_str'] + self.time[0:10] + '.tsv'
         path = self.parameters['output_path'] + 'rankHistory_' +self.parameters['param_str'] [:-1] + '.tsv'
         file = open(path, "w")
-        file.write('time\t')
+
+        #file.write('time\t')
+        heading_list = []
+        heading_list.append('time')
         for i in range(len(self.schedule.agents)):
-            file.write('{0}\t'.format(self.schedule.agents[i].unique_id))
-        file.write('\n')
+            #file.write('{0}\t'.format(self.schedule.agents[i].unique_id))
+            heading_list.append(self.schedule.agents[i].unique_id)
+        #make room for columns to be added on. they need to have headings now so pandas can parse them
+        num_extra_agents = int(((self.parameters['num_users'] * self.parameters['chance_of_criminal']*self.end_tick
+                            )/self.parameters['scam_parameters']['scam_period']))+1
+        for i in range(num_extra_agents):
+            heading_list.append('alias{0}'.format(i))
+        #file.write('\n')
+        heading_list.append('\n')
+        self.rank_history_heading = "\t".join(map (str, heading_list))
+        file.write(self.rank_history_heading)
         return(file)
 
     def write_rank_history_line(self):
+        heading_list = []
+        heading_list.append('time')
+        #self.rank_history_heading = '{0}\t'.format('time')
         time = int(round(self.schedule.time))
         self.rank_history.write('{0}\t'.format(time))
-        for i in range(len(self.schedule.agents)):
-            id = str(self.schedule.agents[i].unique_id)
-            rank = self.ranks[id] if id in self.ranks else -1
+        key_sort = [int(key) for key in self.ranks.keys()]
+        key_sort.sort()
+        od = OrderedDict()
+        for key in key_sort:
+            strkey = str(key)
+            od[strkey]= self.ranks[strkey]
+        #intdir = {int(key): val for key, val in self.ranks.items() }
+        #od = OrderedDict(sorted(intdir))
+        lastAgent = None
+        for agent,rank in od.items():
+            intagent = int(agent)
+            if lastAgent is None:
+                lastAgent = intagent
+            if intagent < len(self.schedule.agents):
+                for i in range (lastAgent+1,intagent):
+                    #self.rank_history.write('{0}:{1}\t'.format(i,-1))
+                    self.rank_history.write('{0}\t'.format(-1))
+                    heading_list.append(i)
+            else:
+                for i in range (lastAgent+1,len(self.schedule.agents)):
+                    #self.rank_history.write('{0}:{1}\t'.format(i,-1))
+                    self.rank_history.write('{0}\t'.format(-1))
+                    heading_list.append(i)
+            #self.rank_history.write('{0}:{1}\t'.format(intagent,rank))
             self.rank_history.write('{0}\t'.format(rank))
+            heading_list.append(intagent)
+            lastAgent = intagent
+        for i in range(lastAgent+1,len(self.schedule.agents) ):
+            #self.rank_history.write('{0}:{1}\t'.format(i,-1))
+            self.rank_history.write('{0}\t'.format(-1))
+            heading_list.append(i)
         self.rank_history.write('\n')
+        heading_list.append('\n')
+        self.rank_history_heading = "\t".join(map(str,heading_list))
+
+        # for i in range(len(self.schedule.agents)):
+        #     id = str(self.schedule.agents[i].unique_id)
+        #     rank = od[id] if id in od else -1
+        #     self.rank_history.write('{0}\t'.format(rank))
+        # self.rank_history.write('\n')
 
     def market_volume_report(self):
         #path = self.parameters['output_path'] + 'transactions_' +self.parameters['param_str'] + self.time[0:10] + '.tsv'
@@ -548,6 +599,7 @@ class ReputationSim(Model):
         if self.error_log:
             self.error_log.close()
         if self.rank_history:
+            self.rank_history.write(self.rank_history_heading)
             self.rank_history.close()
 
 def set_param(configfile, setting):
