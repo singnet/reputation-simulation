@@ -331,6 +331,10 @@ class ReputationSim(Model):
             intagent = int(agent)
             if lastAgent is None:
                 lastAgent = intagent
+                for i in range (0,intagent):
+                    #self.rank_history.write('{0}:{1}\t'.format(i,-1))
+                    self.rank_history.write('{0}\t'.format(-1))
+                    heading_list.append(i)
             if intagent < len(self.schedule.agents):
                 for i in range (lastAgent+1,intagent):
                     #self.rank_history.write('{0}:{1}\t'.format(i,-1))
