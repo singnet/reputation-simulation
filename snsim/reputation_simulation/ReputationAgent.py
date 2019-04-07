@@ -86,7 +86,7 @@ class ReputationAgent(Agent):
                 #There will be overlap in the criminal rings that criminals go to
                 self.num_criminal_consumers = {good:int(self.model.criminal_agent_ring_size_distribution.rvs()) for good in supply_list}
                 self.criminal_consumers = {good:set() for good in supply_list}
-                self.scam_cycle_day = random.randint(0,self.p['scam_parameters']["scam_period"] )
+                self.scam_cycle_day = random.randint(0,self.p['scam_parameters']["scam_period"] -1)
                 self.orig_scam_cycle_day = self.scam_cycle_day
             for good, needrv in self.model.criminal_need_cycle_distributions.items():
                 self.shopping_pattern[good] = needrv.rvs()
@@ -175,7 +175,7 @@ class ReputationAgent(Agent):
             self.model.orig[supplier_id] = self.unique_id
             for good,price in self.supplying.items():
                 if not supplier_id in self.model.suppliers[good]:
-                    self.model.suppliers[good].append(supplier_id)
+                    self.add_new_supplier(supplier_id, good)
 
         if (self.p['suppliers_are_consumers'] or len(self.supplying)< 1):
 
@@ -370,6 +370,12 @@ class ReputationAgent(Agent):
 
         return inactive
 
+    def add_new_supplier(self, supplier, good):
+        if not supplier in self.model.suppliers[good]:
+            self.model.suppliers[good].append(supplier)
+            if self.model.orig[supplier] in self.model.suppliers[good]:
+                self.model.suppliers[good].remove(self.model.orig[supplier])
+
 
     def choose_partners(self):
         # every time you choose a partner, you will choose a random supplier if its
@@ -408,32 +414,38 @@ class ReputationAgent(Agent):
                         #choose your favorite supplier if hes over threshold.  if none over threshold
                         #try a random guy
                         if self.good and not self.p['observer_mode']:
-                            roll = random.uniform (0,1)
-                            if roll < self.open_to_new_experiences:
-                                unknowns = [supplier for supplier in self.model.suppliers[good] if (
-                                    (supplier != self.unique_id and
-                                    (good not in self.personal_experience or supplier not in self.personal_experience[good]  )and
-                                    (supplier not in self.model.ranks)
-                                    )and not self.supplier_inactive(supplier))]
-                                if len(unknowns) :
-                                    supplier_index = random.randint(0,len(unknowns)-1)
-                                    self.suppliers[good].append(unknowns[supplier_index])
-                                else:
-                                    new_supplier = self.choose_with_threshold(good)
-                                    if (new_supplier is not None):
-                                        self.suppliers[good].append(new_supplier)
-
-                            else:
-                                new_supplier = self.choose_with_threshold(good)
-                                if (new_supplier is not None):
-                                    self.suppliers[good].append(new_supplier)
+                            # roll = random.uniform (0,1)
+                            # if roll < self.open_to_new_experiences:
+                            #     unknowns = [supplier for supplier in self.model.suppliers[good] if (
+                            #         (supplier != self.unique_id and
+                            #         (good not in self.personal_experience or supplier not in self.personal_experience[good]  )and
+                            #         (supplier not in self.model.ranks)
+                            #         )and not self.supplier_inactive(supplier))]
+                            #     if len(unknowns) :
+                            #         supplier_index = random.randint(0,len(unknowns)-1)
+                            #         self.suppliers[good].append(unknowns[supplier_index])
+                            #     else:
+                            #         new_supplier = self.choose_with_threshold(good)
+                            #         if (new_supplier is not None):
+                            #             self.suppliers[good].append(new_supplier)
+                            #
+                            # else:
+                            new_supplier = self.choose_with_threshold(good)
+                            if (new_supplier is not None):
+                                self.suppliers[good].append(new_supplier)
                         else:
 
                             roll = random.uniform (0,1)
                             if roll < self.open_to_new_experiences:
 
-                                unknowns = [supplier for supplier in self.model.suppliers[good] if ((supplier != self.unique_id and
-                                    (good not in self.personal_experience or supplier not in self.personal_experience[good]  )
+                                # unknowns = [supplier for supplier in self.model.suppliers[good] if ((supplier != self.unique_id and
+                                #     (good not in self.personal_experience or supplier not in self.personal_experience[good]  )
+                                #     )and not self.supplier_inactive(supplier))] if self.good else [supplier for supplier in self.criminal_consumers[good] if (
+                                #      (supplier != self.unique_id ) and
+                                #     ((good not in self.personal_experience )or supplier not in self.personal_experience[good]  )
+                                #     )] if (good in self.criminal_consumers) else []
+
+                                unknowns = [supplier for supplier in self.model.suppliers[good] if ((supplier != self.unique_id
                                     )and not self.supplier_inactive(supplier))] if self.good else [supplier for supplier in self.criminal_consumers[good] if (
                                      (supplier != self.unique_id ) and
                                     ((good not in self.personal_experience )or supplier not in self.personal_experience[good]  )
@@ -441,6 +453,8 @@ class ReputationAgent(Agent):
                                 if len(unknowns) :
                                     supplier_index = random.randint(0,len(unknowns)-1)
                                     self.suppliers[good].append(unknowns[supplier_index])
+
+
                     if len(self.suppliers[good]) < 1:
                         # either we arnt open to new experiences or we know everyone already so lets try the best that
                         # we know, over the fire threshold.
@@ -481,7 +495,7 @@ class ReputationAgent(Agent):
                         self.model.orig[consumer_id] = self.unique_id
                         self.model.orig[supplier_id] = self.model.orig[supplier]
                         if not supplier_id in self.model.suppliers[good]:
-                            self.model.suppliers[good].append(supplier_id)
+                            self.add_new_supplier(supplier_id, good)
 
                         amount = self.model.amount_distributions[good].rvs() if self.good else self.model.criminal_amount_distributions[good].rvs()
                         price = amount * self.model.schedule.agents[self.model.orig[supplier]].supplying[good]

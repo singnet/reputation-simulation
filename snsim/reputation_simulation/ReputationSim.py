@@ -253,7 +253,7 @@ class ReputationSim(Model):
 
             self.reputation_system.clear_ratings()
             self.reputation_system.clear_ranks()
-            self.reputation_system.set_parameters({'fullnorm': True})
+            #self.reputation_system.set_parameters({'fullnorm': True})
 
 
 
@@ -640,7 +640,12 @@ def call( combolist, configfile, rs=None,  param_str = ""):
 
             call(mycombolist, myconfigfile, rs, my_param_str)
     else:
-        configfile['parameters']['seed'] = configfile['parameters']['seed'] + 1
+        #new_seed = configfile['parameters']['seed'] + 1
+        #set_param(configfile, {"seed": new_seed})
+        if configfile['parameters']['seed']:
+            np.random.seed(seed=configfile['parameters']['seed'])
+            random.seed(configfile['parameters']['seed'] )
+
         set_param( configfile, {"param_str": param_str })
         repsim = ReputationSim(study_path =configfile, rs=rs, opened_config = True)
         if configfile['parameters']['use_java']:
@@ -655,9 +660,9 @@ def main():
     study_path = sys.argv[1] if len(sys.argv)>1 else 'study.json'
     with open(study_path) as json_file:
         config = json.load(json_file, object_pairs_hook=OrderedDict)
-        if config['parameters']['seed']:
-            np.random.seed(seed=config['parameters']['seed'])
-            random.seed(config['parameters']['seed'] )
+        # if config['parameters']['seed']:
+        #     np.random.seed(seed=config['parameters']['seed'])
+        #     random.seed(config['parameters']['seed'] )
         if config['parameters']['macro_view']:
             config = Adapters(config).translate()
 
