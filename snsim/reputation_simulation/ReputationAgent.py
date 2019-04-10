@@ -179,28 +179,24 @@ class ReputationAgent(Agent):
 
         if (self.p['suppliers_are_consumers'] or len(self.supplying)< 1):
 
-            # if self.good:
-            #     for good, supplierlist in self.suppliers.items():
-            #         roll = random.uniform(0,1) if random.uniform(0, 1) < self.p['random_change_suppliers'] else 0
-            #         bad_suppliers =[supplier for supplier in supplierlist if (
-            #             good in self.personal_experience and supplier in self.personal_experience[good]
-            #             and len(self.personal_experience[good][supplier])>0 and
-            #             (self.personal_experience[good][supplier][1] < self.fire_supplier_threshold) or
-            #             (self.personal_experience[good][supplier][1] < roll))]
-            #         for supplier in supplierlist:
-            #             if supplier in bad_suppliers:
-            #                 supplierlist.remove(supplier)
-            #         #for bad_supplier in bad_suppliers:
-                      # supplierlist.remove(bad_supplier)
-
             if not self.good:
                 for good, supplierlist in self.suppliers.items():
-                    if random.uniform(0,1) < self.p['random_change_suppliers']:
-                        self.clear_supplierlist(good,supplierlist)
-                    if not supplierlist:
+                    for supplier in supplierlist:
+                        supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
+                        if self.p['random_change_suppliers'] == 1.0 or self.supplier_inactive(supplier):
+                            if self.unique_id in supplier_agent.criminal_consumers[good]:
+                                supplier_agent.criminal_consumers[good].remove(self.unique_id)
+                                supplierlist.remove(supplier)
+                        else:
+                            roll = random.uniform(0,1)
+                            if roll < self.p['random_change_suppliers']:
+                                if self.unique_id in supplier_agent.criminal_consumers[good]:
+                                    supplier_agent.criminal_consumers[good].remove(self.unique_id)
+                                    supplierlist.remove(supplier)
+
+                for good, supplierlist in self.suppliers.items():
+                    if len(supplierlist) < 1:
                         self.adopt_criminal_supplier(good)
-
-
 
             #have agents start out with minute, non zero supplies of all goods, to make sure cobb douglas works
             tuplist = [(good, random.uniform(0.1,0.2)) for good, chance in self.p["chance_of_supplying"].items()]
@@ -252,98 +248,52 @@ class ReputationAgent(Agent):
             new_rating = rating
             self.personal_experience[good][supplier] = (new_times_rated, new_rating)
 
-    def choose_with_threshold(self,good):
+    def choose_with_threshold(self,good, under_threshold):
+        #only good agents come here, and when there is a reputation system.
+
         # sort takes a long time but we do it if choice method is winner take all
         #choose from your own experiences by your past favorite, one of your past favorites,
         # or using the reputation system.  todo:  add more choice methods that include combinations of these
         winner = None
 
         if self.p['choice_method'] == "thresholded_random":
-            if self.p['observer_mode']:
 
-                over_threshold = [key for key, ratings_tuple in
-                                            self.personal_experience[good].items(
-                                            ) if (ratings_tuple[1] > self.fire_supplier_threshold
-                                                        and not self.supplier_inactive(key))]
-                if len(over_threshold):
-                    roll = np.random.randint(0, len(over_threshold))
-                    winner = int(over_threshold[roll])
+            # thresholded random, using the reputation system AND past experience
 
-            else:
-                # thresholded random, using the reputation system AND past experience
-
-                under_threshold = set( [key for key, ratings_tuple in
-                                            self.personal_experience[good].items(
-                                            ) if ratings_tuple[1] <= self.fire_supplier_threshold]
-                                       )if good in self.personal_experience else set()
-                over_threshold = [agent for agent, rating in self.model.ranks.items() if
-                                  rating > self.reputation_system_threshold and good in self.model.schedule.agents[
-                                      self.model.orig[int(agent)]].supplying and agent not in under_threshold
-                                                        and not self.supplier_inactive(int(agent))]
-                if len(over_threshold):
-                    roll = np.random.randint(0, len(over_threshold))
-                    winner = int(over_threshold[roll])
-        else:
-            #get rid of all we have experienced under threshold
+            over_threshold = [agent for agent, rating in self.model.ranks.items()
+                              if
+                              rating > self.reputation_system_threshold
+                              and int(agent) in self.model.suppliers[good]
+                              #and good in self.model.schedule.agents[self.model.orig[int(agent)]].supplying
+                              and int(agent) not in under_threshold
+                              and not self.supplier_inactive(int(agent))]
+            if len(over_threshold):
+                roll = np.random.randint(0, len(over_threshold))
+                winner = int(over_threshold[roll])
+        elif self.p['choice_method'] == "winner_take_all":
 
 
-            if self.p['choice_method'] == "winner_take_all":
-                if self.p['observer_mode']:
-                    non_criminal_experiences = {key: ratings_tuple for key, ratings_tuple in
-                                                self.personal_experience[good].items(
-                                                ) if (ratings_tuple[1] > self.fire_supplier_threshold
-                                                        and not self.supplier_inactive(key))}
-                    sorted_suppliers = sorted(non_criminal_experiences.items(), key=lambda x: x[1][1], reverse=True)
-                    if len(sorted_suppliers):
-                        winner = sorted_suppliers[0][0]
+            non_criminal_experiences = {int(agent): rating for agent, rating in self.model.ranks.items()
+                                        if
+                                        rating > self.reputation_system_threshold
+                                        and int(agent) in self.model.suppliers[good]
+                                        #and good in self.model.schedule.agents[self.model.orig[int(agent)]].supplying
+                                        and not self.supplier_inactive(int(agent))}
+            sorted_suppliers = sorted(non_criminal_experiences.items(), key=lambda x: x[1], reverse=True)
+            if len(sorted_suppliers):
+                winner = sorted_suppliers[0][0]
 
-                else:
+        elif self.p['choice_method'] == "roulette_wheel":
 
-                    non_criminal_experiences = {int(agent): rating for agent, rating in self.model.ranks.items() if
-                                                rating > self.reputation_system_threshold and good in
-                                                self.model.schedule.agents[self.model.orig[int(agent)]
-                                                ].supplying
-                                                        and not self.supplier_inactive(int(agent))}
-                    sorted_suppliers = sorted(non_criminal_experiences.items(), key=lambda x: x[1], reverse=True)
-                    if len(sorted_suppliers):
-                        winner = sorted_suppliers[0][0]
-            elif self.p['choice_method'] == "roulette_wheel":
-                if self.p['observer_mode']:
-                    # non_criminal_experiences = {key: ratings_tuple for key, ratings_tuple in
-                    #                             self.personal_experience[good].items(
-                    #                             ) if (ratings_tuple[1] > self.fire_supplier_threshold
-                    #                                     and not self.supplier_inactive(key))}
-
-                    criminal_experiences = {key: ratings_tuple for key, ratings_tuple in
-                                                self.personal_experience[good].items(
-                                                ) if ratings_tuple[1] < self.fire_supplier_threshold
-                                                        }
-                    non_criminals = [agent for agent in self.model.suppliers[good]
-                                     if  ((not int(agent) in criminal_experiences)
-                                                        and (not self.supplier_inactive(int(agent))))]
-                    roll = random.randint(0,len(non_criminals)-1)
-                    winner = non_criminals[roll]
-                    #ratings_sum = sum([ratings_tuple[1] for key, ratings_tuple in non_criminals.items()])
-                    # roll = random.uniform(0, ratings_sum)
-                    # cumul = 0
-                    # for key, ratings_tuple in non_criminals.items():
-                    #     if winner is None:
-                    #         cumul = cumul + ratings_tuple[1]
-                    #         if cumul > roll:
-                    #             winner = key
-
-
-                else:
-
-                    under_threshold = set([key for key, ratings_tuple in
-                                           self.personal_experience[good].items(
-                                           ) if  ratings_tuple[1] <= self.fire_supplier_threshold])if good in self.personal_experience else set()
-                    non_criminal_experiences = {int(agent): rating for agent, rating in self.model.ranks.items() if
-                                                (rating > self.reputation_system_threshold) and (good in
-                                                self.model.schedule.agents[self.model.orig[int(agent)]
-                                                ].supplying )and (not int(agent) in under_threshold)
-                                                        and (not self.supplier_inactive(int(agent)))}
-                    ratings_sum = sum([rating for key, rating in non_criminal_experiences.items()])
+                non_criminal_experiences = {int(agent): rating for agent, rating in self.model.ranks.items()
+                                            if
+                                            (rating > self.reputation_system_threshold)
+                                            and int(agent) in self.model.suppliers[good]
+                                            #and (good in self.model.schedule.agents[self.model.orig[int(agent)]].supplying )
+                                            and (not int(agent) in under_threshold)
+                                            and (not self.supplier_inactive(int(agent)))}
+                ratings_sum = sum([rating for key, rating in non_criminal_experiences.items()])
+                if ratings_sum > 0:
                     roll = random.uniform(0, ratings_sum)
                     cumul = 0
                     for key, rating in non_criminal_experiences.items():
@@ -378,25 +328,16 @@ class ReputationAgent(Agent):
 
 
     def choose_partners(self):
-        # every time you choose a partner, you will choose a random supplier if its
-        # empty, perform a transaction, and pop your list
+        #one good per each time you enter.  change this by looping on goods per day if you have more goods that
+        #times that choose_partners is called.
 
         if self.needs:
             good = self.needs.pop(False)
-
-            merchandise_recieved = False
-
             for i in range(self.multiplier):
-
-                supplier = None
-
-                #if self.good and random.uniform(0, 1) < self.p['random_change_suppliers']:
-                #   self.suppliers[good].clear()
-
                 if self.good:
 
                     for supplier in self.suppliers[good]:
-                        if self.p['random_change_suppliers'] == 1 or self.supplier_inactive(supplier):
+                        if self.p['random_change_suppliers'] == 1.0 or self.supplier_inactive(supplier):
                                     self.suppliers[good].remove(supplier)
                         elif (good in self.personal_experience and supplier in self.personal_experience[good]
                             and len(self.personal_experience[good][supplier]) > 0):
@@ -408,162 +349,167 @@ class ReputationAgent(Agent):
                                 if self.personal_experience[good][supplier][1] < roll:
                                     self.suppliers[good].remove(supplier)
 
-                if len(self.model.suppliers[good]) > 0:
-                    if len(self.suppliers[good]) < 1:
-                        #try a random guy according to your openness to new experiences.
-                        #choose your favorite supplier if hes over threshold.  if none over threshold
-                        #try a random guy
-                        if self.good and not self.p['observer_mode']:
-                            # roll = random.uniform (0,1)
-                            # if roll < self.open_to_new_experiences:
-                            #     unknowns = [supplier for supplier in self.model.suppliers[good] if (
-                            #         (supplier != self.unique_id and
-                            #         (good not in self.personal_experience or supplier not in self.personal_experience[good]  )and
-                            #         (supplier not in self.model.ranks)
-                            #         )and not self.supplier_inactive(supplier))]
-                            #     if len(unknowns) :
-                            #         supplier_index = random.randint(0,len(unknowns)-1)
-                            #         self.suppliers[good].append(unknowns[supplier_index])
-                            #     else:
-                            #         new_supplier = self.choose_with_threshold(good)
-                            #         if (new_supplier is not None):
-                            #             self.suppliers[good].append(new_supplier)
-                            #
-                            # else:
-                            new_supplier = self.choose_with_threshold(good)
-                            if (new_supplier is not None):
-                                self.suppliers[good].append(new_supplier)
-                        else:
+                    self.find_suppliers(good)
+                self.make_purchases(good)
 
-                            roll = random.uniform (0,1)
-                            if roll < self.open_to_new_experiences:
+    def find_suppliers(self,good):
 
-                                # unknowns = [supplier for supplier in self.model.suppliers[good] if ((supplier != self.unique_id and
-                                #     (good not in self.personal_experience or supplier not in self.personal_experience[good]  )
-                                #     )and not self.supplier_inactive(supplier))] if self.good else [supplier for supplier in self.criminal_consumers[good] if (
-                                #      (supplier != self.unique_id ) and
-                                #     ((good not in self.personal_experience )or supplier not in self.personal_experience[good]  )
-                                #     )] if (good in self.criminal_consumers) else []
+        # bad agents get their suppliers in the step at the start of the day, but because good
+        # agents must continually judge their suppliers, they choose them after every transaction.
+        # if the agent is good,
+        #     go get a blacklist from experiences.
+        #     if there is norep system,
+        #         if the agent is not open to new experiences
+        #             the agent first attempts to find someone it knows filtering out the blacklist
+        #         if no supplier yet
+        #             the agent chooses randomly from the suppliers excluding the blacklist,
+        #             (without regard to whether its known)
+        #     else if there is a rep system,
+        #         the agent chooses according to choice algorithm but excluding the blacklist.
+        #         which is a set that goes into the routine choose with threshold.
+        #         if there is no thing in there, the agent chooses as if there were no rep system
+        #         in the future we will include openness to new experience , with unopenness implying that the
+        #         agent will return to old experiences.
 
-                                unknowns = [supplier for supplier in self.model.suppliers[good] if ((supplier != self.unique_id
-                                    )and not self.supplier_inactive(supplier))] if self.good else [supplier for supplier in self.criminal_consumers[good] if (
-                                     (supplier != self.unique_id ) and
-                                    ((good not in self.personal_experience )or supplier not in self.personal_experience[good]  )
-                                    )] if (good in self.criminal_consumers) else []
-                                if len(unknowns) :
-                                    supplier_index = random.randint(0,len(unknowns)-1)
-                                    self.suppliers[good].append(unknowns[supplier_index])
+        if self.good and len(self.suppliers[good]) < 1:
+            # if the agent is good,
+            #     go get a blacklist from experiences.
+            under_threshold = set([key for key, ratings_tuple in
+                                   self.personal_experience[good].items(
+                                   ) if ratings_tuple[1] <= self.fire_supplier_threshold]
+                                  ) if good in self.personal_experience else set()
+            if not self.p['observer_mode']:
+                new_supplier = self.choose_with_threshold(good, under_threshold)
+                if (new_supplier is not None):
+                    self.suppliers[good].append(new_supplier)
+            if self.p['observer_mode'] or len(self.suppliers[good]) < 1:
+            #     if there is norep system,
+            #         if the agent is not open to new experiences
+            #             the agent first attempts to find someone it knows filtering out the blacklist
+                if self.open_to_new_experiences < 0.95:#the roll is expensive
+                    roll = random.uniform(0, 1)
+                    if roll > self.open_to_new_experiences:
+                        knowns = [supplier for supplier in self.personal_experience[good]
+                                  if (
+                                    supplier != self.unique_id
+                                    and supplier in self.model.suppliers[good]
+                                   # and good in self.model.schedule.agents[self.model.orig[int(supplier)]].supplying
+                                    and (not supplier in under_threshold)
+                                    and (not self.supplier_inactive(supplier))
+                                  )
+                                  ] if good in self.personal_experience else []
+                        if len(knowns):
+                            supplier_index = random.randint(0, len(knowns) - 1)
+                            self.suppliers[good].append(knowns[supplier_index])
+
+            #       if no supplier yet
+            #             the agent chooses randomly from the suppliers excluding the blacklist,
+            #             (without regard to whether its known)
+
+                if len(self.suppliers[good]) < 1:
+                    # youve got no choice but to try someone new at random
+                    unknowns = [supplier for supplier in self.model.suppliers[good]
+                                if (
+                                        supplier != self.unique_id
+                                        and (not supplier in under_threshold)
+                                        and (not self.supplier_inactive(supplier))
+                                )
+                                ]
+
+                    if len(unknowns):
+                        supplier_index = random.randint(0, len(unknowns) - 1)
+                        self.suppliers[good].append(unknowns[supplier_index])
 
 
-                    if len(self.suppliers[good]) < 1:
-                        # either we arnt open to new experiences or we know everyone already so lets try the best that
-                        # we know, over the fire threshold.
-                        if good in self.personal_experience or (self.good and not self.p['observer_mode']):
-                            #sorted_suppliers = sorted(self.personal_experience[good].items(), key=lambda x: x[1][1],reverse=True)
-                            #if sorted_suppliers[0][1][1] > self.fire_supplier_threshold:
-                                #self.suppliers[good].append(sorted_suppliers[0][0])
-                            #sorting takes too long, roulette wheel will do
-                            new_supplier = self.choose_with_threshold(good)
-                            if (new_supplier is not None):
-                                self.suppliers[good].append(new_supplier)
-                    if len(self.suppliers[good]) < 1:
-                        #youve got no choice but to try someone new at random
-                        unknowns = [supplier for supplier in self.model.suppliers[good] if ((
-                                 supplier != self.unique_id and
-                                (good not in self.personal_experience or supplier not in self.personal_experience[good] )
-                                )and not self.supplier_inactive(supplier))]if self.good else [supplier for supplier in self.criminal_consumers[good] if (supplier != self.unique_id and
-                            (good not in self.personal_experience or supplier not in self.personal_experience[good]  )
-                            )]if (good in self.criminal_consumers) else []
-                        if len(unknowns) :
-                            supplier_index = random.randint(0,len(unknowns)-1)
-                            self.suppliers[good].append(unknowns[supplier_index])
 
+    def make_purchases(self,good):
+        if len(self.suppliers[good]) > 0:
+            merchandise_recieved = False
+            supplier_idx = 0 if len(self.suppliers[good]) == 1 else random.randint(0, len(self.suppliers[good]) - 1)
+            supplier = self.suppliers[good][supplier_idx]
 
-                    if len(self.suppliers[good])> 0:
-                        #supplier = self.suppliers[good][0]
-                        supplier_idx = 0 if len(self.suppliers[good] ) == 1 else random.randint(0,len(self.suppliers[good] )-1)
-                        supplier = self.suppliers[good][supplier_idx]
+            supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
+            our_day = self.model.daynum + supplier_agent.orig_scam_cycle_day
+            generation_increment = (our_day // self.p['scam_parameters']['scam_period']) * self.p['num_users']
 
-                        supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
-                        #if supplier_agent.scam_cycle_day >= self.p['scam_inactive_period']:
-                            # gen number * num_agents + agent number for the bad guys
-                        our_day = self.model.daynum + supplier_agent.orig_scam_cycle_day
-                        generation_increment = (our_day // self.p['scam_parameters']['scam_period']) * self.p['num_users']
+            consumer_id = self.unique_id if self.good else generation_increment + self.unique_id
+            supplier_id = self.model.orig[supplier] if supplier_agent.good else generation_increment + self.model.orig[
+                supplier]
+            self.model.orig[consumer_id] = self.unique_id
+            self.model.orig[supplier_id] = self.model.orig[supplier]
+            if not supplier_id in self.model.suppliers[good]:
+                self.add_new_supplier(supplier_id, good)
 
-                        consumer_id =self.unique_id if self.good  else generation_increment + self.unique_id
-                        supplier_id =self.model.orig[supplier] if supplier_agent.good else generation_increment + self.model.orig[supplier]
-                        self.model.orig[consumer_id] = self.unique_id
-                        self.model.orig[supplier_id] = self.model.orig[supplier]
-                        if not supplier_id in self.model.suppliers[good]:
-                            self.add_new_supplier(supplier_id, good)
+            amount = self.model.amount_distributions[good].rvs() if self.good else \
+            self.model.criminal_amount_distributions[good].rvs()
+            price = amount * self.model.schedule.agents[self.model.orig[supplier]].supplying[good]
 
-                        amount = self.model.amount_distributions[good].rvs() if self.good else self.model.criminal_amount_distributions[good].rvs()
-                        price = amount * self.model.schedule.agents[self.model.orig[supplier]].supplying[good]
+            # two cases:
+            # 1. payment without ratings:  child field populated with transid and parent left blank ,
+            #	value has payment value, unit is payment unit.
+            # 2. payment with ratings:  parent has id of payment while child has id of ranking,
+            #	has ranking, unit blank, parent_value payment, parent_unit AGI
 
-                # two cases:
-                # 1. payment without ratings:  child field populated with transid and parent left blank ,
-                #	value has payment value, unit is payment unit.
-                # 2. payment with ratings:  parent has id of payment while child has id of ranking,
-                #	has ranking, unit blank, parent_value payment, parent_unit AGI
+            # if supplier is not None:
+            # if self.p['transactions_per_day'][0]== 1000:
+            #    print ("agnet {0} repeat{1} purcahse of good{2}".format(self.unique_id, i, good))
+            self.model.save_info_for_market_volume_report(self, self.model.orig[supplier], price)
+            if self.good:
 
-                #if supplier is not None:
-                    #if self.p['transactions_per_day'][0]== 1000:
-                    #    print ("agnet {0} repeat{1} purcahse of good{2}".format(self.unique_id, i, good))
-                        self.model.save_info_for_market_volume_report(self,self.model.orig[supplier], price)
-                        if self.good:
+                perception, rating = self.rate(supplier)
+                if self.model.schedule.agents[self.model.orig[supplier]].good:
+                    merchandise_recieved = True
+                self.update_personal_experience(good, supplier_id, perception)
+                if self.p['include_ratings'] and rating and rating != "":
+                    self.model.print_transaction_report_line(consumer_id, supplier_id,
+                                                             price, good, self.p['types_and_units']['rating'],
+                                                             rating=rating, type='rating')
 
-                            perception, rating = self.rate(supplier)
-                            if self.model.schedule.agents[self.model.orig[supplier]].good:
-                                merchandise_recieved = True
-                            self.update_personal_experience(good, supplier_id, perception)
-                            if self.p['include_ratings'] and rating and rating != "":
-                                self.model.print_transaction_report_line(consumer_id,supplier_id,
-                                    price,good, self.p['types_and_units']['rating'],
-                                    rating=rating, type = 'rating' )
+                    self.model.send_trade_to_reputation_system(consumer_id, supplier_id,
+                                                               price, good, self.p['types_and_units']['rating'],
+                                                               rating=rating, type='rating')
+                elif not self.p['include_ratings']:
+                    self.model.print_transaction_report_line(consumer_id, supplier_id,
+                                                             price, good, self.p['types_and_units']['payment'])
+                    self.model.send_trade_to_reputation_system(consumer_id, supplier_id,
+                                                               price, good, self.p['types_and_units']['payment'])
+            else:
 
-                                self.model.send_trade_to_reputation_system(consumer_id,supplier_id,
-                                    price,good, self.p['types_and_units']['rating'],
-                                    rating=rating, type = 'rating' )
-                            elif not self.p['include_ratings'] :
-                                self.model.print_transaction_report_line(consumer_id,supplier_id,
-                                    price,good, self.p['types_and_units']['payment'] )
-                                self.model.send_trade_to_reputation_system(consumer_id,supplier_id,
-                                    price,good, self.p['types_and_units']['payment'] )
-                        else:
+                if not self.supplier_inactive(supplier_id):
 
-                            if not self.supplier_inactive(supplier_id):
+                    if self.p['include_ratings']:
+                        rating = self.best_rating() if (
+                                random.uniform(0, 1) < self.p['criminal_chance_of_rating']) else self.p[
+                            'non_rating_val']
 
-                                if self.p['include_ratings']:
-                                    rating =  self.best_rating() if (
-                                        random.uniform(0,1) < self.p['criminal_chance_of_rating']) else self.p['non_rating_val']
+                        self.model.print_transaction_report_line(consumer_id, supplier_id,
+                                                                 price, good, self.p['types_and_units']['rating'],
+                                                                 rating=rating, type='rating')
+                        self.model.send_trade_to_reputation_system(consumer_id, supplier_id,
+                                                                   price, good, self.p['types_and_units']['rating'],
+                                                                   rating=rating, type='rating')
+                    else:
+                        self.model.print_transaction_report_line(consumer_id, supplier_id,
+                                                                 price, good, self.p['types_and_units']['payment'])
+                        self.model.send_trade_to_reputation_system(consumer_id, supplier_id,
+                                                                   price, good, self.p['types_and_units']['payment'])
 
-                                    self.model.print_transaction_report_line(consumer_id,supplier_id,
-                                        price,good, self.p['types_and_units']['rating'],
-                                        rating=rating , type = 'rating')
-                                    self.model.send_trade_to_reputation_system(consumer_id,supplier_id,
-                                        price,good, self.p['types_and_units']['rating'],
-                                        rating=rating , type = 'rating')
-                                else:
-                                    self.model.print_transaction_report_line(consumer_id,supplier_id,
-                                        price,good, self.p['types_and_units']['payment'] )
-                                    self.model.send_trade_to_reputation_system(consumer_id,supplier_id,
-                                        price,good, self.p['types_and_units']['payment'] )
+            if (self.p['suppliers_are_consumers'] or len(self.supplying) < 1):
 
-                if (self.p['suppliers_are_consumers'] or len(self.supplying) < 1):
+                if self.good:
+                    for good1, supplierlist in self.suppliers.items():
 
-                    if self.good:
-                        for good1, supplierlist in self.suppliers.items():
+                        bad_suppliers = [supplier for supplier in supplierlist if (
+                                good1 in self.personal_experience and supplier in self.personal_experience[good1]
+                                and len(self.personal_experience[good1][supplier]) > 0 and
+                                self.personal_experience[good1][supplier][1] < self.fire_supplier_threshold)]
+                        for bad_supplier in bad_suppliers:
+                            supplierlist.remove(bad_supplier)
 
-                            bad_suppliers = [supplier for supplier in supplierlist if (
-                                    good1 in self.personal_experience and supplier in self.personal_experience[good1]
-                                    and len(self.personal_experience[good1][supplier]) > 0 and
-                                    self.personal_experience[good1][supplier][1] < self.fire_supplier_threshold)]
-                            for bad_supplier in bad_suppliers:
-                                supplierlist.remove(bad_supplier)
-
-            if merchandise_recieved:  #comment out for unrestricted
-                self.days_until_shop[good]= self.shopping_pattern[good]
+            if merchandise_recieved:  # comment out for unrestricted
+                self.days_until_shop[good] = self.shopping_pattern[good]
                 self.cobb_douglas_utilities[good] = self.cobb_douglas_utilities_original[good]
+
 
     def best_rating(self):
         dd = self.p['ratings_goodness_thresholds']
