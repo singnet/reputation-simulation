@@ -365,7 +365,7 @@
     }
   },
   "parameters": {
-    "reputation_parameters": {
+     "reputation_parameters": {
       "precision": 0.01,
       "default": 0.0,
       "conservatism": 0.5,
@@ -373,16 +373,17 @@
       "weighting": true,
       "logratings": false,
       "decayed": 0.5,
-      "liquid": false,
-      "logranks": false,
+      "liquid": true,
+      "logranks": true,
       "downrating": false,
       "update_period": 1,
       "aggregation": false,
       "denomination": true,
       "unrated": false,
-      "ratings":1.0,
-      "spendings":0.0
+      "ratings":0.5,
+      "spendings":0.5
     },
+
     "macro_view": "antons_view",
     "use_java": true,
     "port": 1187,

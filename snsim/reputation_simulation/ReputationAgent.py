@@ -201,8 +201,8 @@ class ReputationAgent(Agent):
             #have agents start out with minute, non zero supplies of all goods, to make sure cobb douglas works
             tuplist = [(good, random.uniform(0.1,0.2)) for good, chance in self.p["chance_of_supplying"].items()]
             self.goods = OrderedDict(tuplist)
-            num_trades = math.floor(self.model.transactions_per_day_distribution.rvs(
-                ) if self.good else self.model.criminal_transactions_per_day_distribution.rvs())
+            num_trades =int(round(self.model.transactions_per_day_distribution.rvs(
+                ) if self.good else self.model.criminal_transactions_per_day_distribution.rvs() ))
 
             #we offer a more efficient version of cobb_douglas, which is a needs draw
 
@@ -323,8 +323,13 @@ class ReputationAgent(Agent):
     def add_new_supplier(self, supplier, good):
         if not supplier in self.model.suppliers[good]:
             self.model.suppliers[good].append(supplier)
-            if self.model.orig[supplier] in self.model.suppliers[good]:
-                self.model.suppliers[good].remove(self.model.orig[supplier])
+            # if supplier != self.model.orig[supplier] and self.model.orig[supplier] in self.model.suppliers[good]:
+            #     self.model.suppliers[good].remove(self.model.orig[supplier])
+            scam_periods_so_far = self.model.daynum // self.p['scam_parameters']['scam_period']
+            for i in range(scam_periods_so_far):
+                alias = (i * self.p['num_users']) + self.model.orig[supplier]
+                if alias != supplier and alias in self.model.suppliers[good]:
+                    self.model.suppliers[good].remove(alias)
 
 
     def choose_partners(self):
@@ -401,6 +406,7 @@ class ReputationAgent(Agent):
                         if len(knowns):
                             supplier_index = random.randint(0, len(knowns) - 1)
                             self.suppliers[good].append(knowns[supplier_index])
+
 
             #       if no supplier yet
             #             the agent chooses randomly from the suppliers excluding the blacklist,

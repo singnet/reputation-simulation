@@ -365,7 +365,7 @@
     }
   },
   "parameters": {
-    "reputation_parameters": {
+     "reputation_parameters": {
       "precision": 0.01,
       "default": 0.0,
       "conservatism": 0.5,
@@ -373,20 +373,20 @@
       "weighting": true,
       "logratings": false,
       "decayed": 0.5,
-      "liquid": false,
-      "logranks": false,
+      "liquid": true,
+      "logranks": true,
       "downrating": false,
       "update_period": 1,
       "aggregation": false,
       "denomination": true,
-      "unrated": false,
+      "unrated": true,
       "ratings":1.0,
       "spendings":0.0
     },
     "macro_view": "antons_view",
     "use_java": true,
     "port": 1187,
-    "output_path": "noIndividuality1_SOM/",
+    "output_path": "noIndividuality1_TOM/",
     "seed": 7573,
     "observer_mode": false,
     "randomize_initial_needs": true,
