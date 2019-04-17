@@ -10,15 +10,15 @@ from collections import OrderedDict
 class DiscreteRankTests(unittest.TestCase):
 
     def setUp(self):
-        study_path = "../test.json"
+        study_path = "./test.json"
         self.softAssertionErrors = []
 
         with open(study_path) as json_file:
             self.config = json.load(json_file, object_pairs_hook=OrderedDict)
-        self.error_path = "../" + self.config['parameters']["output_path"] + "error_log.txt"
+        self.error_path = "./" + self.config['parameters']["output_path"] + "error_log.txt"
         self.t = self.config['tests']
         self.error_log = open(self.error_path, "a+")
-        out_path = "../" + self.config['parameters']["output_path"] + "discrete_rank_tests.tsv"
+        out_path = "./" + self.config['parameters']["output_path"] + "discrete_rank_tests.tsv"
         self.output_tsv = open(out_path, "w")
         self.boolean_users = OrderedDict()
         self.rank_history = OrderedDict()
@@ -26,9 +26,9 @@ class DiscreteRankTests(unittest.TestCase):
         self.codes = []
         for code,limits in self.t.items():
             self.codes.append(code)
-            rank_history_path = "../" + self.config['parameters']["output_path"] +"rankHistory_" + code + ".tsv"
+            rank_history_path = "./" + self.config['parameters']["output_path"] +"rankHistory_" + code + ".tsv"
             self.rank_history[code] = pd.read_csv(rank_history_path, "\t")
-            boolean_users_path = "../" + self.config['parameters']["output_path"] +"boolean_users_" + code + ".tsv"
+            boolean_users_path = "./" + self.config['parameters']["output_path"] +"boolean_users_" + code + ".tsv"
             self.boolean_users[code] = pd.read_csv(boolean_users_path, "\t", header=None)
 
     def tearDown(self):

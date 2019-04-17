@@ -379,7 +379,7 @@
       "update_period": 1,
       "aggregation": false,
       "denomination": true,
-      "unrated": false,
+      "unrated": true,
       "ratings":0.5,
       "spendings":0.5
     },

@@ -12,11 +12,11 @@ import numpy as np
 class ContinuousRankTests(unittest.TestCase):
 
     def setUp(self):
-        study_path = "../test.json"
+        study_path = "./test.json"
         self.softAssertionErrors = []
         with open(study_path) as json_file:
             self.config = json.load(json_file, object_pairs_hook=OrderedDict)
-        self.error_path = "../" + self.config['parameters']["output_path"] + "error_log.txt"
+        self.error_path = "./" + self.config['parameters']["output_path"] + "error_log.txt"
         self.t = self.config['tests']
         self.error_log = open(self.error_path, "a+")
         self.users = OrderedDict()
@@ -25,9 +25,9 @@ class ContinuousRankTests(unittest.TestCase):
         self.codes = []
         for code,limits in self.t.items():
             self.codes.append(code)
-            rank_history_path = "../" + self.config['parameters']["output_path"] +"rankHistory_" + code + ".tsv"
+            rank_history_path = "./" + self.config['parameters']["output_path"] +"rankHistory_" + code + ".tsv"
             self.rank_history[code] = pd.read_csv(rank_history_path, "\t")
-            users_path = "../" + self.config['parameters']["output_path"] +"users_" + code + ".tsv"
+            users_path = "./" + self.config['parameters']["output_path"] +"users_" + code + ".tsv"
             self.users[code] = pd.read_csv(users_path, "\t", header=None)
 
     def tearDown(self):
@@ -55,7 +55,7 @@ class ContinuousRankTests(unittest.TestCase):
 
         self.error_log.write("\nFile:{0} ".format(self.error_path))
         print("File:{0} ".format(self.error_path))
-        out_path = "../" + self.config['parameters']["output_path"] + "correlation_tests.tsv"
+        out_path = "./" + self.config['parameters']["output_path"] + "correlation_tests.tsv"
         self.output_tsv = open(out_path, "w")
         self.output_tsv.write("code\tpearson1\tspearman\tpearson\tpearsong\tpearsonb")
 
@@ -137,7 +137,7 @@ class ContinuousRankTests(unittest.TestCase):
         #
         self.error_log.write("\nFile:{0} ".format(self.error_path))
         print("File:{0} ".format(self.error_path))
-        out_path = "../" + self.config['parameters']["output_path"] + "continuous_rsmd_tests.tsv"
+        out_path = "./" + self.config['parameters']["output_path"] + "continuous_rsmd_tests.tsv"
         self.output_tsv = open(out_path, "w")
         self.output_tsv.write("code\trmsd\trmsdg\trmsdb")
 

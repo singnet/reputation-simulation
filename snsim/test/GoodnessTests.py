@@ -10,11 +10,11 @@ from collections import OrderedDict
 class GoodnessTests(unittest.TestCase):
 
     def setUp(self):
-        study_path = "../test.json"
+        study_path = "./test.json"
         self.softAssertionErrors = []
         with open(study_path) as json_file:
             self.config = json.load(json_file, object_pairs_hook=OrderedDict)
-        self.error_path = "../" + self.config['parameters']["output_path"] + "error_log.txt"
+        self.error_path = "./" + self.config['parameters']["output_path"] + "error_log.txt"
         self.t = self.config['tests']
         self.error_log = open(self.error_path, "a+")
         self.transactions = OrderedDict()
@@ -24,9 +24,9 @@ class GoodnessTests(unittest.TestCase):
         self.codes = []
         for code, limits in self.t.items():
             self.codes.append(code)
-            users_path = "../" + self.config['parameters']["output_path"] +"users_" + code + ".tsv"
-            boolean_users_path = "../" + self.config['parameters']["output_path"] +"boolean_users_" + code + ".tsv"
-            transactions_path = "../" + self.config['parameters']["output_path"] +"transactions_" + code + ".tsv"
+            users_path = "./" + self.config['parameters']["output_path"] +"users_" + code + ".tsv"
+            boolean_users_path = "./" + self.config['parameters']["output_path"] +"boolean_users_" + code + ".tsv"
+            transactions_path = "./" + self.config['parameters']["output_path"] +"transactions_" + code + ".tsv"
             self.transactions[code] = pd.read_csv(transactions_path, "\t", header=None)
             self.boolean_users[code] = pd.read_csv(boolean_users_path, "\t", header=None)
             self.users[code] = pd.read_csv(boolean_users_path, "\t", header=None)
@@ -70,7 +70,7 @@ class GoodnessTests(unittest.TestCase):
 
         self.error_log.write("\nFile:{0} ".format(self.error_path))
         print("File:{0} ".format(self.error_path))
-        out_path = "../" + self.config['parameters']["output_path"] + "inequity_tests.tsv"
+        out_path = "./" + self.config['parameters']["output_path"] + "inequity_tests.tsv"
         self.output_tsv = open(out_path, "w")
         self.output_tsv.write("code\tinequity")
 

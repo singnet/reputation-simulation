@@ -12,11 +12,11 @@ import numpy as np
 class ContinuousRankByGoodTests(unittest.TestCase):
 
     def setUp(self):
-        study_path = "../test.json"
+        study_path = "./test.json"
         self.softAssertionErrors = []
         with open(study_path) as json_file:
             self.config = json.load(json_file, object_pairs_hook=OrderedDict)
-        self.error_path = "../" + self.config['parameters']["output_path"] + "error_log.txt"
+        self.error_path = "./" + self.config['parameters']["output_path"] + "error_log.txt"
         self.t = self.config['tests']
         self.error_log = open(self.error_path, "a+")
         self.users = OrderedDict()
@@ -27,13 +27,13 @@ class ContinuousRankByGoodTests(unittest.TestCase):
         self.codes = []
         for code,limits in self.t.items():
             self.codes.append(code)
-            boolean_users_path = "../" + self.config['parameters']["output_path"] +"boolean_users_" + code + ".tsv"
+            boolean_users_path = "./" + self.config['parameters']["output_path"] +"boolean_users_" + code + ".tsv"
             self.boolean_users[code] = pd.read_csv(boolean_users_path, "\t", header=None)
-            rank_history_path = "../" + self.config['parameters']["output_path"] +"rankHistory_" + code + ".tsv"
+            rank_history_path = "./" + self.config['parameters']["output_path"] +"rankHistory_" + code + ".tsv"
             self.rank_history[code] = pd.read_csv(rank_history_path, "\t")
-            users_path = "../" + self.config['parameters']["output_path"] +"users_" + code + ".tsv"
+            users_path = "./" + self.config['parameters']["output_path"] +"users_" + code + ".tsv"
             self.users[code] = pd.read_csv(users_path, "\t", header=None)
-            transactions_path = "../" + self.config['parameters']["output_path"] +"transactions_" + code + ".tsv"
+            transactions_path = "./" + self.config['parameters']["output_path"] +"transactions_" + code + ".tsv"
             self.transactions[code] = pd.read_csv(transactions_path, "\t", header=None)
 
     def tearDown(self):
@@ -66,7 +66,7 @@ class ContinuousRankByGoodTests(unittest.TestCase):
 
         self.error_log.write("\nFile:{0} ".format(self.error_path))
         print("File:{0} ".format(self.error_path))
-        out_path = "../" + self.config['parameters']["output_path"] + "correlation_by_good_tests.tsv"
+        out_path = "./" + self.config['parameters']["output_path"] + "correlation_by_good_tests.tsv"
         self.output_tsv = open(out_path, "w")
         self.output_tsv.write("code\tpearson1_by_good\tspearman_by_good\tpearson_by_good\tpearsong_by_good\tpearsonb_by_good")
 
@@ -228,10 +228,10 @@ class ContinuousRankByGoodTests(unittest.TestCase):
         #
         self.error_log.write("\nFile:{0} ".format(self.error_path))
         print("File:{0} ".format(self.error_path))
-        out_path = "../" + self.config['parameters']["output_path"] + "continuous_rsmd_by_good_tests.tsv"
+        out_path = "./" + self.config['parameters']["output_path"] + "continuous_rsmd_by_good_tests.tsv"
         self.output_tsv = open(out_path, "w")
         self.output_tsv.write("code\trmsd_by_good\trmsdg_by_good\trmsdb_by_good")
-        out_path = "../" + self.config['parameters']["output_path"] + "goods.tsv"
+        out_path = "./" + self.config['parameters']["output_path"] + "goods.tsv"
         self.goods_tsv = open(out_path, "w")
         self.goods_tsv.write("code\tsupplier\tgood\tmarket_volume")
 
