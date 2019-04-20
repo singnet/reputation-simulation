@@ -98,6 +98,11 @@ class ReputationAgent(Agent):
             needs = True
         return needs
 
+    def taken(self):
+        suppliers = [supplier  for good, supplierlist in self.suppliers.items()for supplier in supplierlist]
+        taken = True if len(suppliers) else False
+        return taken
+
     def adopt_criminal_supplier(self, good):
         supplier = None
         possible_suppliers = [supplier for supplier in self.model.criminal_suppliers[good] if (
