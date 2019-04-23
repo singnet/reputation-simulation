@@ -328,27 +328,28 @@ class ReputationSim(Model):
         #od = OrderedDict(sorted(intdir))
         lastAgent = None
         for agent,rank in od.items():
-            intagent = int(agent)
-            if lastAgent is None:
+            if not agent is None:
+                intagent = int(agent)
+                if lastAgent is None:
+                    lastAgent = intagent
+                    for i in range (0,intagent):
+                        #self.rank_history.write('{0}:{1}\t'.format(i,-1))
+                        self.rank_history.write('{0}\t'.format(-1))
+                        heading_list.append(i)
+                if intagent < len(self.schedule.agents):
+                    for i in range (lastAgent+1,intagent):
+                        #self.rank_history.write('{0}:{1}\t'.format(i,-1))
+                        self.rank_history.write('{0}\t'.format(-1))
+                        heading_list.append(i)
+                else:
+                    for i in range (lastAgent+1,len(self.schedule.agents)):
+                        #self.rank_history.write('{0}:{1}\t'.format(i,-1))
+                        self.rank_history.write('{0}\t'.format(-1))
+                        heading_list.append(i)
+                #self.rank_history.write('{0}:{1}\t'.format(intagent,rank))
+                self.rank_history.write('{0}\t'.format(rank))
+                heading_list.append(intagent)
                 lastAgent = intagent
-                for i in range (0,intagent):
-                    #self.rank_history.write('{0}:{1}\t'.format(i,-1))
-                    self.rank_history.write('{0}\t'.format(-1))
-                    heading_list.append(i)
-            if intagent < len(self.schedule.agents):
-                for i in range (lastAgent+1,intagent):
-                    #self.rank_history.write('{0}:{1}\t'.format(i,-1))
-                    self.rank_history.write('{0}\t'.format(-1))
-                    heading_list.append(i)
-            else:
-                for i in range (lastAgent+1,len(self.schedule.agents)):
-                    #self.rank_history.write('{0}:{1}\t'.format(i,-1))
-                    self.rank_history.write('{0}\t'.format(-1))
-                    heading_list.append(i)
-            #self.rank_history.write('{0}:{1}\t'.format(intagent,rank))
-            self.rank_history.write('{0}\t'.format(rank))
-            heading_list.append(intagent)
-            lastAgent = intagent
         for i in range(lastAgent+1,len(self.schedule.agents) ):
             #self.rank_history.write('{0}:{1}\t'.format(i,-1))
             self.rank_history.write('{0}\t'.format(-1))
@@ -635,6 +636,9 @@ def call( combolist, configfile, rs=None,  param_str = ""):
                     #my_param_str == 'r_20_0.1_' or
                     #my_param_str == 'r_10_1_' or
                     #my_param_str == 'r_10_0.5_'
+                    #my_param_str == 'r_sp182_' or
+                    #my_param_str == 'r_sp92_' or
+                    #my_param_str == 'r_sp30_'
             #):
             #if not my_param_str.startswith("r"):
 

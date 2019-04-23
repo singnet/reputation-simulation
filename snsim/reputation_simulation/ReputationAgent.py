@@ -84,7 +84,7 @@ class ReputationAgent(Agent):
         else:
             if supply_list is not None and len(supply_list) > 0:
                 #There will be overlap in the criminal rings that criminals go to
-                self.num_criminal_consumers = {good:int(self.model.criminal_agent_ring_size_distribution.rvs()) for good in supply_list}
+                self.num_criminal_consumers = {good:int(round(self.model.criminal_agent_ring_size_distribution.rvs())) for good in supply_list}
                 self.criminal_consumers = {good:set() for good in supply_list}
                 self.scam_cycle_day = random.randint(0,self.p['scam_parameters']["scam_period"] -1)
                 self.orig_scam_cycle_day = self.scam_cycle_day
@@ -99,8 +99,10 @@ class ReputationAgent(Agent):
         return needs
 
     def taken(self):
-        suppliers = [supplier  for good, supplierlist in self.suppliers.items()for supplier in supplierlist]
-        taken = True if len(suppliers) else False
+        taken = False
+        if not self.good:
+            suppliers = [supplier  for good, supplierlist in self.suppliers.items()for supplier in supplierlist]
+            taken = True if len(suppliers) else False
         return taken
 
     def adopt_criminal_supplier(self, good):
@@ -184,23 +186,23 @@ class ReputationAgent(Agent):
 
         if (self.p['suppliers_are_consumers'] or len(self.supplying)< 1):
 
-            if not self.good:
-                for good, supplierlist in self.suppliers.items():
-                    for supplier in supplierlist:
-                        supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
-                        if self.p['random_change_suppliers'] == 1.0 or self.supplier_inactive(supplier):
-                            if self.unique_id in supplier_agent.criminal_consumers[good]:
-                                supplier_agent.criminal_consumers[good].remove(self.unique_id)
-                                supplierlist.remove(supplier)
-                        else:
-                            roll = random.uniform(0,1)
-                            if roll < self.p['random_change_suppliers']:
-                                if self.unique_id in supplier_agent.criminal_consumers[good]:
-                                    supplier_agent.criminal_consumers[good].remove(self.unique_id)
-                                    supplierlist.remove(supplier)
+            if (not self.good) and (not self.taken()):
+                # for good, supplierlist in self.suppliers.items():
+                #     for supplier in supplierlist:
+                #         supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
+                #         if self.p['random_change_suppliers'] == 1.0 or self.supplier_inactive(supplier):
+                #             if self.unique_id in supplier_agent.criminal_consumers[good]:
+                #                 supplier_agent.criminal_consumers[good].remove(self.unique_id)
+                #                 supplierlist.remove(supplier)
+                #         else:
+                #             roll = random.uniform(0,1)
+                #             if roll < self.p['random_change_suppliers']:
+                #                 if self.unique_id in supplier_agent.criminal_consumers[good]:
+                #                     supplier_agent.criminal_consumers[good].remove(self.unique_id)
+                #                     supplierlist.remove(supplier)
 
                 for good, supplierlist in self.suppliers.items():
-                    if len(supplierlist) < 1:
+                    if len(supplierlist) < 1 and not self.taken():
                         self.adopt_criminal_supplier(good)
 
             #have agents start out with minute, non zero supplies of all goods, to make sure cobb douglas works
@@ -236,7 +238,7 @@ class ReputationAgent(Agent):
             if num_trades and  num_trades < len(self.needs):
                 self.needs = self.needs[:num_trades]
             elif self.needs:
-                self.multiplier = int(num_trades/len (self.needs))
+                self.multiplier = int(round(num_trades/len (self.needs)))
 
 
     def update_personal_experience(self, good, supplier, rating):
@@ -319,9 +321,10 @@ class ReputationAgent(Agent):
         else:
             our_day = self.model.daynum + supplier_agent.orig_scam_cycle_day
             generation_increment = (our_day // self.p['scam_parameters']['scam_period']) * self.p['num_users']
-            if ((supplier_agent.scam_cycle_day >= self.p['scam_parameters']['scam_inactive_period'])or
-                    (supplier != self.model.orig[supplier]+generation_increment) ):
+            if (supplier_agent.scam_cycle_day >= self.p['scam_parameters']['scam_inactive_period']):
                 inactive = False
+            if (supplier != self.model.orig[supplier]+generation_increment) :
+                inactive = True
 
         return inactive
 
@@ -330,7 +333,7 @@ class ReputationAgent(Agent):
             self.model.suppliers[good].append(supplier)
             # if supplier != self.model.orig[supplier] and self.model.orig[supplier] in self.model.suppliers[good]:
             #     self.model.suppliers[good].remove(self.model.orig[supplier])
-            scam_periods_so_far = self.model.daynum // self.p['scam_parameters']['scam_period']
+            scam_periods_so_far = (self.model.daynum // self.p['scam_parameters']['scam_period'])+1
             for i in range(scam_periods_so_far):
                 alias = (i * self.p['num_users']) + self.model.orig[supplier]
                 if alias != supplier and alias in self.model.suppliers[good]:
@@ -464,9 +467,9 @@ class ReputationAgent(Agent):
             # if supplier is not None:
             # if self.p['transactions_per_day'][0]== 1000:
             #    print ("agnet {0} repeat{1} purcahse of good{2}".format(self.unique_id, i, good))
-            self.model.save_info_for_market_volume_report(self, self.model.orig[supplier], price)
-            if self.good:
 
+            if self.good:
+                self.model.save_info_for_market_volume_report(self, self.model.orig[supplier], price)
                 perception, rating = self.rate(supplier)
                 if self.model.schedule.agents[self.model.orig[supplier]].good:
                     merchandise_recieved = True
@@ -487,7 +490,7 @@ class ReputationAgent(Agent):
             else:
 
                 if not self.supplier_inactive(supplier_id):
-
+                    self.model.save_info_for_market_volume_report(self, self.model.orig[supplier], price)
                     if self.p['include_ratings']:
                         rating = self.best_rating() if (
                                 random.uniform(0, 1) < self.p['criminal_chance_of_rating']) else self.p[
