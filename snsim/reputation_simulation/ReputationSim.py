@@ -13,6 +13,12 @@ import operator
 from scipy.stats import truncnorm
 from ReputationAgent import ReputationAgent
 from Adapters import Adapters
+from ContinuousRankByGoodTests import ContinuousRankByGoodTests
+from ContinuousRankTests import ContinuousRankTests
+from DiscreteRankTests import DiscreteRankTests
+from GoodnessTests import GoodnessTests
+from MarketVolumeTests import MarketVolumeTests
+from TransactionsTests import TransactionsTests
 import math
 #from reputation import Aigents
 from random import shuffle
@@ -46,26 +52,28 @@ class ReputationSim(Model):
 
     def __init__(self,study_path='study.json',rs=None,  opened_config= False):
        # print('First line of init in RepuationSim, study path is ${0}'.format(study_path))
+        self.config = None
         if opened_config:
-            config = study_path
+            self.config = study_path
         else:
             with open(study_path) as json_file:
 
-                config = json.load(json_file, object_pairs_hook=OrderedDict)
+                self.config = json.load(json_file, object_pairs_hook=OrderedDict)
 
         #save the config with the output
 
         self.transaction_numbers = []
         transaction_number = 0
         # print(json.dumps(config['ontology'], indent=2))
-        self.parameters = config['parameters']
+        self.parameters = self.config['parameters']
         #super().__init__(config['parameters']['seed'])
         super().__init__()
         super().reset_randomizer(self.parameters['seed'])
 
-        self.orig = {i:i for i in range(config['parameters']['num_users'])}
+        self.orig = {i:i for i in range(self.config['parameters']['num_users'])}
 
         self.time = dt.datetime.now().isoformat()
+
         self.rank_history_heading = ""
 
         if not os.path.exists(self.parameters['output_path']):
@@ -75,10 +83,11 @@ class ReputationSim(Model):
         #filename = self.parameters['output_path'] + 'params_' + self.parameters['param_str'] + self.time[0:10] + '.json'
         filename = self.parameters['output_path'] + 'params_' + self.parameters['param_str'][:-1] + '.json'
 
-        pretty = json.dumps(config, indent=2, separators=(',', ':'))
+        pretty = json.dumps(self.config, indent=2, separators=(',', ':'))
         with open(filename, 'w') as outfile:
             outfile.write(pretty)
         outfile.close()
+        self.average_rank_history = self.average_rank_history()
         self.transaction_report = self.transaction_report()
         self.market_volume_report = self.market_volume_report()
         self.error_log = self.error_log() if self.parameters['error_log'] else None
@@ -288,6 +297,43 @@ class ReputationSim(Model):
         #path = self.parameters['output_path'] + 'transactions_' +self.parameters['param_str'] + self.time[0:10] + '.tsv'
         path = self.parameters['output_path'] + 'errorLog_' +self.parameters['param_str'] [:-1] + '.tsv'
         file = open(path, "w")
+        return(file)
+
+    def initialize_rank(self,id):
+        #an alias has first appeared
+        self.rank_sums[id] = 0
+        self.rank_days[id] =0
+
+    def add_rank(self,id,rank):
+            self.rank_sums[id] += rank
+            self.rank_days[id]  += 1
+
+    def finalize_rank(self,id):
+        if self.rank_days[id]>0:
+            average_rank = int(round(self.rank_sums[id]/ self.rank_days[id]))
+            self.average_rank_history.write("{0}\t{1}\n".format(id,average_rank))
+
+    def finalize_all_ranks(self):
+        for good,agentlist in self.suppliers.items():
+            for agent in agentlist:
+                self.finalize_rank(agent)
+        self.average_rank_history.close()
+
+
+    def average_rank_history(self):
+        #path = self.parameters['output_path'] + 'transactions_' +self.parameters['param_str'] + self.time[0:10] + '.tsv'
+        path = self.parameters['output_path'] + 'averageRankHistory_' +self.parameters['param_str'] [:-1] + '.tsv'
+        file = open(path, "w")
+
+        #file.write('time\t')
+        heading_list = []
+        heading_list.append('time')
+        heading_list.append('average_rank')
+        heading_list.append('\n')
+        average_rank_history_heading = "\t".join(map (str, heading_list))
+        file.write(average_rank_history_heading)
+        self.rank_sums = {}
+        self.rank_days = {}
         return(file)
 
     def rank_history(self):
@@ -568,6 +614,12 @@ class ReputationSim(Model):
 
     def get_ranks(self, prev_date):
         self.ranks = self.reputation_system.get_ranks_dict({'date':prev_date})
+
+        current_suppliers = set([supplier for good, supplierlist in self.suppliers.items() for supplier in supplierlist])
+        for agent,rank in self.ranks.items():
+            if int(agent) in current_suppliers:
+                self.add_rank(int(agent),rank)
+
         #generation_increment = (self.model.daynum // self.p['scam_period']) * self.p['num_users']
         #if self.p['scam_inactive_period']:  #there is a campaign in which ids are shifted, so subtract the increment
 
@@ -594,11 +646,10 @@ class ReputationSim(Model):
             if self.error_log:
                 self.error_log.write("ranks: {0}\n".format(str(self.ranks)))
 
-
-
     def go(self):
         while self.schedule.time < self.get_end_tick():
             self.step()
+        self.finalize_all_ranks()
         self.market_volume_report.close()
         self.transaction_report.close()
         if self.error_log:
@@ -606,6 +657,113 @@ class ReputationSim(Model):
         if self.rank_history:
             self.rank_history.write(self.rank_history_heading)
             self.rank_history.close()
+
+
+
+def createTestCsv(config):
+    import pandas as pd
+    from copy import deepcopy
+
+
+    outpath = config['parameters']['output_path'] + 'results.tsv'
+    allcols = ['code', 'folder', 'spendings', 'ratings', 'unrated', 'denom',
+               'logratings', 'fullnorm', 'conserv',
+               'default', 'downrating', 'decayed', 'period',
+               'loss_to_scam', 'profit_from_scam', 'inequity', 'utility', 'market_volume']
+
+    columns = ['ratings', 'spendings', 'unrated', 'downrating', 'denom',
+               'logratings', 'fullnorm', 'default', 'conserv', 'decayed', 'period', 'folder', 'code']
+
+    p = config['parameters']['reputation_parameters']
+    paramvals = []
+    paramvals.append(str(p['ratings']))
+    paramvals.append(str(p['spendings']))
+    paramvals.append(str(p['unrated']))
+    paramvals.append(str(p['downrating']))
+    paramvals.append(str(p['denomination']))
+    paramvals.append(str(p['logratings']))
+    paramvals.append(str(p['fullnorm']))
+    paramvals.append(str(p['default']))
+    paramvals.append(str(p['conservatism']))
+    paramvals.append(str(p['decayed']))
+    paramvals.append(str(p['update_period']))
+    paramvals.append(config['parameters']['output_path'][: -1])
+
+    # alist = [
+    #     ['0.5', '0.5', 'false', 'false', 'true', 'false', 'true', '0.0', '0.9', '0.5', '1',
+    #      'weightDenomNoUnratedConserv9Ratings5Spending5half']
+    # ]
+
+    #codelist = ['r_sp182', 'r_sp92', 'r_sp30', 'r_sp10']
+
+    codelist = [code for code, test in config['tests'].items()]
+
+    #codelist = config['tests'].keys()
+
+    testfiles = [
+        "discrete_rank_tests.tsv",
+        "correlation_by_good_tests.tsv",
+        "scam_loss_tests.tsv",
+        "utility_tests.tsv",
+        "inequity_tests.tsv",
+        "market_volume_tests.tsv",
+        "price_variance_tests.tsv",
+        "correlation_tests.tsv",
+        "continuous_rsmd_tests.tsv",
+        "continuous_rsmd_by_good_tests.tsv",
+        "scam_profit_tests.tsv",
+    ]
+
+    dflist = []
+    #for row in alist:
+    row = paramvals
+    print(row)
+    runslist = []
+    for code in codelist:
+        copy = deepcopy(row)
+        copy.append(code)
+        runslist.append(copy)
+        runs = pd.DataFrame(runslist, columns=columns)
+    # print(runs)
+    for t in testfiles:
+        path = row[11] + '/' + t
+        try:
+            df = pd.read_csv(path, delimiter='\t')
+            df['folder'] = row[11]
+            print(path)
+            print(df)
+            # if len(df.index)== len(codelist):
+            runs = pd.merge(runs, df, on=['folder', 'code'])
+            # print(runs)
+        except FileNotFoundError as e:
+            print(e)
+        except:
+            pass
+    #dflist.append(runs)
+
+    #result = pd.concat(dflist)
+    #print(result)
+    #result = result[allcols]
+    #result.to_csv(outpath)
+    #result
+    result = runs[allcols]
+    result.to_csv(outpath)
+
+def run_tests(config):
+    test = ContinuousRankByGoodTests()
+    test.go(config)
+    test = ContinuousRankTests()
+    test.go(config)
+    test = DiscreteRankTests()
+    test.go(config)
+    test = GoodnessTests()
+    test.go(config)
+    test = MarketVolumeTests()
+    test.go(config)
+    test = TransactionsTests()
+    test.go(config)
+    createTestCsv(config)
+
 
 def set_param(configfile, setting):
     # setting is OrderedDict, perhaps nested before val is set.  example :  {"prices": {"milk": [2, 0.001, 0, 1000] }}
@@ -636,9 +794,9 @@ def call( combolist, configfile, rs=None,  param_str = ""):
                     #my_param_str == 'r_20_0.1_' or
                     #my_param_str == 'r_10_1_' or
                     #my_param_str == 'r_10_0.5_'
-                    #my_param_str == 'r_sp182_' or
-                    #my_param_str == 'r_sp92_' or
-                    #my_param_str == 'r_sp30_'
+                    # my_param_str == 'r_sp182_' or
+                    # my_param_str == 'r_sp92_' or
+                    # my_param_str == 'r_sp30_'
             #):
             #if not my_param_str.startswith("r"):
 
@@ -701,6 +859,8 @@ def main():
 
                 })
             call(config['batch']['parameter_combinations'], config,rs=rs)
+            if config['parameters']["run_automatic_tests"]:
+                run_tests(config)
         else:
             repsim = ReputationSim(sys.argv[1]) if len(sys.argv) > 1 else ReputationSim()
             repsim.go()

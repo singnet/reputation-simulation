@@ -1,0 +1,9307 @@
+{
+  "macro_views": {
+    "antons_view": {
+      "adapter": "antons_view",
+      "parameters": {
+        "CRg": 9,
+        "CRb": 9,
+        "GR": 19,
+        "NTg": 1,
+        "NTb": 1,
+        "NIg": 1,
+        "NIb": 1,
+        "NA": 1000,
+        "D": 180,
+        "SP": 182,
+        "SIP": 0,
+        "PLRg": 60,
+        "PLRb": 100,
+        "PR": 9,
+        "NP": 2,
+        "Pmin": 50,
+        "Pmax": 150
+      },
+      "supplement": {
+        "amounts_stdev" : 0.01,
+        "amounts_min" :  0,
+        "amounts_max" :  1000,
+        "cobb_douglas_stdev" :  0.01,
+        "need_cycle_stdev" : 0.01,
+        "need_cycle_min" :  0,
+        "need_cycle_max" :  1000,
+        "price_stdev" : 0.01,
+        "zipf_parameter":  1.1
+      }
+    }
+  },
+  "tests": {
+    "r_10_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_10_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_10_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_10_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_20_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_20_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_20_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_20_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_30_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_30_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_30_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_30_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_40_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_40_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_40_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_40_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_50_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_50_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_50_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_50_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_60_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_60_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_60_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_60_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_70_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_70_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_70_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_70_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_80_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_80_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_80_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_80_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_90_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_90_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_90_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_90_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_100_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_100_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_100_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_100_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_110_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_110_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_110_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_110_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_120_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_120_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_120_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_120_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_130_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_130_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_130_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_130_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_140_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_140_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_140_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_140_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_150_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_150_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_150_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_150_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_160_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_160_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_160_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_160_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_170_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_170_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_170_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_170_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_180_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_180_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_180_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_180_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_190_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_190_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_190_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_190_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_200_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_200_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_200_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_200_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_210_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_210_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_210_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_210_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_220_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_220_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_220_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_220_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_230_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_230_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_230_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_230_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_240_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_240_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_240_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_240_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_250_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_250_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_250_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_250_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_260_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_260_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_260_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_260_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_270_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_270_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_270_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_270_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_280_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_280_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_280_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_280_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_290_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_290_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_290_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_290_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_300_sp182": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_300_sp92": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+    "r_300_sp30": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    },
+
+    "r_300_sp10": {
+      "recall": {
+        "lower": 0,
+        "upper": 1
+      },
+      "precision": {
+        "lower": 0,
+        "upper": 1
+      },
+      "f1": {
+        "lower": 0,
+        "upper": 1
+      },
+      "accuracy": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearson": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsonb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "pearsong": {
+        "lower": 0,
+        "upper": 1
+      },
+      "spearman": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsd": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdg": {
+        "lower": 0,
+        "upper": 1
+      },
+      "rmsdb": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "stickiness": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "price_variance": {
+        "lower": 7500,
+        "upper": 10000
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    }
+  },
+ "batch": {
+   "on": true,
+   "parameter_combinations": {
+     "random_seeds":{
+       "r_10": {
+         "seed":10
+       },
+       "r_20": {
+         "seed":20
+       },
+       "r_30": {
+         "seed":30
+       },
+       "r_40": {
+         "seed":40
+       },
+       "r_50": {
+         "seed":50
+       },
+       "r_60": {
+         "seed":60
+       },
+       "r_70": {
+         "seed":70
+       },
+       "r_80": {
+         "seed":80
+       },
+       "r_90": {
+         "seed":90
+       },
+       "r_100": {
+         "seed":100
+       },
+       "r_110": {
+         "seed":110
+       },
+       "r_120": {
+         "seed":120
+       },
+       "r_130": {
+         "seed":130
+       },
+       "r_140": {
+         "seed":140
+       },
+       "r_150": {
+         "seed":150
+       },
+       "r_160": {
+         "seed":160
+       },
+       "r_170": {
+         "seed":170
+       },
+       "r_180": {
+         "seed":180
+       },
+       "r_190": {
+         "seed":190
+       },
+       "r_200": {
+         "seed":200
+       },
+       "r_210": {
+         "seed":210
+       },
+       "r_220": {
+         "seed":220
+       },
+       "r_230": {
+         "seed":230
+       },
+       "r_240": {
+         "seed":240
+       },
+       "r_250": {
+         "seed":250
+       },
+       "r_260": {
+         "seed":260
+       },
+       "r_270": {
+         "seed":270
+       },
+       "r_280": {
+         "seed":280
+       },
+       "r_290": {
+         "seed":290
+       },
+       "r_300": {
+         "seed":300
+       }
+     },
+      "scam_period":{
+        "sp182":{
+          "scam_parameters":{
+            "scam_period":182,
+            "scam_inactive_period":0
+          }
+        },
+        "sp92":{
+          "scam_parameters":{
+            "scam_period":92,
+            "scam_inactive_period":0
+          }
+        },
+        "sp30":{
+          "scam_parameters":{
+            "scam_period":30,
+            "scam_inactive_period":0
+          }
+        },
+        "sp10":{
+          "scam_parameters":{
+            "scam_period":10,
+            "scam_inactive_period":0
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "reputation_parameters": {
+      "precision": 0.01,
+      "default": 0.0,
+      "conservatism": 0.5,
+      "fullnorm": true,
+      "weighting": true,
+      "logratings": false,
+      "decayed": 0.5,
+      "liquid": true,
+      "logranks": true,
+      "downrating": true,
+      "update_period": 1,
+      "aggregation": false,
+      "denomination": true,
+      "unrated": false,
+      "ratings":0.5,
+      "spendings":0.5
+    },
+    "macro_view": "antons_view",
+    "use_java": true,
+    "run_automatic_tests": false,
+    "port": 1181,
+    "output_path": "SOMconserv5DownDefault0rn/",
+    "seed": 9573,
+    "observer_mode": false,
+    "randomize_initial_needs": true,
+    "ranks_update_period": 1,
+    "error_log": false,
+    "deterministic_mode": true,
+    "num_users": 1000,
+    "initial_date": "01.01.2018 11:05:02",
+    "final_date": "30.06.2018 11:05:02",
+    "days_per_tick": 1.0,
+    "network": "singularity",
+    "types_and_units": {
+      "payment": "AGI",
+      "rating": ""
+    },
+    "suppliers_are_consumers": false,
+    "scam_parameters": {
+      "scam_period": 15,
+      "scam_inactive_period": 10
+    },
+    "criminal_agent_ring_size": [
+      50,
+      2,
+      2,
+      100
+    ],
+    "open_to_new_experiences": [
+      1.0,
+      0.1
+    ],
+    "fire_supplier_threshold": [
+      0.3,
+      0.1
+    ],
+    "reputation_system_threshold": [
+      40,
+      1,
+      1,
+      1000
+    ],
+    "average_reputation_system_threshold": false,
+    "choice_method": "roulette_wheel",
+    "forget_discount": [
+      0.99,
+      0.02
+    ],
+    "param_str": "r_sp182_",
+    "prices": {
+      "milk": [
+        1,
+        0.2,
+        1,
+        100
+      ],
+      "honey": [
+        2,
+        0.3,
+        1,
+        100
+      ]
+    },
+    "criminal_prices": {
+      "milk": [
+        1,
+        0.2,
+        1,
+        100
+      ],
+      "honey": [
+        2,
+        0.3,
+        1,
+        100
+      ]
+    },
+    "amounts": {
+      "milk": [
+        20.0,
+        1.0,
+        1,
+        1000
+      ],
+      "honey": [
+        20.0,
+        1.0,
+        1,
+        1000
+      ]
+    },
+    "criminal_amounts": {
+      "milk": [
+        1.0,
+        0.01,
+        1,
+        1000
+      ],
+      "honey": [
+        1.0,
+        0.01,
+        1,
+        1000
+      ]
+    },
+    "chance_of_supplying": {
+      "milk": 0.05,
+      "honey": 0.05
+    },
+    "criminal_chance_of_supplying": {
+      "milk": 0.06,
+      "honey": 0.04
+    },
+    "cobb_douglas_constant": 1.5,
+    "cobb_douglas_utilities": {
+      "milk": [
+        0.05,
+        0.01
+      ],
+      "honey": [
+        0.1,
+        0.3
+      ]
+    },
+    "need_cycle": {
+      "milk": [
+        2,
+        1,
+        0,
+        20
+      ],
+      "honey": [
+        1,
+        2,
+        0,
+        30
+      ]
+    },
+    "criminal_need_cycle": {
+      "milk": [
+        0,
+        0.2
+      ],
+      "honey": [
+        0,
+        0.2
+      ]
+    },
+    "random_change_suppliers": 1.0,
+    "include_ratings": true,
+    "chance_of_criminal": 0.05,
+    "goodness": [
+      0.75,
+      0.15
+    ],
+    "criminal_goodness": [
+      0.0,
+      0.03
+    ],
+    "transactions_per_day": [
+      10,
+      1,
+      0,
+      1000
+    ],
+    "criminal_transactions_per_day": [
+      100,
+      1,
+      0,
+      1000
+    ],
+    "ratings_goodness_thresholds": {
+      "0.0": 0.25,
+      "1.0": 1.0
+    },
+    "rating_perception": [
+      0,
+      0.01,
+      -1,
+      1
+    ],
+    "chance_of_rating_good2good": 0.6,
+    "chance_of_rating_good2bad": 0.6,
+    "criminal_chance_of_rating": 1.0,
+    "non_rating_val": ""
+  }
+} 

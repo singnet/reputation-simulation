@@ -60,6 +60,7 @@ class ReputationAgent(Agent):
                     price = self.model.price_distributions[good].rvs() if self.good else self.model.criminal_price_distributions[good].rvs()
                     self.supplying[good]= price
                     self.model.suppliers[good] .append(unique_id)
+                    self.model.initialize_rank(unique_id)
                     if not self.good:
                         self.model.criminal_suppliers[good].append(self.unique_id)
         else:
@@ -69,6 +70,7 @@ class ReputationAgent(Agent):
                 price = self.model.price_distributions[good].rvs() if self.good else self.model.criminal_price_distributions[good].rvs()
                 self.supplying[good]= price
                 self.model.suppliers[good] .append(unique_id)
+                self.model.initialize_rank(unique_id)
 
 
 
@@ -331,6 +333,7 @@ class ReputationAgent(Agent):
     def add_new_supplier(self, supplier, good):
         if not supplier in self.model.suppliers[good]:
             self.model.suppliers[good].append(supplier)
+            self.model.initialize_rank(supplier)
             # if supplier != self.model.orig[supplier] and self.model.orig[supplier] in self.model.suppliers[good]:
             #     self.model.suppliers[good].remove(self.model.orig[supplier])
             scam_periods_so_far = (self.model.daynum // self.p['scam_parameters']['scam_period'])+1
@@ -338,6 +341,8 @@ class ReputationAgent(Agent):
                 alias = (i * self.p['num_users']) + self.model.orig[supplier]
                 if alias != supplier and alias in self.model.suppliers[good]:
                     self.model.suppliers[good].remove(alias)
+                    self.model.finalize_rank(alias)
+            self.model.average_rank_history.flush()
 
 
     def choose_partners(self):
