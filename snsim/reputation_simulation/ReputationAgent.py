@@ -59,17 +59,17 @@ class ReputationAgent(Agent):
                     supply_list.append(good)
                     price = self.model.price_distributions[good].rvs() if self.good else self.model.criminal_price_distributions[good].rvs()
                     self.supplying[good]= price
-                    self.model.suppliers[good] .append(unique_id)
+                    self.model.suppliers[good].add(unique_id)
                     self.model.initialize_rank(unique_id)
                     if not self.good:
-                        self.model.criminal_suppliers[good].append(self.unique_id)
+                        self.model.criminal_suppliers[good].add(self.unique_id)
         else:
             for good in supply_list:
                 #price_fract = self.model.cobb_douglas_distributions[good].rvs()
                 #price = self.p['min_price']+ ((self.p['max_price'] - self.p['min_price'])*price_fract)
                 price = self.model.price_distributions[good].rvs() if self.good else self.model.criminal_price_distributions[good].rvs()
                 self.supplying[good]= price
-                self.model.suppliers[good] .append(unique_id)
+                self.model.suppliers[good].add(unique_id)
                 self.model.initialize_rank(unique_id)
 
 
@@ -95,7 +95,7 @@ class ReputationAgent(Agent):
 
     def needs_criminal_consumer(self, supplier,good):
         needs = False
-        supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
+        supplier_agent = self.model.agents[self.model.orig[supplier]]
         if len(supplier_agent.criminal_consumers[good]) < supplier_agent.num_criminal_consumers[good]:
             needs = True
         return needs
@@ -115,14 +115,14 @@ class ReputationAgent(Agent):
                 not self.supplier_inactive(supplier) ]
         if len(possible_suppliers) > 0:
             supplier = possible_suppliers[random.randint(0,len(possible_suppliers)-1)]
-            supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
+            supplier_agent = self.model.agents[self.model.orig[supplier]]
             supplier_agent.criminal_consumers[good].add(self.unique_id)
             self.suppliers[good].append(supplier)
 
     def clear_supplierlist (self, good,supplierlist):
         if not self.good:
             for supplier in supplierlist:
-                supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
+                supplier_agent = self.model.agents[self.model.orig[supplier]]
                 if self.unique_id in supplier_agent.criminal_consumers[good]:
                     supplier_agent.criminal_consumers[good].remove (self.unique_id)
         supplierlist.clear()
@@ -191,7 +191,7 @@ class ReputationAgent(Agent):
             if (not self.good) and (not self.taken()):
                 # for good, supplierlist in self.suppliers.items():
                 #     for supplier in supplierlist:
-                #         supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
+                #         supplier_agent = self.model.agents[self.model.orig[supplier]]
                 #         if self.p['random_change_suppliers'] == 1.0 or self.supplier_inactive(supplier):
                 #             if self.unique_id in supplier_agent.criminal_consumers[good]:
                 #                 supplier_agent.criminal_consumers[good].remove(self.unique_id)
@@ -273,7 +273,7 @@ class ReputationAgent(Agent):
                               if
                               rating > self.reputation_system_threshold
                               and int(agent) in self.model.suppliers[good]
-                              #and good in self.model.schedule.agents[self.model.orig[int(agent)]].supplying
+                              #and good in self.model.agents[self.model.orig[int(agent)]].supplying
                               and int(agent) not in under_threshold
                               and not self.supplier_inactive(int(agent))]
             if len(over_threshold):
@@ -286,7 +286,7 @@ class ReputationAgent(Agent):
                                         if
                                         rating > self.reputation_system_threshold
                                         and int(agent) in self.model.suppliers[good]
-                                        #and good in self.model.schedule.agents[self.model.orig[int(agent)]].supplying
+                                        #and good in self.model.agents[self.model.orig[int(agent)]].supplying
                                         and not self.supplier_inactive(int(agent))}
             sorted_suppliers = sorted(non_criminal_experiences.items(), key=lambda x: x[1], reverse=True)
             if len(sorted_suppliers):
@@ -298,7 +298,7 @@ class ReputationAgent(Agent):
                                             if
                                             (rating > self.reputation_system_threshold)
                                             and int(agent) in self.model.suppliers[good]
-                                            #and (good in self.model.schedule.agents[self.model.orig[int(agent)]].supplying )
+                                            #and (good in self.model.agents[self.model.orig[int(agent)]].supplying )
                                             and (not int(agent) in under_threshold)
                                             and (not self.supplier_inactive(int(agent)))}
                 ratings_sum = sum([rating for key, rating in non_criminal_experiences.items()])
@@ -317,7 +317,7 @@ class ReputationAgent(Agent):
         #inactive if agent is in SAP or if agents orig is in sap, or if the agent is hiding its name.
         inactive = True
 
-        supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
+        supplier_agent = self.model.agents[self.model.orig[supplier]]
         if supplier_agent.good:
             inactive = False
         else:
@@ -332,7 +332,7 @@ class ReputationAgent(Agent):
 
     def add_new_supplier(self, supplier, good):
         if not supplier in self.model.suppliers[good]:
-            self.model.suppliers[good].append(supplier)
+            self.model.suppliers[good].add(supplier)
             self.model.initialize_rank(supplier)
             # if supplier != self.model.orig[supplier] and self.model.orig[supplier] in self.model.suppliers[good]:
             #     self.model.suppliers[good].remove(self.model.orig[supplier])
@@ -411,7 +411,7 @@ class ReputationAgent(Agent):
                                   if (
                                     supplier != self.unique_id
                                     and supplier in self.model.suppliers[good]
-                                   # and good in self.model.schedule.agents[self.model.orig[int(supplier)]].supplying
+                                   # and good in self.model.agents[self.model.orig[int(supplier)]].supplying
                                     and (not supplier in under_threshold)
                                     and (not self.supplier_inactive(supplier))
                                   )
@@ -447,7 +447,7 @@ class ReputationAgent(Agent):
             supplier_idx = 0 if len(self.suppliers[good]) == 1 else random.randint(0, len(self.suppliers[good]) - 1)
             supplier = self.suppliers[good][supplier_idx]
 
-            supplier_agent = self.model.schedule.agents[self.model.orig[supplier]]
+            supplier_agent = self.model.agents[self.model.orig[supplier]]
             our_day = self.model.daynum + supplier_agent.orig_scam_cycle_day
             generation_increment = (our_day // self.p['scam_parameters']['scam_period']) * self.p['num_users']
 
@@ -461,7 +461,7 @@ class ReputationAgent(Agent):
 
             amount = self.model.amount_distributions[good].rvs() if self.good else \
             self.model.criminal_amount_distributions[good].rvs()
-            price = amount * self.model.schedule.agents[self.model.orig[supplier]].supplying[good]
+            price = amount * self.model.agents[self.model.orig[supplier]].supplying[good]
 
             # two cases:
             # 1. payment without ratings:  child field populated with transid and parent left blank ,
@@ -476,7 +476,7 @@ class ReputationAgent(Agent):
             if self.good:
                 self.model.save_info_for_market_volume_report(self, self.model.orig[supplier], price)
                 perception, rating = self.rate(supplier)
-                if self.model.schedule.agents[self.model.orig[supplier]].good:
+                if self.model.agents[self.model.orig[supplier]].good:
                     merchandise_recieved = True
                 self.update_personal_experience(good, supplier_id, perception)
                 if self.p['include_ratings'] and rating and rating != "":
@@ -540,8 +540,8 @@ class ReputationAgent(Agent):
         # puts some randomness in the ratings.  This is only for good rateds
 
         bias = self.model.rating_perception_distribution.rvs(
-            ) if self.model.schedule.agents[self.model.orig[supplier]].good else 0
-        perception = self.model.schedule.agents[self.model.orig[supplier]].goodness + bias
+            ) if self.model.agents[self.model.orig[supplier]].good else 0
+        perception = self.model.agents[self.model.orig[supplier]].goodness + bias
         #if not self.good:
             #perception = 1-perception
 
@@ -553,8 +553,8 @@ class ReputationAgent(Agent):
             if (perception < threshold or threshold == dd[next(reversed(dd))])and rating is None:
                 rating = rating_val
         if (rating is None or
-                (self.model.schedule.agents[self.model.orig[supplier]].good and roll > self.p['chance_of_rating_good2good']) or
-                ((not self.model.schedule.agents[self.model.orig[supplier]].good) and roll > self.p['chance_of_rating_good2bad'])
+                (self.model.agents[self.model.orig[supplier]].good and roll > self.p['chance_of_rating_good2good']) or
+                ((not self.model.agents[self.model.orig[supplier]].good) and roll > self.p['chance_of_rating_good2bad'])
             ):
             rating = self.p['non_rating_val']
 

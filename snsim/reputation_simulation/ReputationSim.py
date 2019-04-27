@@ -23,7 +23,8 @@ import math
 #from reputation import Aigents
 from random import shuffle
 from reputation import AigentsAPIReputationService
-#from reputation import PythonReputationService
+from reputation.reputation_base_api import *
+from reputation import PythonReputationService
 #from reputation.reputation_service_api import PythonReputationService
 
 
@@ -96,10 +97,10 @@ class ReputationSim(Model):
         self.seconds_per_day = 86400
 
 
-        tuplist = [(good, []) for good, chance in self.parameters["chance_of_supplying"].items()]
+        tuplist = [(good,set()) for good, chance in self.parameters["chance_of_supplying"].items()]
         self.suppliers = OrderedDict(tuplist)
 
-        tuplist = [(good, []) for good, chance in self.parameters["criminal_chance_of_supplying"].items()]
+        tuplist = [(good, set()) for good, chance in self.parameters["criminal_chance_of_supplying"].items()]
         self.criminal_suppliers = OrderedDict(tuplist)
 
 
@@ -187,17 +188,20 @@ class ReputationSim(Model):
                     sup_count = sup_count + num_sup_this_good
                     nsuppliers [good]= num_sup_this_good
 
+            self.agents = {}
             for good, num_suppliers in nsuppliers.items():
                 for _ in range(num_suppliers):
                     a = globals()['ReputationAgent'](agent_count, self, criminal=True, supply_list=[good])
                     self.schedule.add(a)
-                    self.criminal_suppliers[good].append(agent_count)
+                    self.agents[agent_count]=a
+                    self.criminal_suppliers[good].add(agent_count)
                     agent_count += 1
 
             #criminal consumers
             for _ in range(num_criminals - num_suppliers1):
                 a = globals()['ReputationAgent'](agent_count, self, criminal=True, supply_list=[])
                 self.schedule.add(a)
+                self.agents[agent_count]=a
                 agent_count += 1
 
             #good suppliers
@@ -223,12 +227,14 @@ class ReputationSim(Model):
                 for _ in range(num_suppliers):
                     a = globals()['ReputationAgent'](agent_count, self, criminal=False, supply_list=[good])
                     self.schedule.add(a)
+                    self.agents[agent_count]=a
                     agent_count += 1
 
             #good consumers
             for i in range(agent_count,self.parameters['num_users']):
                 a = globals()['ReputationAgent'](agent_count, self,criminal=False, supply_list=[])
                 self.schedule.add(a)
+                self.agents[agent_count]=a
                 agent_count += 1
 
         else:
@@ -345,9 +351,9 @@ class ReputationSim(Model):
         #file.write('time\t')
         heading_list = []
         heading_list.append('time')
-        for i in range(len(self.schedule.agents)):
+        for i in range(len(self.agents)):
             #file.write('{0}\t'.format(self.schedule.agents[i].unique_id))
-            heading_list.append(self.schedule.agents[i].unique_id)
+            heading_list.append(self.agents[i].unique_id)
         #make room for columns to be added on. they need to have headings now so pandas can parse them
         num_extra_agents = int(((self.parameters['num_users'] * self.parameters['chance_of_criminal']*self.end_tick
                             )/self.parameters['scam_parameters']['scam_period']))+1
@@ -384,13 +390,13 @@ class ReputationSim(Model):
                             #self.rank_history.write('{0}:{1}\t'.format(i,-1))
                             self.rank_history.write('{0}\t'.format(-1))
                             heading_list.append(i)
-                    if intagent < len(self.schedule.agents):
+                    if intagent < len(self.agents):
                         for i in range (lastAgent+1,intagent):
                             #self.rank_history.write('{0}:{1}\t'.format(i,-1))
                             self.rank_history.write('{0}\t'.format(-1))
                             heading_list.append(i)
                     else:
-                        for i in range (lastAgent+1,len(self.schedule.agents)):
+                        for i in range (lastAgent+1,len(self.agents)):
                             #self.rank_history.write('{0}:{1}\t'.format(i,-1))
                             self.rank_history.write('{0}\t'.format(-1))
                             heading_list.append(i)
@@ -398,7 +404,7 @@ class ReputationSim(Model):
                     self.rank_history.write('{0}\t'.format(rank))
                     heading_list.append(intagent)
                     lastAgent = intagent
-            for i in range(lastAgent+1,len(self.schedule.agents) ):
+            for i in range(lastAgent+1,len(self.agents) ):
                 #self.rank_history.write('{0}:{1}\t'.format(i,-1))
                 self.rank_history.write('{0}\t'.format(-1))
                 heading_list.append(i)
@@ -409,7 +415,7 @@ class ReputationSim(Model):
 
             self.rank_history.write('\n')
 
-            # for i in range(len(self.schedule.agents)):
+            # for i in range(len(self.agents)):
             #     id = str(self.schedule.agents[i].unique_id)
             #     rank = od[id] if id in od else -1
             #     self.rank_history.write('{0}\t'.format(rank))
@@ -564,17 +570,17 @@ class ReputationSim(Model):
 
     def save_info_for_market_volume_report(self, consumer, supplier, payment):
             # if increment num transactions and add cum price to the correct agent category of seller
-            if self.schedule.agents[supplier].good and consumer.good:
+            if self.agents[supplier].good and consumer.good:
                 self.good2good_agent_completed_transactions += 1
                 self.good2good_agent_cumul_completed_transactions += 1
                 self.good2good_agent_total_price += payment
                 self.good2good_agent_cumul_total_price += payment
-            elif not self.schedule.agents[supplier].good and consumer.good:
+            elif not self.agents[supplier].good and consumer.good:
                 self.good2bad_agent_completed_transactions += 1
                 self.good2bad_agent_cumul_completed_transactions += 1
                 self.good2bad_agent_total_price += payment
                 self.good2bad_agent_cumul_total_price += payment
-            elif not self.schedule.agents[supplier].good and not consumer.good:
+            elif not self.agents[supplier].good and not consumer.good:
                 self.bad2bad_agent_completed_transactions += 1
                 self.bad2bad_agent_cumul_completed_transactions += 1
                 self.bad2bad_agent_total_price += payment
@@ -593,8 +599,8 @@ class ReputationSim(Model):
         path = self.parameters['output_path'] + 'users_' + self.parameters['param_str'][: -1]  + '.tsv'
 
         with open(path, 'w') as outfile:
-            agents = self.schedule.agents if userlist and userlist[0] == -1 else userlist
-            outlist = [(agent.unique_id, agent.goodness) for agent in agents]
+            agents = self.agents if userlist and userlist[0] == -1 else userlist
+            outlist = [(agent.unique_id, agent.goodness) for idx,agent in agents.items()]
             sorted_outlist = sorted(outlist,  key=operator.itemgetter(1), reverse=True)
             for id, goodness in sorted_outlist:
                 outfile.write("{0}\t{1}\n".format(id, goodness))
@@ -603,8 +609,8 @@ class ReputationSim(Model):
         path = self.parameters['output_path'] + 'boolean_users_' + self.parameters['param_str'][: -1] + '.tsv'
 
         with open(path, 'w') as outfile:
-            agents = self.schedule.agents if userlist and userlist[0] == -1 else userlist
-            outlist = [(agent.unique_id, agent.good) for agent in agents]
+            agents = self.agents if userlist and userlist[0] == -1 else userlist
+            outlist = [(agent.unique_id, agent.good) for idx, agent in agents.items()]
             sorted_outlist = sorted(outlist, key=operator.itemgetter(1), reverse=True)
             for id, good in sorted_outlist:
                 val = 1 if good else 0
