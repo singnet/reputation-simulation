@@ -24,6 +24,7 @@ import math
 from random import shuffle
 from reputation import AigentsAPIReputationService
 #from reputation import PythonReputationService
+from reputation.reputation_service_api import PythonReputationService
 
 
 from mesa import Model
