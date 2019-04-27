@@ -23,7 +23,7 @@ import math
 #from reputation import Aigents
 from random import shuffle
 from reputation import AigentsAPIReputationService
-from reputation import PythonReputationService
+#from reputation import PythonReputationService
 #from reputation.reputation_service_api import PythonReputationService
 
 
@@ -374,42 +374,46 @@ class ReputationSim(Model):
         #intdir = {int(key): val for key, val in self.ranks.items() }
         #od = OrderedDict(sorted(intdir))
         lastAgent = None
-        for agent,rank in od.items():
-            if not agent is None:
-                intagent = int(agent)
-                if lastAgent is None:
+        if len(od):
+            for agent,rank in od.items():
+                if not agent is None:
+                    intagent = int(agent)
+                    if lastAgent is None:
+                        lastAgent = intagent
+                        for i in range (0,intagent):
+                            #self.rank_history.write('{0}:{1}\t'.format(i,-1))
+                            self.rank_history.write('{0}\t'.format(-1))
+                            heading_list.append(i)
+                    if intagent < len(self.schedule.agents):
+                        for i in range (lastAgent+1,intagent):
+                            #self.rank_history.write('{0}:{1}\t'.format(i,-1))
+                            self.rank_history.write('{0}\t'.format(-1))
+                            heading_list.append(i)
+                    else:
+                        for i in range (lastAgent+1,len(self.schedule.agents)):
+                            #self.rank_history.write('{0}:{1}\t'.format(i,-1))
+                            self.rank_history.write('{0}\t'.format(-1))
+                            heading_list.append(i)
+                    #self.rank_history.write('{0}:{1}\t'.format(intagent,rank))
+                    self.rank_history.write('{0}\t'.format(rank))
+                    heading_list.append(intagent)
                     lastAgent = intagent
-                    for i in range (0,intagent):
-                        #self.rank_history.write('{0}:{1}\t'.format(i,-1))
-                        self.rank_history.write('{0}\t'.format(-1))
-                        heading_list.append(i)
-                if intagent < len(self.schedule.agents):
-                    for i in range (lastAgent+1,intagent):
-                        #self.rank_history.write('{0}:{1}\t'.format(i,-1))
-                        self.rank_history.write('{0}\t'.format(-1))
-                        heading_list.append(i)
-                else:
-                    for i in range (lastAgent+1,len(self.schedule.agents)):
-                        #self.rank_history.write('{0}:{1}\t'.format(i,-1))
-                        self.rank_history.write('{0}\t'.format(-1))
-                        heading_list.append(i)
-                #self.rank_history.write('{0}:{1}\t'.format(intagent,rank))
-                self.rank_history.write('{0}\t'.format(rank))
-                heading_list.append(intagent)
-                lastAgent = intagent
-        for i in range(lastAgent+1,len(self.schedule.agents) ):
-            #self.rank_history.write('{0}:{1}\t'.format(i,-1))
-            self.rank_history.write('{0}\t'.format(-1))
-            heading_list.append(i)
-        self.rank_history.write('\n')
-        heading_list.append('\n')
-        self.rank_history_heading = "\t".join(map(str,heading_list))
+            for i in range(lastAgent+1,len(self.schedule.agents) ):
+                #self.rank_history.write('{0}:{1}\t'.format(i,-1))
+                self.rank_history.write('{0}\t'.format(-1))
+                heading_list.append(i)
+            self.rank_history.write('\n')
+            heading_list.append('\n')
+            self.rank_history_heading = "\t".join(map(str,heading_list))
+        else:
 
-        # for i in range(len(self.schedule.agents)):
-        #     id = str(self.schedule.agents[i].unique_id)
-        #     rank = od[id] if id in od else -1
-        #     self.rank_history.write('{0}\t'.format(rank))
-        # self.rank_history.write('\n')
+            self.rank_history.write('\n')
+
+            # for i in range(len(self.schedule.agents)):
+            #     id = str(self.schedule.agents[i].unique_id)
+            #     rank = od[id] if id in od else -1
+            #     self.rank_history.write('{0}\t'.format(rank))
+            # self.rank_history.write('\n')
 
     def market_volume_report(self):
         #path = self.parameters['output_path'] + 'transactions_' +self.parameters['param_str'] + self.time[0:10] + '.tsv'
