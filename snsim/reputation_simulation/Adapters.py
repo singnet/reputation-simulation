@@ -135,5 +135,7 @@ class Adapters():
         threshold = stats.norm(mean, stdev).ppf(pneg)
         self.config['parameters']['ratings_goodness_thresholds']["0.0"]=threshold
 
+        self.config['parameters']['criminal_agent_ring_size'][0] = int(round(num_bad_consumers/num_bad_suppliers))
+
 
         return self.config
