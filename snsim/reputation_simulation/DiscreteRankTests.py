@@ -3,15 +3,17 @@ import pandas as pd
 import json
 import datetime
 import math
+import copy
 from collections import OrderedDict
 
 
 
 class DiscreteRankTests(unittest.TestCase):
 
-    def go(self,config):
+    def go(self,config,param_set=set()):
         self.unittest = False
         self.config = config
+        self.param_set = param_set
         self.setUp()
         self.test_rsmd_discrete()
         self.tearDown()
@@ -31,7 +33,7 @@ class DiscreteRankTests(unittest.TestCase):
 
         self.softAssertionErrors = []
         self.error_path = "./" + self.config['parameters']["output_path"] + "error_log.txt"
-        self.t = self.config['tests']
+        self.t = copy.deepcopy(self.config['tests'])
         self.error_log = open(self.error_path, "a+")
         out_path = "./" + self.config['parameters']["output_path"] + "discrete_rank_tests.tsv"
         self.output_tsv = open(out_path, "w")
@@ -40,12 +42,34 @@ class DiscreteRankTests(unittest.TestCase):
 
         self.codes = []
         for code,limits in self.t.items():
-            self.codes.append(code)
-            rank_history_path = "./" + self.config['parameters']["output_path"] +"rankHistory_" + code + ".tsv"
-            self.rank_history[code] = pd.read_csv(rank_history_path, "\t")
-            boolean_users_path = "./" + self.config['parameters']["output_path"] +"boolean_users_" + code + ".tsv"
-            self.boolean_users[code] = pd.read_csv(boolean_users_path, "\t", header=None)
-
+            if code != "default":
+                self.codes.append(code)
+                rank_history_path = "./" + self.config['parameters']["output_path"] +"rankHistory_" + code + ".tsv"
+                self.rank_history[code] = pd.read_csv(rank_history_path, "\t")
+                boolean_users_path = "./" + self.config['parameters']["output_path"] +"boolean_users_" + code + ".tsv"
+                self.boolean_users[code] = pd.read_csv(boolean_users_path, "\t", header=None)
+                if code in self.param_set:
+                    self.param_set.remove(code)
+        for code in self.param_set:
+            if 'default' in self.t:
+                self.codes.append(code)
+                rank_history_path = "./" + self.config['parameters']["output_path"] +"rankHistory_" + code + ".tsv"
+                self.rank_history[code] = pd.read_csv(rank_history_path, "\t")
+                boolean_users_path = "./" + self.config['parameters']["output_path"] +"boolean_users_" + code + ".tsv"
+                self.boolean_users[code] = pd.read_csv(boolean_users_path, "\t", header=None)
+                self.t[code] = {}
+                self.t[code]['precision'] = {}
+                self.t[code]['recall'] = {}
+                self.t[code]['f1'] = {}
+                self.t[code]['accuracy'] = {}
+                self.t[code]['precision']['lower']=self.t['default']['precision']['lower']
+                self.t[code]['precision']['upper']=self.t['default']['precision']['upper']
+                self.t[code]['recall']['lower']=self.t['default']['recall']['lower']
+                self.t[code]['recall']['upper']=self.t['default']['recall']['upper']
+                self.t[code]['f1']['lower']=self.t['default']['f1']['lower']
+                self.t[code]['f1']['upper']=self.t['default']['f1']['upper']
+                self.t[code]['accuracy']['lower']=self.t['default']['accuracy']['lower']
+                self.t[code]['accuracy']['upper']=self.t['default']['accuracy']['upper']
     def tearDown(self):
         if self.unittest:
             self.assertEqual([], self.softAssertionErrors)

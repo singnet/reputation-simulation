@@ -1,6 +1,7 @@
 import unittest
 import pandas as pd
 import json
+import copy
 import datetime
 import math
 from collections import OrderedDict
@@ -11,9 +12,11 @@ import numpy as np
 
 class ContinuousRankTests(unittest.TestCase):
 
-    def go(self,config):
+
+    def go(self,config,param_set=set()):
         self.unittest = False
         self.config = config
+        self.param_set = param_set
         self.setUp()
         self.test_correlation_continuous()
         self.test_rsmd_continuous()
@@ -34,18 +37,50 @@ class ContinuousRankTests(unittest.TestCase):
 
         self.softAssertionErrors = []
         self.error_path = "./" + self.config['parameters']["output_path"] + "error_log.txt"
-        self.t = self.config['tests']
+        self.t = copy.deepcopy(self.config['tests'])
         self.error_log = open(self.error_path, "a+")
         self.users = OrderedDict()
         self.rank_history = OrderedDict()
 
         self.codes = []
         for code,limits in self.t.items():
-            self.codes.append(code)
-            rank_history_path = "./" + self.config['parameters']["output_path"] +"rankHistory_" + code + ".tsv"
-            self.rank_history[code] = pd.read_csv(rank_history_path, "\t")
-            users_path = "./" + self.config['parameters']["output_path"] +"users_" + code + ".tsv"
-            self.users[code] = pd.read_csv(users_path, "\t", header=None)
+            if code != "default":
+                self.codes.append(code)
+                rank_history_path = "./" + self.config['parameters']["output_path"] +"rankHistory_" + code + ".tsv"
+                self.rank_history[code] = pd.read_csv(rank_history_path, "\t")
+                users_path = "./" + self.config['parameters']["output_path"] +"users_" + code + ".tsv"
+                self.users[code] = pd.read_csv(users_path, "\t", header=None)
+                if code in self.param_set:
+                    self.param_set.remove(code)
+        for code in self.param_set:
+            if 'default' in self.t:
+                self.codes.append(code)
+                rank_history_path = "./" + self.config['parameters']["output_path"] +"rankHistory_" + code + ".tsv"
+                self.rank_history[code] = pd.read_csv(rank_history_path, "\t")
+                users_path = "./" + self.config['parameters']["output_path"] +"users_" + code + ".tsv"
+                self.users[code] = pd.read_csv(users_path, "\t", header=None)
+                self.t[code]= {}
+                self.t[code]['pearson']= {}
+                self.t[code]['spearman']= {}
+                self.t[code]['pearsonb']= {}
+                self.t[code]['pearsong']= {}
+                self.t[code]['rmsd']= {}
+                self.t[code]['rmsdb']= {}
+                self.t[code]['rmsdg']= {}
+                self.t[code]['pearson']['lower']=self.t['default']['pearson']['lower']
+                self.t[code]['pearson']['upper']=self.t['default']['pearson']['upper']
+                self.t[code]['spearman']['lower']=self.t['default']['spearman']['lower']
+                self.t[code]['spearman']['upper']=self.t['default']['spearman']['upper']
+                self.t[code]['pearsong']['lower']=self.t['default']['pearsong']['lower']
+                self.t[code]['pearsong']['upper']=self.t['default']['pearsong']['upper']
+                self.t[code]['pearsonb']['lower']=self.t['default']['pearsonb']['lower']
+                self.t[code]['pearsonb']['upper']=self.t['default']['pearsonb']['upper']
+                self.t[code]['rmsd']['lower'] = self.t['default']['rmsd']['lower']
+                self.t[code]['rmsd']['upper']=self.t['default']['rmsd']['upper']
+                self.t[code]['rmsdb']['upper']=self.t['default']['rmsdb']['upper']
+                self.t[code]['rmsdb']['lower']=self.t['default']['rmsdb']['lower']
+                self.t[code]['rmsdg']['upper']=self.t['default']['rmsdg']['upper']
+                self.t[code]['rmsdg']['lower']=self.t['default']['rmsdg']['lower']
 
     def tearDown(self):
         if self.unittest:

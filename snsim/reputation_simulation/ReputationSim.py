@@ -669,166 +669,192 @@ class ReputationSim(Model):
             self.rank_history.write(self.rank_history_heading)
             self.rank_history.close()
 
+class Runner():
+
+    def __init__(self):
+        self.param_list = []
+
+    def createTestCsv(self,config,codelist=None):
+        import pandas as pd
+        from copy import deepcopy
 
 
-def createTestCsv(config):
-    import pandas as pd
-    from copy import deepcopy
+        outpath = config['parameters']['output_path'] + 'results.tsv'
+        allcols = ['code', 'folder', 'spendings', 'ratings', 'unrated', 'denom',
+                   'logratings', 'fullnorm', 'conserv',
+                   'default', 'downrating', 'decayed', 'period',
+                   'loss_to_scam', 'profit_from_scam', 'inequity', 'utility', 'market_volume']
+
+        columns = ['ratings', 'spendings', 'unrated', 'downrating', 'denom',
+                   'logratings', 'fullnorm', 'default', 'conserv', 'decayed', 'period', 'folder', 'code']
+
+        p = config['parameters']['reputation_parameters']
+        paramvals = []
+        paramvals.append(str(p['ratings']))
+        paramvals.append(str(p['spendings']))
+        paramvals.append(str(p['unrated']))
+        paramvals.append(str(p['downrating']))
+        paramvals.append(str(p['denomination']))
+        paramvals.append(str(p['logratings']))
+        paramvals.append(str(p['fullnorm']))
+        paramvals.append(str(p['default']))
+        paramvals.append(str(p['conservatism']))
+        paramvals.append(str(p['decayed']))
+        paramvals.append(str(p['update_period']))
+        paramvals.append(config['parameters']['output_path'][: -1])
+
+        # alist = [
+        #     ['0.5', '0.5', 'false', 'false', 'true', 'false', 'true', '0.0', '0.9', '0.5', '1',
+        #      'weightDenomNoUnratedConserv9Ratings5Spending5half']
+        # ]
+
+        #codelist = ['r_sp182', 'r_sp92', 'r_sp30', 'r_sp10']
+
+        if codelist is None:
+            codelist = [code for code, test in config['tests'].items()]
+
+        #codelist = config['tests'].keys()
+
+        testfiles = [
+            "discrete_rank_tests.tsv",
+            "correlation_by_good_tests.tsv",
+            "scam_loss_tests.tsv",
+            "utility_tests.tsv",
+            "inequity_tests.tsv",
+            "market_volume_tests.tsv",
+            "price_variance_tests.tsv",
+            "correlation_tests.tsv",
+            "continuous_rsmd_tests.tsv",
+            "continuous_rsmd_by_good_tests.tsv",
+            "scam_profit_tests.tsv",
+        ]
+
+        dflist = []
+        #for row in alist:
+        row = paramvals
+        print(row)
+        runslist = []
+        for code in codelist:
+            copy = deepcopy(row)
+            copy.append(code)
+            runslist.append(copy)
+            runs = pd.DataFrame(runslist, columns=columns)
+        # print(runs)
+        for t in testfiles:
+            path = row[11] + '/' + t
+            try:
+                df = pd.read_csv(path, delimiter='\t')
+                df['folder'] = row[11]
+                print(path)
+                print(df)
+                # if len(df.index)== len(codelist):
+                runs = pd.merge(runs, df, on=['folder', 'code'])
+                # print(runs)
+            except FileNotFoundError as e:
+                print(e)
+            except:
+                pass
+        #dflist.append(runs)
+
+        #result = pd.concat(dflist)
+        #print(result)
+        #result = result[allcols]
+        #result.to_csv(outpath)
+        #result
+        result = runs[allcols]
+        result.to_csv(outpath)
 
 
-    outpath = config['parameters']['output_path'] + 'results.tsv'
-    allcols = ['code', 'folder', 'spendings', 'ratings', 'unrated', 'denom',
-               'logratings', 'fullnorm', 'conserv',
-               'default', 'downrating', 'decayed', 'period',
-               'loss_to_scam', 'profit_from_scam', 'inequity', 'utility', 'market_volume']
-
-    columns = ['ratings', 'spendings', 'unrated', 'downrating', 'denom',
-               'logratings', 'fullnorm', 'default', 'conserv', 'decayed', 'period', 'folder', 'code']
-
-    p = config['parameters']['reputation_parameters']
-    paramvals = []
-    paramvals.append(str(p['ratings']))
-    paramvals.append(str(p['spendings']))
-    paramvals.append(str(p['unrated']))
-    paramvals.append(str(p['downrating']))
-    paramvals.append(str(p['denomination']))
-    paramvals.append(str(p['logratings']))
-    paramvals.append(str(p['fullnorm']))
-    paramvals.append(str(p['default']))
-    paramvals.append(str(p['conservatism']))
-    paramvals.append(str(p['decayed']))
-    paramvals.append(str(p['update_period']))
-    paramvals.append(config['parameters']['output_path'][: -1])
-
-    # alist = [
-    #     ['0.5', '0.5', 'false', 'false', 'true', 'false', 'true', '0.0', '0.9', '0.5', '1',
-    #      'weightDenomNoUnratedConserv9Ratings5Spending5half']
-    # ]
-
-    #codelist = ['r_sp182', 'r_sp92', 'r_sp30', 'r_sp10']
-
-    codelist = [code for code, test in config['tests'].items()]
-
-    #codelist = config['tests'].keys()
-
-    testfiles = [
-        "discrete_rank_tests.tsv",
-        "correlation_by_good_tests.tsv",
-        "scam_loss_tests.tsv",
-        "utility_tests.tsv",
-        "inequity_tests.tsv",
-        "market_volume_tests.tsv",
-        "price_variance_tests.tsv",
-        "correlation_tests.tsv",
-        "continuous_rsmd_tests.tsv",
-        "continuous_rsmd_by_good_tests.tsv",
-        "scam_profit_tests.tsv",
-    ]
-
-    dflist = []
-    #for row in alist:
-    row = paramvals
-    print(row)
-    runslist = []
-    for code in codelist:
-        copy = deepcopy(row)
-        copy.append(code)
-        runslist.append(copy)
-        runs = pd.DataFrame(runslist, columns=columns)
-    # print(runs)
-    for t in testfiles:
-        path = row[11] + '/' + t
-        try:
-            df = pd.read_csv(path, delimiter='\t')
-            df['folder'] = row[11]
-            print(path)
-            print(df)
-            # if len(df.index)== len(codelist):
-            runs = pd.merge(runs, df, on=['folder', 'code'])
-            # print(runs)
-        except FileNotFoundError as e:
-            print(e)
-        except:
-            pass
-    #dflist.append(runs)
-
-    #result = pd.concat(dflist)
-    #print(result)
-    #result = result[allcols]
-    #result.to_csv(outpath)
-    #result
-    result = runs[allcols]
-    result.to_csv(outpath)
-
-def run_tests(config):
-    test = ContinuousRankByGoodTests()
-    test.go(config)
-    test = ContinuousRankTests()
-    test.go(config)
-    test = DiscreteRankTests()
-    test.go(config)
-    test = GoodnessTests()
-    test.go(config)
-    test = MarketVolumeTests()
-    test.go(config)
-    test = TransactionsTests()
-    test.go(config)
-    createTestCsv(config)
+    def get_param_list(self, combolist, param_str = ""):
+        if combolist:
+            mycombolist = copy.deepcopy(combolist)
+            level,settings = mycombolist.popitem(last = False)
+            for name, setting in settings.items():
+                my_param_str = param_str + name + "_"
+                self.get_param_list(mycombolist,my_param_str)
+        else:
+            self.param_list.append(param_str[:-1])
 
 
-def set_param(configfile, setting):
-    # setting is OrderedDict, perhaps nested before val is set.  example :  {"prices": {"milk": [2, 0.001, 0, 1000] }}
-    old_val = configfile['parameters']
-    new_val = setting
-    nextKey = next(iter(new_val.items()))[0]
-    old_old_val = old_val
-    while isinstance(new_val, dict) and len(new_val)== 1:
-    #while isinstance(new_val, dict):
+    def run_tests(self,config):
+        self.get_param_list(config['batch']['parameter_combinations'])
+        param_set = set(self.param_list)
+        test = ContinuousRankByGoodTests()
+        param_set = set(self.param_list)
+        test.go(config,param_set)
+        test = ContinuousRankTests()
+        param_set = set(self.param_list)
+        test.go(config,param_set)
+        test = DiscreteRankTests()
+        param_set = set(self.param_list)
+        test.go(config,param_set)
+        test = GoodnessTests()
+        param_set = set(self.param_list)
+        test.go(config,param_set)
+        test = MarketVolumeTests()
+        param_set = set(self.param_list)
+        test.go(config,param_set)
+        test = TransactionsTests()
+        param_set = set(self.param_list)
+        test.go(config,param_set)
+        param_set = set(self.param_list)
+        self.createTestCsv(config, param_set)
+
+
+    def set_param(self,configfile, setting):
+        # setting is OrderedDict, perhaps nested before val is set.  example :  {"prices": {"milk": [2, 0.001, 0, 1000] }}
+        old_val = configfile['parameters']
+        new_val = setting
         nextKey = next(iter(new_val.items()))[0]
         old_old_val = old_val
-        old_val = old_val[nextKey]
-        new_val = new_val[nextKey]
-    old_old_val[nextKey] = new_val
+        while isinstance(new_val, dict) and len(new_val)== 1:
+        #while isinstance(new_val, dict):
+            nextKey = next(iter(new_val.items()))[0]
+            old_old_val = old_val
+            old_val = old_val[nextKey]
+            new_val = new_val[nextKey]
+        old_old_val[nextKey] = new_val
 
-def call( combolist, configfile, rs=None,  param_str = ""):
-    if combolist:
-        mycombolist = copy.deepcopy(combolist)
-        level,settings = mycombolist.popitem(last = False)
-        for name, setting in settings.items():
-            myconfigfile = copy.deepcopy(configfile)
-            set_param(myconfigfile, setting)
-            my_param_str = param_str + name + "_"
-            # for sttarting in the middle of a batch run
-            #if not (
-                    #my_param_str == 'r_20_1_'  or
-                    #my_param_str == 'r_20_0.5_' or
-                    #my_param_str == 'r_20_0.1_' or
-                    #my_param_str == 'r_10_1_' or
-                    #my_param_str == 'r_10_0.5_'
-                    # my_param_str == 'r_sp182_' or
-                    # my_param_str == 'r_sp92_' or
-                    # my_param_str == 'r_sp30_'
-            #):
-            #if not my_param_str.startswith("r"):
+    def call(self, combolist, configfile, rs=None,  param_str = ""):
+        if combolist:
+            mycombolist = copy.deepcopy(combolist)
+            level,settings = mycombolist.popitem(last = False)
+            for name, setting in settings.items():
+                myconfigfile = copy.deepcopy(configfile)
+                self.set_param(myconfigfile, setting)
+                my_param_str = param_str + name + "_"
+                # for sttarting in the middle of a batch run
+                #if not (
+                        #my_param_str == 'r_20_1_'  or
+                        #my_param_str == 'r_20_0.5_' or
+                        #my_param_str == 'r_20_0.1_' or
+                        #my_param_str == 'r_10_1_' or
+                        #my_param_str == 'r_10_0.5_'
+                        # my_param_str == 'r_sp182_' or
+                        # my_param_str == 'r_sp92_' or
+                        # my_param_str == 'r_sp30_'
+                #):
+                #if not my_param_str.startswith("r"):
 
-            call(mycombolist, myconfigfile, rs, my_param_str)
-    else:
-        #new_seed = configfile['parameters']['seed'] + 1
-        #set_param(configfile, {"seed": new_seed})
-        if configfile['parameters']['seed']:
-            np.random.seed(seed=configfile['parameters']['seed'])
-            random.seed(configfile['parameters']['seed'] )
+                self.call(mycombolist, myconfigfile, rs, my_param_str)
+        else:
+            #new_seed = configfile['parameters']['seed'] + 1
+            #set_param(configfile, {"seed": new_seed})
+            if configfile['parameters']['seed']:
+                np.random.seed(seed=configfile['parameters']['seed'])
+                random.seed(configfile['parameters']['seed'] )
 
-        set_param( configfile, {"param_str": param_str })
-        repsim = ReputationSim(study_path =configfile, rs=rs, opened_config = True)
-        if configfile['parameters']['use_java']:
-            print ("{0} : {1}  port:{2} ".format(configfile['parameters']['output_path'],param_str,configfile['parameters']['port']))
-        print("{0} : {1}".format(configfile['parameters']['output_path'], param_str))
+            self.set_param( configfile, {"param_str": param_str })
+            repsim = ReputationSim(study_path =configfile, rs=rs, opened_config = True)
+            if configfile['parameters']['use_java']:
+                print ("{0} : {1}  port:{2} ".format(configfile['parameters']['output_path'],param_str,configfile['parameters']['port']))
+            print("{0} : {1}".format(configfile['parameters']['output_path'], param_str))
 
-        repsim.go()
+            repsim.go()
 
 
 def main():
+    runner = Runner()
     print (os.getcwd())
     study_path = sys.argv[1] if len(sys.argv)>1 else 'study.json'
     with open(study_path) as json_file:
@@ -869,9 +895,9 @@ def main():
                      'spendings': config['parameters']['reputation_parameters']['spendings']
 
                 })
-            call(config['batch']['parameter_combinations'], config,rs=rs)
+            runner.call(config['batch']['parameter_combinations'], config,rs=rs)
             if config['parameters']["run_automatic_tests"]:
-                run_tests(config)
+                runner.run_tests(config)
         else:
             repsim = ReputationSim(sys.argv[1]) if len(sys.argv) > 1 else ReputationSim()
             repsim.go()

@@ -2,15 +2,17 @@ import unittest
 import pandas as pd
 import json
 import datetime
+import copy
 from collections import OrderedDict
 
 
 
 class MarketVolumeTests(unittest.TestCase):
 
-    def go(self, config):
+    def go(self,config,param_set=set()):
         self.unittest = False
         self.config = config
+        self.param_set = param_set
         self.setUp()
         self.test_market_volume()
         self.test_scam_loss()
@@ -31,15 +33,35 @@ class MarketVolumeTests(unittest.TestCase):
 
         self.softAssertionErrors = []
         self.error_path = "./" + self.config['parameters']["output_path"] + "error_log.txt"
-        self.t = self.config['tests']
+        self.t = copy.deepcopy(self.config['tests'])
         self.error_log = open(self.error_path, "a+")
         self.market_volume_report = OrderedDict()
 
         self.codes = []
         for code,limits in self.t.items():
-            self.codes.append(code)
-            market_volume_report_path = "./" + self.config['parameters']["output_path"] +"marketVolume_" + code + ".tsv"
-            self.market_volume_report[code] = pd.read_csv(market_volume_report_path, "\t")
+            if code != "default":
+                self.codes.append(code)
+                market_volume_report_path = "./" + self.config['parameters']["output_path"] +"marketVolume_" + code + ".tsv"
+                self.market_volume_report[code] = pd.read_csv(market_volume_report_path, "\t")
+                if code in self.param_set:
+                    self.param_set.remove(code)
+        for code in self.param_set:
+            if 'default' in self.t:
+                self.codes.append(code)
+                market_volume_report_path = "./" + self.config['parameters']["output_path"] +"marketVolume_" + code + ".tsv"
+                self.market_volume_report[code] = pd.read_csv(market_volume_report_path, "\t")
+                self.t[code] = {}
+                self.t[code]['loss_to_scam'] = {}
+                self.t[code]['profit_from_scam'] = {}
+                self.t[code]['market_volume'] = {}
+                self.t[code]['loss_to_scam']['lower'] = self.t['default']['loss_to_scam']['lower']
+                self.t[code]['loss_to_scam']['upper'] = self.t['default']['loss_to_scam']['upper']
+
+                self.t[code]['profit_from_scam']['lower'] = self.t['default']['profit_from_scam']['lower']
+                self.t[code]['profit_from_scam']['upper'] = self.t['default']['profit_from_scam']['upper']
+
+                self.t[code]['market_volume']['lower'] = self.t['default']['market_volume']['lower']
+                self.t[code]['market_volume']['upper'] = self.t['default']['market_volume']['upper']
 
     def tearDown(self):
         if self.unittest:

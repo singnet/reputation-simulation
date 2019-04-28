@@ -3,15 +3,17 @@ import pandas as pd
 import sys
 import json
 import datetime
+import copy
 from collections import OrderedDict
 
 
 
 class GoodnessTests(unittest.TestCase):
 
-    def go(self,config):
+    def go(self,config,param_set=set()):
         self.unittest = False
         self.config = config
+        self.param_set = param_set
         self.setUp()
         self.test_inequity()
         self.tearDown()
@@ -30,7 +32,7 @@ class GoodnessTests(unittest.TestCase):
 
         self.softAssertionErrors = []
         self.error_path = "./" + self.config['parameters']["output_path"] + "error_log.txt"
-        self.t = self.config['tests']
+        self.t = copy.deepcopy(self.config['tests'])
         self.error_log = open(self.error_path, "a+")
         self.transactions = OrderedDict()
         self.boolean_users = OrderedDict()
@@ -38,13 +40,29 @@ class GoodnessTests(unittest.TestCase):
 
         self.codes = []
         for code, limits in self.t.items():
-            self.codes.append(code)
-            users_path = "./" + self.config['parameters']["output_path"] +"users_" + code + ".tsv"
-            boolean_users_path = "./" + self.config['parameters']["output_path"] +"boolean_users_" + code + ".tsv"
-            transactions_path = "./" + self.config['parameters']["output_path"] +"transactions_" + code + ".tsv"
-            self.transactions[code] = pd.read_csv(transactions_path, "\t", header=None)
-            self.boolean_users[code] = pd.read_csv(boolean_users_path, "\t", header=None)
-            self.users[code] = pd.read_csv(boolean_users_path, "\t", header=None)
+            if code != "default":
+                self.codes.append(code)
+                users_path = "./" + self.config['parameters']["output_path"] +"users_" + code + ".tsv"
+                boolean_users_path = "./" + self.config['parameters']["output_path"] +"boolean_users_" + code + ".tsv"
+                transactions_path = "./" + self.config['parameters']["output_path"] +"transactions_" + code + ".tsv"
+                self.transactions[code] = pd.read_csv(transactions_path, "\t", header=None)
+                self.boolean_users[code] = pd.read_csv(boolean_users_path, "\t", header=None)
+                self.users[code] = pd.read_csv(boolean_users_path, "\t", header=None)
+                if code in self.param_set:
+                    self.param_set.remove(code)
+        for code in self.param_set:
+            if 'default' in self.t:
+                self.codes.append(code)
+                users_path = "./" + self.config['parameters']["output_path"] +"users_" + code + ".tsv"
+                boolean_users_path = "./" + self.config['parameters']["output_path"] +"boolean_users_" + code + ".tsv"
+                transactions_path = "./" + self.config['parameters']["output_path"] +"transactions_" + code + ".tsv"
+                self.transactions[code] = pd.read_csv(transactions_path, "\t", header=None)
+                self.boolean_users[code] = pd.read_csv(boolean_users_path, "\t", header=None)
+                self.users[code] = pd.read_csv(boolean_users_path, "\t", header=None)
+                self.t[code] = {}
+                self.t[code]['inequity'] = {}
+                self.t[code]['inequity']['lower'] = self.t['default']['inequity']['lower']
+                self.t[code]['inequity']['upper'] = self.t['default']['inequity']['upper']
 
     def tearDown(self):
         if self.unittest:
