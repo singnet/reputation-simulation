@@ -1,9 +1,9 @@
 ### Analysis instructions for running the reputation simulation
    (1) Modify json config file for your run
-  * "noUnratednoDenomConserv5SAP182.json" is an example of a config file
-  * Config files have four sections: macro_views, test, batch, and parameters. 
+  * "rn.json" is an example of a config file
+  * Config files have four sections: macro_views, test, batch, and parameters. The parameters are the direct interface to the simulation, but the macro_views and batch section override what is the parameter section.  First the macro_views write over the parameters, then the batch write over them. The actual parameter set used for a run is written to its output folder.
     *  Marcroviews let the user use equations to parameterize the simulation in automated fashion:  parameters entered here are transalated with an adapter. 
-    *  Test tells what unittests and ranges apply to this scenario.
+    *  Test tells what unittests and ranges apply to this scenario. Both default and exception tests and bounds can be specified.
     *  Batch tells what parameters in the parameter section to run a cartesian product on, and what to call the outfiles.
     *  Parameters contains all the parameters of a single run
  * All the parameters you want to modify for a simple run are in the parameters section
@@ -23,19 +23,23 @@
   * user files tell the how good the agent is
   * market volume report reports on market volumes of trade between types of agents
   * rank history prints out the ranks of all agents in each row, with -1 meaning no ranking
+  * average rank history prints out the average ranks of agents during the time they are active in the simulation
+  * results.tsv contains the results of tests
 		
- (4)  To get metrics on the run, run unittests , which here are soft unittests for analysis purposes
-  * Make sure the config file mentioned in the Tests of the test folder contains the tests that you want run on each parameter combination and the directory of the simulation run to be tested.
+ (4)   There are two ways to get metrics on the run,: one is by setting automate tests to true, in which case individual test results are in the folder under results.tsv.  After the fact, unittests can be run. 
+  * The unittests are soft unittests for analysis purposes 
+  * In the unittest case, make sure the config file mentioned in the Tests of the test folder contains the tests that you want run on each parameter combination and the directory of the simulation run to be tested.
     * Modify the test.json file to have the correct tests and correct directory, the rest of the file is ignored.  You can do this by copying the config file onto the file "test.json"
     * Alternatively, if needed, you can change the config file name in every test in the reputation/test folder to the current config file
     
     ```sed -i 's/test.json/noUnratednoDenomConserv5SAP182.json/g' *Tests.py```
-  * Run the unittests, pointing to the test directory 
+    * Run the unittests, pointing to the test directory 
     
     ```python -m unittest discover -s /home/reputation/snsim/reputation/test -t /home/reputation/snsim/reputation/test -p *Tests*```
   * Metric results will appear in the output file
     * error_log.txt contains all the metrics, in appended timestamp mode to record metric changes over time
-    * For worksheet analysis, individual test results appear in tsv files
+    * Unittests make individual files for each test, and the automatic test runs combiene those results into one tsv.
+    * For worksheet analysis with unittest runs, individual test results that appear in tsv files can be aggregated with a notebook.
       * These tsv files can be read into a jupyter notebook, that generates a composite tsv for analysis in a worksheet
       * reputation_results-conserv_new_unrestricted_mem.ipynb is one example
 			
