@@ -212,6 +212,8 @@ class ReputationAgent(Agent):
             self.goods = OrderedDict(tuplist)
             num_trades =int(round(self.model.transactions_per_day_distribution.rvs(
                 ) if self.good else self.model.criminal_transactions_per_day_distribution.rvs() ))
+            if num_trades == 0:
+                num_trades = 1  #If there is less than one trade per day, the needs cycle determine whether the trade is made
 
             #we offer a more efficient version of cobb_douglas, which is a needs draw
 

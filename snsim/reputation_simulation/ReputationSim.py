@@ -680,6 +680,9 @@ class Runner():
 
 
         outpath = config['parameters']['output_path'] + 'results.tsv'
+
+
+
         allcols = ['code', 'folder', 'spendings', 'ratings', 'unrated', 'denom',
                    'logratings', 'fullnorm', 'conserv',
                    'default', 'downrating', 'decayed', 'period',
@@ -688,20 +691,7 @@ class Runner():
         columns = ['ratings', 'spendings', 'unrated', 'downrating', 'denom',
                    'logratings', 'fullnorm', 'default', 'conserv', 'decayed', 'period', 'folder', 'code']
 
-        p = config['parameters']['reputation_parameters']
-        paramvals = []
-        paramvals.append(str(p['ratings']))
-        paramvals.append(str(p['spendings']))
-        paramvals.append(str(p['unrated']))
-        paramvals.append(str(p['downrating']))
-        paramvals.append(str(p['denomination']))
-        paramvals.append(str(p['logratings']))
-        paramvals.append(str(p['fullnorm']))
-        paramvals.append(str(p['default']))
-        paramvals.append(str(p['conservatism']))
-        paramvals.append(str(p['decayed']))
-        paramvals.append(str(p['update_period']))
-        paramvals.append(config['parameters']['output_path'][: -1])
+
 
         # alist = [
         #     ['0.5', '0.5', 'false', 'false', 'true', 'false', 'true', '0.0', '0.9', '0.5', '1',
@@ -731,10 +721,29 @@ class Runner():
 
         dflist = []
         #for row in alist:
-        row = paramvals
-        print(row)
         runslist = []
         for code in codelist:
+            newconfigpath = config['parameters']['output_path'] + "params_" + code + ".json"
+
+            with open(newconfigpath) as json_file:
+                newconfig = json.load(json_file, object_pairs_hook=OrderedDict)
+            p = newconfig['parameters']['reputation_parameters']
+            paramvals = []
+            paramvals.append(str(p['ratings']))
+            paramvals.append(str(p['spendings']))
+            paramvals.append(str(p['unrated']))
+            paramvals.append(str(p['downrating']))
+            paramvals.append(str(p['denomination']))
+            paramvals.append(str(p['logratings']))
+            paramvals.append(str(p['fullnorm']))
+            paramvals.append(str(p['default']))
+            paramvals.append(str(p['conservatism']))
+            paramvals.append(str(p['decayed']))
+            paramvals.append(str(p['update_period']))
+            paramvals.append(config['parameters']['output_path'][: -1])
+            row = paramvals
+            print(row)
+
             copy = deepcopy(row)
             copy.append(code)
             runslist.append(copy)

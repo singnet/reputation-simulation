@@ -11,7 +11,7 @@
         "NIg": 1,
         "NIb": 1,
         "NA": 10,
-        "D": 3,
+        "D": 10,
         "SP": 1,
         "SIP": 0,
         "PLRg": 60,
@@ -113,25 +113,74 @@
   "batch": {
     "on": true,
     "parameter_combinations": {
-      "random_seeds": {
-        "r_10": [
+     "model": {
+        "r_SOM": [
           {
             "parameters": {
-              "seed": 10
+              "reputation_parameters": {
+				"unrated": false
+			  }
+            }
+          },
+		   {
+            "parameters": {
+              "reputation_parameters": {
+				"ratings": 0.5
+			  }
+            }
+          },
+		   {
+            "parameters": {
+              "reputation_parameters": {
+				"spendings": 0.5
+			  }
             }
           }
         ],
-        "r_20": [
-          {
+        "r_TOM": [
+            {
             "parameters": {
-              "seed": 20
+              "reputation_parameters": {
+				"unrated": true
+			  }
+            }
+          },
+		   {
+            "parameters": {
+              "reputation_parameters": {
+				"ratings": 1.0
+			  }
+            }
+          },
+		   {
+            "parameters": {
+              "reputation_parameters": {
+				"spendings": 0.0
+			  }
             }
           }
-        ],
-        "r_30": [
-          {
+          ],
+
+        "r_SOMTOM": [
+           {
             "parameters": {
-              "seed": 30
+              "reputation_parameters": {
+				"unrated": true
+			  }
+            }
+          },
+		   {
+            "parameters": {
+              "reputation_parameters": {
+				"ratings": 0.5
+			  }
+            }
+          },
+		   {
+            "parameters": {
+              "reputation_parameters": {
+				"spendings": 0.5
+			  }
             }
           }
         ]
@@ -185,7 +234,7 @@
             "macro_views": {
               "antons_view": {
                 "parameters": {
-                  "NA": 10000
+                  "NA": 100
                 }
               }
             }
@@ -196,7 +245,7 @@
             "macro_views": {
               "antons_view": {
                 "parameters": {
-                  "NA": 1000
+                  "NA": 50
                 }
               }
             }
