@@ -1,6 +1,6 @@
 ### Analysis instructions for running the reputation simulation
    (1) Modify json config file for your run
-  * "rn.json" is an example of a config file
+  * "halfTenth.json" is an example of a config file
   * Config files have four sections: macro_views, test, batch, and parameters. The parameters are the direct interface to the simulation, but the macro_views and batch section override what is the parameter section.  First the macro_views write over the parameters, then the batch write over them. The actual parameter set used for a run is written to its output folder.
     *  Marcroviews let the user use equations to parameterize the simulation in automated fashion:  parameters entered here are transalated with an adapter. 
     *  Test tells what unittests and ranges apply to this scenario. Both default and exception tests and bounds can be specified.
@@ -32,7 +32,7 @@
     * Modify the test.json file to have the correct tests and correct directory, the rest of the file is ignored.  You can do this by copying the config file onto the file "test.json"
     * Alternatively, if needed, you can change the config file name in every test in the reputation/test folder to the current config file
     
-    ```sed -i 's/test.json/noUnratednoDenomConserv5SAP182.json/g' *Tests.py```
+    ```sed -i 's/test.json/halfTenth.json/g' *Tests.py```
     * Run the unittests, pointing to the test directory 
     
     ```python -m unittest discover -s /home/reputation/snsim/reputation/test -t /home/reputation/snsim/reputation/test -p *Tests*```
