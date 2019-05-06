@@ -803,7 +803,8 @@ class Runner():
 
     def set_param(self,configfile, setting):
         # setting is OrderedDict, perhaps nested before val is set.  example :  {"prices": {"milk": [2, 0.001, 0, 1000] }}
-        old_val = configfile['parameters']
+        #old_val = configfile['parameters']
+        old_val = configfile
         new_val = setting
         nextKey = next(iter(new_val.items()))[0]
         old_old_val = old_val
@@ -819,9 +820,10 @@ class Runner():
         if combolist:
             mycombolist = copy.deepcopy(combolist)
             level,settings = mycombolist.popitem(last = False)
-            for name, setting in settings.items():
+            for name, settingsList in settings.items():
                 myconfigfile = copy.deepcopy(configfile)
-                self.set_param(myconfigfile, setting)
+                for setting  in settingsList:
+                    self.set_param(myconfigfile, setting)
                 my_param_str = param_str + name + "_"
                 # for sttarting in the middle of a batch run
                 #if not (
@@ -844,7 +846,9 @@ class Runner():
                 np.random.seed(seed=configfile['parameters']['seed'])
                 random.seed(configfile['parameters']['seed'] )
 
-            self.set_param( configfile, {"param_str": param_str })
+            self.set_param( configfile,{"parameters": {"param_str": param_str }})
+            if configfile['parameters']['macro_view']:
+                configfile = Adapters(configfile).translate()
             repsim = ReputationSim(study_path =configfile, rs=rs, opened_config = True)
             if configfile['parameters']['use_java']:
                 print ("{0} : {1}  port:{2} ".format(configfile['parameters']['output_path'],param_str,configfile['parameters']['port']))
@@ -862,8 +866,8 @@ def main():
         # if config['parameters']['seed']:
         #     np.random.seed(seed=config['parameters']['seed'])
         #     random.seed(config['parameters']['seed'] )
-        if config['parameters']['macro_view']:
-            config = Adapters(config).translate()
+        #if config['parameters']['macro_view']:
+            #config = Adapters(config).translate()
 
         if config['batch']['on']:
             now = dt.datetime.now()

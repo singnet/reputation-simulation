@@ -118,7 +118,7 @@ class Adapters():
 
         market_volume = [p*a*t for p, a , t in zip(prices,amounts,transaction_rates) ]
         sum_market_volume = sum(market_volume)
-        chance_of_supplying = {p:(market_volume[i]/sum_market_volume) * (num_good_suppliers/num_good_agents) for i,p in enumerate(product_list)}
+        chance_of_supplying = {p:0  for i,p in enumerate(product_list)} if sum_market_volume== 0 or num_good_agents==0 else {p:(market_volume[i]/sum_market_volume) * (num_good_suppliers/num_good_agents) for i,p in enumerate(product_list)}
         self.config['parameters']['chance_of_supplying']= chance_of_supplying
 
         amounts = [a[0] for p,a in new_amounts_bad.items()]
@@ -126,7 +126,8 @@ class Adapters():
         market_volume = [p*a*t for p, a , t in zip(prices,amounts,transaction_rates) ]
         sum_market_volume = sum(market_volume)
 
-        criminal_chance_of_supplying = {p:(market_volume[i]/sum_market_volume)* (num_bad_suppliers/num_bad_agents)  for i,p in enumerate(product_list)}
+        criminal_chance_of_supplying ={p:0  for i,p in enumerate(product_list)
+            } if sum_market_volume== 0 or num_bad_agents==0 else {p:(market_volume[i]/sum_market_volume)* (num_bad_suppliers/num_bad_agents)  for i,p in enumerate(product_list)}
         self.config['parameters']['criminal_chance_of_supplying']= criminal_chance_of_supplying
 
         mean =  self.config['parameters']['goodness'][0]
@@ -135,7 +136,7 @@ class Adapters():
         threshold = stats.norm(mean, stdev).ppf(pneg)
         self.config['parameters']['ratings_goodness_thresholds']["0.0"]=threshold
 
-        self.config['parameters']['criminal_agent_ring_size'][0] = int(round(num_bad_consumers/num_bad_suppliers))
+        self.config['parameters']['criminal_agent_ring_size'][0] = 0 if num_bad_suppliers == 0 else int(round(num_bad_consumers/num_bad_suppliers))
 
 
         return self.config
