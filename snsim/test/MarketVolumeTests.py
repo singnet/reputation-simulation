@@ -34,7 +34,7 @@ class MarketVolumeTests(unittest.TestCase):
         except AttributeError:
             self.unittest = True
             self.config = None
-            self.param_set = set()
+        self.param_list = []
 
         if self.config is None:
             study_path = "./test.json"
