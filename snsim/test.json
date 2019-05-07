@@ -6,14 +6,14 @@
         "CRg": 9,
         "CRb": 9,
         "GR": 19,
-        "NTg": 1,
-        "NTb": 2,
+        "NTg": 0.1,
+        "NTb": 0.2,
         "NIg": 1,
         "NIb": 1,
         "NA": 1000,
         "D": 180,
-        "SP": 182,
-        "SIP": 0,
+        "SP": 30,
+        "SIP": 15,
         "PLRg": 60,
         "PLRb": 100,
         "PR": 9,
@@ -22,243 +22,20 @@
         "Pmax": 150
       },
       "supplement": {
-        "amounts_stdev" : 0.01,
-        "amounts_min" :  0,
-        "amounts_max" :  1000,
-        "cobb_douglas_stdev" :  0.01,
-        "need_cycle_stdev" : 0.01,
-        "need_cycle_min" :  0,
-        "need_cycle_max" :  1000,
-        "price_stdev" : 0.01,
-        "zipf_parameter":  1.1
+        "amounts_stdev": 0.01,
+        "amounts_min": 0,
+        "amounts_max": 1000,
+        "cobb_douglas_stdev": 0.01,
+        "need_cycle_stdev": 0.01,
+        "need_cycle_min": 0,
+        "need_cycle_max": 1000,
+        "price_stdev": 0.01,
+        "zipf_parameter": 1.1
       }
     }
   },
   "tests": {
-    "r_sp182": {
-      "recall": {
-        "lower": 0,
-        "upper": 1
-      },
-      "precision": {
-        "lower": 0,
-        "upper": 1
-      },
-      "f1": {
-        "lower": 0,
-        "upper": 1
-      },
-      "accuracy": {
-        "lower": 0,
-        "upper": 1
-      },
-      "pearson": {
-        "lower": 0,
-        "upper": 1
-      },
-      "pearsonb": {
-        "lower": 0,
-        "upper": 1
-      },
-      "pearsong": {
-        "lower": 0,
-        "upper": 1
-      },
-      "spearman": {
-        "lower": 0,
-        "upper": 1
-      },
-      "rmsd": {
-        "lower": 0,
-        "upper": 1
-      },
-      "rmsdg": {
-        "lower": 0,
-        "upper": 1
-      },
-      "rmsdb": {
-        "lower": 0,
-        "upper": 1
-      },
-      "profit_from_scam": {
-        "lower": 0,
-        "upper": 1
-      },
-      "loss_to_scam": {
-        "lower": 0,
-        "upper": 1
-      },
-      "stickiness": {
-        "lower": 0,
-        "upper": 1
-      },
-      "market_volume": {
-        "lower": 30,
-        "upper": 40
-      },
-      "price_variance": {
-        "lower": 7500,
-        "upper": 10000
-      },
-      "inequity": {
-        "lower": 0,
-        "upper": 1
-      },
-      "utility": {
-        "lower": 0,
-        "upper": 1
-      }
-    },
-    "r_sp92": {
-      "recall": {
-        "lower": 0,
-        "upper": 1
-      },
-      "precision": {
-        "lower": 0,
-        "upper": 1
-      },
-      "f1": {
-        "lower": 0,
-        "upper": 1
-      },
-      "accuracy": {
-        "lower": 0,
-        "upper": 1
-      },
-      "pearson": {
-        "lower": 0,
-        "upper": 1
-      },
-      "pearsonb": {
-        "lower": 0,
-        "upper": 1
-      },
-      "pearsong": {
-        "lower": 0,
-        "upper": 1
-      },
-      "spearman": {
-        "lower": 0,
-        "upper": 1
-      },
-      "rmsd": {
-        "lower": 0,
-        "upper": 1
-      },
-      "rmsdg": {
-        "lower": 0,
-        "upper": 1
-      },
-      "rmsdb": {
-        "lower": 0,
-        "upper": 1
-      },
-      "profit_from_scam": {
-        "lower": 0,
-        "upper": 1
-      },
-      "loss_to_scam": {
-        "lower": 0,
-        "upper": 1
-      },
-      "stickiness": {
-        "lower": 0,
-        "upper": 1
-      },
-      "market_volume": {
-        "lower": 30,
-        "upper": 40
-      },
-      "price_variance": {
-        "lower": 7500,
-        "upper": 10000
-      },
-      "inequity": {
-        "lower": 0,
-        "upper": 1
-      },
-      "utility": {
-        "lower": 0,
-        "upper": 1
-      }
-    },
-    "r_sp30": {
-      "recall": {
-        "lower": 0,
-        "upper": 1
-      },
-      "precision": {
-        "lower": 0,
-        "upper": 1
-      },
-      "f1": {
-        "lower": 0,
-        "upper": 1
-      },
-      "accuracy": {
-        "lower": 0,
-        "upper": 1
-      },
-      "pearson": {
-        "lower": 0,
-        "upper": 1
-      },
-      "pearsonb": {
-        "lower": 0,
-        "upper": 1
-      },
-      "pearsong": {
-        "lower": 0,
-        "upper": 1
-      },
-      "spearman": {
-        "lower": 0,
-        "upper": 1
-      },
-      "rmsd": {
-        "lower": 0,
-        "upper": 1
-      },
-      "rmsdg": {
-        "lower": 0,
-        "upper": 1
-      },
-      "rmsdb": {
-        "lower": 0,
-        "upper": 1
-      },
-      "profit_from_scam": {
-        "lower": 0,
-        "upper": 1
-      },
-      "loss_to_scam": {
-        "lower": 0,
-        "upper": 1
-      },
-      "stickiness": {
-        "lower": 0,
-        "upper": 1
-      },
-      "market_volume": {
-        "lower": 30,
-        "upper": 40
-      },
-      "price_variance": {
-        "lower": 7500,
-        "upper": 10000
-      },
-      "inequity": {
-        "lower": 0,
-        "upper": 1
-      },
-      "utility": {
-        "lower": 0,
-        "upper": 1
-      }
-    },
-
-    "r_sp10": {
+    "default": {
       "recall": {
         "lower": 0,
         "upper": 1
@@ -333,34 +110,208 @@
       }
     }
   },
-  "batch":{
-    "on":true,
-    "parameter_combinations":{
-      "scam_period":{
-        "r_sp182":{
-          "scam_parameters":{
-            "scam_period":182,
-            "scam_inactive_period":91
+  "batch": {
+    "on": true,
+    "parameter_combinations": {
+      "model": {
+        "r_SOM": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+				"unrated": false
+			  }
+            }
+          },
+		   {
+            "parameters": {
+              "reputation_parameters": {
+				"ratings": 0.5
+			  }
+            }
+          },
+		   {
+            "parameters": {
+              "reputation_parameters": {
+				"spendings": 0.5
+			  }
+            }
           }
-        },
-        "r_sp92":{
-          "scam_parameters":{
-            "scam_period":92,
-            "scam_inactive_period":46
+        ],
+        "r_TOM": [
+            {
+            "parameters": {
+              "reputation_parameters": {
+				"unrated": true
+			  }
+            }
+          },
+		   {
+            "parameters": {
+              "reputation_parameters": {
+				"ratings": 1.0
+			  }
+            }
+          },
+		   {
+            "parameters": {
+              "reputation_parameters": {
+				"spendings": 0.0
+			  }
+            }
           }
-        },
-        "r_sp30":{
-          "scam_parameters":{
-            "scam_period":30,
-            "scam_inactive_period":15
+          ],
+
+        "r_SOMTOM": [
+           {
+            "parameters": {
+              "reputation_parameters": {
+				"unrated": true
+			  }
+            }
+          },
+		   {
+            "parameters": {
+              "reputation_parameters": {
+				"ratings": 0.5
+			  }
+            }
+          },
+		   {
+            "parameters": {
+              "reputation_parameters": {
+				"spendings": 0.5
+			  }
+            }
           }
-        },
-        "r_sp10":{
-          "scam_parameters":{
-            "scam_period":10,
-            "scam_inactive_period":5
+        ]
+      },
+      "conservatism": {
+        "conserv5": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+				"conservatism": 0.5
+			  }
+            }
           }
-        }
+        ],
+        "conserv9": [
+            {
+            "parameters": {
+              "reputation_parameters": {
+				"conservatism": 0.9
+			  }
+            }
+          }
+        ]
+      },
+      "downrating": {
+        "down": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+				"downrating": true
+			  }
+            }
+          }
+        ],
+        "noDown": [
+            {
+            "parameters": {
+              "reputation_parameters": {
+				"downrating": false
+			  }
+            }
+          }
+        ]
+      },
+
+      "default": {
+        "default0": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+				"default": 0.0
+			  }
+            }
+          }
+        ],
+        "default5": [
+            {
+            "parameters": {
+              "reputation_parameters": {
+				"default": 0.5
+			  }
+            }
+          }
+        ]
+      },
+      "scam_period": {
+        "sp90": [
+          {
+            "macro_views": {
+              "antons_view": {
+                "parameters": {
+                  "SP": 90
+                }
+              }
+            }
+          },
+          {
+            "macro_views": {
+              "antons_view": {
+                "parameters": {
+                  "SIP": 45
+                }
+              }
+            }
+          }
+        ],
+        "sp30": [
+          {
+            "macro_views": {
+              "antons_view": {
+                "parameters": {
+                  "SP": 30
+                }
+              }
+            }
+          },
+          {
+            "macro_views": {
+              "antons_view": {
+                "parameters": {
+                  "SIP": 15
+                }
+              }
+            }
+          }
+        ]
+      },
+
+      "num_users": {
+        "na10000": [
+          {
+            "macro_views": {
+              "antons_view": {
+                "parameters": {
+                  "NA": 10000
+                }
+              }
+            }
+          }
+        ],
+        "na1000": [
+          {
+            "macro_views": {
+              "antons_view": {
+                "parameters": {
+                  "NA": 1000
+                }
+              }
+            }
+          }
+        ]
       }
     }
   },
@@ -375,19 +326,19 @@
       "decayed": 0.5,
       "liquid": true,
       "logranks": true,
-      "downrating": false,
+      "downrating": true,
       "update_period": 1,
       "aggregation": false,
       "denomination": true,
-      "unrated": true,
-      "ratings":0.5,
-      "spendings":0.5
+      "unrated": false,
+      "ratings": 0.5,
+      "spendings": 0.5
     },
     "macro_view": "antons_view",
-    "use_java": true,
+    "use_java": false,
     "run_automatic_tests": true,
-    "port": 1214,
-    "output_path": "weightDenomUnratedConserv5Ratings5Spending5half_debug/",
+    "port": 1181,
+    "output_path": "halfTenth/",
     "seed": 9573,
     "observer_mode": false,
     "randomize_initial_needs": true,
@@ -409,8 +360,8 @@
       "scam_inactive_period": 10
     },
     "criminal_agent_ring_size": [
-      9,
-      0.001,
+      50,
+      2,
       2,
       100
     ],
@@ -547,13 +498,13 @@
     ],
     "transactions_per_day": [
       10,
-      1,
+      0.0001,
       0,
       1000
     ],
     "criminal_transactions_per_day": [
       100,
-      1,
+      0.0001,
       0,
       1000
     ],
