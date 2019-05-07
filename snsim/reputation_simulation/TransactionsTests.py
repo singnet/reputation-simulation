@@ -11,10 +11,19 @@ from collections import OrderedDict
 
 class TransactionsTests(unittest.TestCase):
 
-    def go(self,config,param_set=set()):
+    def get_param_list(self, combolist, param_str = ""):
+        if combolist:
+            mycombolist = copy.deepcopy(combolist)
+            level,settings = mycombolist.popitem(last = False)
+            for name, setting in settings.items():
+                my_param_str = param_str + name + "_"
+                self.get_param_list(mycombolist,my_param_str)
+        else:
+            self.param_list.append(param_str[:-1])
+
+    def go(self,config):
         self.unittest = False
         self.config = config
-        self.param_set = param_set
         self.setUp()
         self.test_price_variance()
         self.test_utility()
@@ -33,6 +42,8 @@ class TransactionsTests(unittest.TestCase):
             with open(study_path) as json_file:
                 self.config = json.load(json_file, object_pairs_hook=OrderedDict)
 
+        self.get_param_list(self.config['batch']['parameter_combinations'])
+        self.param_set = set(self.param_list)
         self.softAssertionErrors = []
         self.error_path = "./" + self.config['parameters']["output_path"] + "error_log.txt"
         self.t = copy.deepcopy(self.config['tests'])

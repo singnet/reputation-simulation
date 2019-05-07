@@ -338,7 +338,7 @@
     "use_java": false,
     "run_automatic_tests": true,
     "port": 1181,
-    "output_path": "halfTenth/",
+    "output_path": "SOMTOMconserv9NoDownDefault5HalfRn/",
     "seed": 9573,
     "observer_mode": false,
     "randomize_initial_needs": true,

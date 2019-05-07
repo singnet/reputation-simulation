@@ -786,28 +786,20 @@ class Runner():
 
 
     def run_tests(self,config):
-        self.get_param_list(config['batch']['parameter_combinations'])
-        param_set = set(self.param_list)
         test = ContinuousRankByGoodTests()
-        param_set = set(self.param_list)
-        test.go(config,param_set)
+        test.go(config)
         test = ContinuousRankTests()
-        param_set = set(self.param_list)
-        test.go(config,param_set)
+        test.go(config)
         test = DiscreteRankTests()
-        param_set = set(self.param_list)
-        test.go(config,param_set)
+        test.go(config)
         test = GoodnessTests()
-        param_set = set(self.param_list)
-        test.go(config,param_set)
+        test.go(config)
         test = MarketVolumeTests()
-        param_set = set(self.param_list)
-        test.go(config,param_set)
+        test.go(config)
         test = TransactionsTests()
-        param_set = set(self.param_list)
-        test.go(config,param_set)
-        param_set = set(self.param_list)
-        self.createTestCsv(config, param_set)
+        test.go(config)
+        self.get_param_list(config['batch']['parameter_combinations'])
+        self.createTestCsv(config, set(self.param_list))
 
 
     def set_param(self,configfile, setting):
