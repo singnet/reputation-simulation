@@ -678,15 +678,18 @@ class Runner():
         import pandas as pd
         from copy import deepcopy
 
-
-        outpath = config['parameters']['output_path'] + 'results.tsv'
-
-
-
+        outpath = config['parameters']['output_path'] + 'results.csv'
         allcols = ['code', 'folder', 'spendings', 'ratings', 'unrated', 'denom',
                    'logratings', 'fullnorm', 'conserv',
                    'default', 'downrating', 'decayed', 'period',
-                   'loss_to_scam', 'profit_from_scam', 'inequity', 'utility', 'market_volume']
+                   'precision', 'recall', 'f1',
+                   'pearson_by_good', 'pearsong_by_good', 'pearsonb_by_good',
+                   'loss_to_scam', 'profit_from_scam',  'market_volume']
+        #
+        # allcols = ['code', 'folder', 'spendings', 'ratings', 'unrated', 'denom',
+        #            'logratings', 'fullnorm', 'conserv',
+        #            'default', 'downrating', 'decayed', 'period',
+        #            'loss_to_scam', 'profit_from_scam', 'inequity', 'utility', 'market_volume']
 
         columns = ['ratings', 'spendings', 'unrated', 'downrating', 'denom',
                    'logratings', 'fullnorm', 'default', 'conserv', 'decayed', 'period', 'folder', 'code']
@@ -709,13 +712,13 @@ class Runner():
             "discrete_rank_tests.tsv",
             "correlation_by_good_tests.tsv",
             "scam_loss_tests.tsv",
-            "utility_tests.tsv",
-            "inequity_tests.tsv",
+         #   "utility_tests.tsv",
+        #    "inequity_tests.tsv",
             "market_volume_tests.tsv",
-            "price_variance_tests.tsv",
-            "correlation_tests.tsv",
-            "continuous_rsmd_tests.tsv",
-            "continuous_rsmd_by_good_tests.tsv",
+         #   "price_variance_tests.tsv",
+         #   "correlation_tests.tsv",
+        #    "continuous_rsmd_tests.tsv",
+         #   "continuous_rsmd_by_good_tests.tsv",
             "scam_profit_tests.tsv",
         ]
 
@@ -788,16 +791,16 @@ class Runner():
     def run_tests(self,config):
         test = ContinuousRankByGoodTests()
         test.go(config)
-        test = ContinuousRankTests()
-        test.go(config)
+        #test = ContinuousRankTests()
+        #test.go(config)
         test = DiscreteRankTests()
         test.go(config)
-        test = GoodnessTests()
-        test.go(config)
+        #test = GoodnessTests()
+        #test.go(config)
         test = MarketVolumeTests()
         test.go(config)
-        test = TransactionsTests()
-        test.go(config)
+        #test = TransactionsTests()
+        #test.go(config)
         self.get_param_list(config['batch']['parameter_combinations'])
         self.createTestCsv(config, set(self.param_list))
 
