@@ -39,16 +39,24 @@ class Adapters():
         npr= self.config['macro_views']['antons_view']['parameters']['NP']
         pmin= self.config['macro_views']['antons_view']['parameters']['Pmin']
         pmax= self.config['macro_views']['antons_view']['parameters']['Pmax']
+        gf = self.config['macro_views']['antons_view']['parameters']['GF']
 
         self.config ['parameters']['num_users'] = na
         num_bad_agents = na //(gr+1)
         num_good_agents = gr*num_bad_agents
-        self.config['parameters']['chance_of_criminal']=num_bad_agents /na
+
+
         num_good_consumers = (num_good_agents*crg) // (crg + 1)
         num_good_suppliers = num_good_consumers // crg
         num_bad_consumers = (num_bad_agents*crb) // (crb + 1)
         num_bad_suppliers = num_bad_consumers // crb
 
+        num_consumers = num_good_consumers + num_bad_consumers
+        num_bad_consumers = gf * num_consumers
+        num_good_consumers = num_consumers - num_bad_consumers
+        num_bad_agents = num_bad_consumers + num_bad_suppliers
+
+        self.config['parameters']['chance_of_criminal']=num_bad_agents /na
         date_time = self.config['parameters']['initial_date']
         pattern = '%d.%m.%Y %H:%M:%S'
         date_tuple = time.strptime(date_time, pattern)
@@ -60,11 +68,11 @@ class Adapters():
         self.config['parameters']['chance_of_rating_good2good']=plrg * 0.01
         self.config['parameters']['chance_of_rating_good2bad']=plrb * 0.01
 
-        self.config['parameters']["scam_parameters"]["scam_period"] = sp
-        self.config['parameters']["scam_parameters"]["scam_inactive_period"] = sip
+        self.config['parameters']["scam_parameters"]["scam_period"][0] = sp
+        self.config['parameters']["scam_parameters"]["scam_inactive_period"][0] = sip
 
 
-        product_list = ["product{0}".format(i) for i in range(npr)]
+        product_list = ["{0}".format(i) for i in range(npr)]
 
         x = np.arange(1, npr + 1)
 
@@ -92,6 +100,10 @@ class Adapters():
         cobb_douglas = {p:[sample[i],stdev] for i,p in enumerate(product_list)}
         self.config['parameters']['cobb_douglas_utilities'] = cobb_douglas
 
+        criminal_cobb_douglas = {p:(sample[i] if p in self.config['parameters']['criminal_category_list'] else 0
+                                    ) for i,p in enumerate(product_list)}
+        criminal_cobb_douglas = self.normalize_utilities(criminal_cobb_douglas)
+
         stdev = self.config['macro_views']['antons_view']['supplement']['need_cycle_stdev']
         min= self.config['macro_views']['antons_view']['supplement']['need_cycle_min']
         max=self.config['macro_views']['antons_view']['supplement']['need_cycle_max']
@@ -99,7 +111,8 @@ class Adapters():
         new_need_cycle = {p:[1/(sample[i]*ntg),stdev, min, max] for i,p in enumerate(product_list)}
         self.config['parameters']['need_cycle'] = new_need_cycle
 
-        new_criminal_need_cycle = {p:[1/(sample[i]*ntb),stdev, min, max] for i,p in enumerate(product_list)}
+        new_criminal_need_cycle = {p:[1/(sample[i]*ntb),stdev, min, max] for i,p in enumerate(product_list) if (
+                p in self.config['parameters']['criminal_category_list'] )}
         self.config['parameters']['criminal_need_cycle'] = new_criminal_need_cycle
 
         stdev = self.config['macro_views']['antons_view']['supplement']['price_stdev']
@@ -121,13 +134,15 @@ class Adapters():
         chance_of_supplying = {p:0  for i,p in enumerate(product_list)} if sum_market_volume== 0 or num_good_agents==0 else {p:(market_volume[i]/sum_market_volume) * (num_good_suppliers/num_good_agents) for i,p in enumerate(product_list)}
         self.config['parameters']['chance_of_supplying']= chance_of_supplying
 
+        transaction_rates = [a for p,a in criminal_cobb_douglas.items()]
         amounts = [a[0] for p,a in new_amounts_bad.items()]
         prices = [a[0] for p,a in new_prices_bad.items()]
         market_volume = [p*a*t for p, a , t in zip(prices,amounts,transaction_rates) ]
         sum_market_volume = sum(market_volume)
 
-        criminal_chance_of_supplying ={p:0  for i,p in enumerate(product_list)
-            } if sum_market_volume== 0 or num_bad_agents==0 else {p:(market_volume[i]/sum_market_volume)* (num_bad_suppliers/num_bad_agents)  for i,p in enumerate(product_list)}
+        criminal_chance_of_supplying ={p:0  for i,p in enumerate(self.config['parameters']['criminal_category_list'])
+            } if sum_market_volume== 0 or num_bad_agents==0 else {p:(
+            market_volume[i]/sum_market_volume)* (num_bad_suppliers/num_bad_agents)  for i,p in enumerate(product_list)}
         self.config['parameters']['criminal_chance_of_supplying']= criminal_chance_of_supplying
 
         mean =  self.config['parameters']['goodness'][0]
@@ -136,7 +151,16 @@ class Adapters():
         threshold = stats.norm(mean, stdev).ppf(pneg)
         self.config['parameters']['ratings_goodness_thresholds']["0.0"]=threshold
 
-        self.config['parameters']['criminal_agent_ring_size'][0] = 0 if num_bad_suppliers == 0 else int(round(num_bad_consumers/num_bad_suppliers))
-
+        if self.config['macro_views']['antons_view']['supplement'] ["overwrite_criminal_agent_ring_size"] == "divide_equally":
+            self.config['parameters']['criminal_agent_ring_size'][0] = 0 if num_bad_suppliers == 0 else int(round(num_bad_consumers/num_bad_suppliers))
 
         return self.config
+
+
+
+    def normalize_utilities(self,utilities):
+        #make all the utilities add to one
+
+        sum_utilities = sum(utilities.values())
+        utilities = {k:(v/sum_utilities) for k,v in utilities.items()}
+        return utilities

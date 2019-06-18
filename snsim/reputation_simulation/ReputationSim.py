@@ -11,6 +11,8 @@ import datetime as dt
 import time
 import operator
 from scipy.stats import truncnorm
+from pomegranate import *
+
 from ReputationAgent import ReputationAgent
 from Adapters import Adapters
 from ContinuousRankByGoodTests import ContinuousRankByGoodTests
@@ -54,6 +56,7 @@ class ReputationSim(Model):
 
     def __init__(self,study_path='study.json',rs=None,  opened_config= False):
        # print('First line of init in RepuationSim, study path is ${0}'.format(study_path))
+        self.current_product_id = 0
         self.config = None
         if opened_config:
             self.config = study_path
@@ -62,7 +65,12 @@ class ReputationSim(Model):
 
                 self.config = json.load(json_file, object_pairs_hook=OrderedDict)
 
+        if rs is None:
+           rs = self.initialize_reputation_system(self.config)
+
         #save the config with the output
+
+        self.bayesian_network = self.get_bayesian_networks()
 
         self.transaction_numbers = []
         transaction_number = 0
@@ -121,6 +129,14 @@ class ReputationSim(Model):
             *tuple(self.parameters['criminal_transactions_per_day']))
         self.transactions_per_day_distribution = self.get_truncated_normal(
             *tuple(self.parameters['transactions_per_day']))
+        self.sp_distribution = self.get_truncated_normal(
+            *tuple(self.parameters['scam_parameters']['scam_period']))
+        self.num_products_supplied_distribution = self.get_truncated_normal(
+            *tuple(self.parameters['num_products_supplied']))
+        self.quality_deviation_from_supplier_distribution = self.get_truncated_normal(
+            *tuple(self.parameters['quality_deviation_from_supplier']))
+        self.sip_distribution = self.get_truncated_normal(
+            *tuple(self.parameters['scam_parameters']['scam_inactive_period']))
         self.criminal_agent_ring_size_distribution = self.get_truncated_normal(*tuple(self.parameters['criminal_agent_ring_size']) )
         self.open_to_new_experiences_distribution = self.get_truncated_normal(*tuple(self.parameters['open_to_new_experiences']) )
         self.criminal_goodness_distribution = self.get_truncated_normal(*tuple(self.parameters['criminal_goodness']) )
@@ -261,7 +277,105 @@ class ReputationSim(Model):
             self.reset_reputation_system()
         self.rank_history = self.rank_history()
         self.reset_stats()
+
+        self.reset_stats_product()
         #print ('Last line of ReputationSim __init__')
+
+    def next_product_id(self):
+        product_id = self.current_product_id
+        self.current_product_id += 1
+        return product_id
+
+    def roll_bayes(self,evidence,net):
+        #result = self.model.roll_bayes(evidence, "supplier_switch")
+        description = self.bayesian_network[net].predict_proba(evidence)
+        result = (json.loads(description[2].to_json()))['parameters'][0]
+        winner = None
+        roll = random.uniform(0, 1)
+        cumul = 0
+        for key, rating in result.items():
+            if winner is None:
+                cumul = cumul + rating
+                if cumul > roll:
+                    winner = key
+        return winner
+
+    def get_bayesian_networks(self):
+        bayesian_networks ={}
+        for netname, netinfo in self.config['bayesian_networks'].items():
+            dists ={}
+            states={}
+            edge_list = []
+            for distname, distinfo in netinfo['discrete_distributions'].items():
+                distinfodict = {k:v for k,v in distinfo.items()}
+                dist = DiscreteDistribution(distinfodict)
+                dists[distname]=dist
+                state = State(dist, name=distname)
+                states[distname]= state
+            cpts = copy.deepcopy(netinfo['conditional_probability'])
+            isa_dag = True
+            while len(cpts) and isa_dag:
+                len_before = len(cpts)
+                states_exist = {k:v for k,v in cpts.items() if all(name in states for name in v['RVs'])}
+                for cptname, cptinfo in states_exist.items():
+                    dist_list = [dists[rvname] for rvname in cptinfo['RVs']]
+                    cpt = ConditionalProbabilityTable(cptinfo['CPT'],dist_list)
+                    dists[cptname ]= cpt
+                    state = State(cpt,name=cptname)
+                    states[cptname] = state
+                    cpts.pop(cptname)
+                    for rvname in cptinfo['RVs']:
+                        edge_list.append((states[rvname],states[cptname]))
+                if len_before == len(cpts):
+                    isa_dag = False
+
+            bayesian_networks[netname]= BayesianNetwork(netname)
+            state_list = [state for statename,state in states.items()]
+            bayesian_networks[netname].add_states(*state_list)
+            for edge in edge_list:
+                bayesian_networks[netname].add_edge(*edge)
+            bayesian_networks[netname].bake()
+
+        #     description = bayesian_networks[netname].predict_proba({})
+        #
+        #     print ("description = bayesian_networks[netname].predict_proba({})")
+        #     print(description)
+        #
+        #
+        # description = bayesian_networks["supplier_scam"].predict_proba(
+        #     {"supplier_outside_reputation":"supplier_outside_reputationHigh"})
+        # print("""description = bayesian_networks["supplier_scam"].predict_proba(
+        #     {"supplier_outside_reputation":"supplier_outside_reputationHigh"})""")
+        # print(description)
+        #
+        # description = bayesian_networks["supplier_scam"].predict_proba(
+        #     {"supplier_LDprofit":"supplier_LDprofitNot",
+        #     "supplier_outside_reputation":"supplier_outside_reputationLow"})
+        # print("""description = bayesian_networks["supplier_scam"].predict_proba(
+        #     {"supplier_LDprofit":"supplier_LDprofitNot",
+        #     "supplier_outside_reputation":"supplier_outside_reputationLow"})""")
+        # print(description)
+        #
+        # description = bayesian_networks["product_scam"].predict_proba({"product_fairness":"product_fairnessNot"})
+        # print('description = bayesian_networks["product_scam"].predict_proba({"product_fairness":"product_fairnessNot"})')
+        # print(description)
+        #
+        # description = bayesian_networks["product_scam"].predict_proba({"product_fairness":"product_fairness"})
+        # print('description = bayesian_networks["product_scam"].predict_proba({"product_fairness":"product_fairness"})')
+        # print(description)
+        #
+        # description = bayesian_networks["PLRo"].predict_proba({"PLRt":"PLRt_30","PLRo":"PLRoNot"})
+        # print("""description = bayesian_networks["PLRo"].predict_proba({"PLRt":"PLRt_30","PLRo":"PLRoNot"})""")
+        # print(description)
+        #
+        # description = bayesian_networks["num_bought_scams"].predict_proba({"product_Dscam":"product_Dscam_lower"})
+        # print('description = bayesian_networks["num_bought_scams"].predict_proba({"product_Dscam":"product_Dscam_lower"})')
+        # print(description)
+        #
+
+        return bayesian_networks
+
+
 
 
     def reset_reputation_system(self):
@@ -272,6 +386,50 @@ class ReputationSim(Model):
             #self.reputation_system.set_parameters({'fullnorm': True})
 
 
+    def reset_stats_product(self):
+
+        # OQ is organic quality 0-1
+        # CR is commission rate
+        #
+        # bsl_num = Σorganicbuys(Price * (1 - OQ))
+        # bsl_denom = Σorganicbuys(Price)
+        # sgp_denom = Σsponsoredbuys(Price * (1 + CR))
+        # sgl_num = (Σsponsoredbuys(Price * (1 + CR) * OQ))
+        # sgl_denom = (Σorganicbuys(Price * OQ))
+        # num_changes
+        #
+        self.bsl_num = 0
+        self.bsl_denom = 0
+        self.sgp_denom = 0
+        self.sgl_num = 0
+        self.sgl_denom = 0
+        self.num_changes = 0
+
+    def add_organic_buy(self,price,quality):
+        # bsl_num = Σorganicbuys(Price * (1 - OQ))
+        # bsl_denom = Σorganicbuys(Price)
+        # sgl_denom = (Σorganicbuys(Price * OQ))
+        self.bsl_num += price * (1.0-quality)
+        self.bsl_denom += price
+        self.sgl_denom += price * quality
+
+
+    def add_sponsored_buy(self,price, quality, commission):
+        # sgp_denom = Σsponsoredbuys(Price * (1 + CR))
+        # sgl_num = (Σsponsoredbuys(Price * (1 + CR) * OQ))
+        self.sgp_denom += price * (1+commission)
+        self.sgl_num += price * (1+commission) * quality
+
+    def add_identity_change(self):
+        self.num_changes += 1
+
+    def print_stats_product(self):
+        bsl = self.bsl_num/self.bsl_denom if self.bsl_denom != 0 else -1
+        sgp = self.bsl_num/self.sgp_denom if self.sgp_denom != 0 else -1
+        sgl = self.sgl_num/self.sgl_denom if self.sgl_denom != 0 else -1
+        criminals = [bad for good,bad in self.criminal_suppliers.items()]
+        asp = (len(criminals)* self.get_end_tick())/self.num_changes if self.num_changes != 0 else -1
+        print ("\nbsl:{0},sgp:{1},sgl:{2},asp:{3}\n".format(bsl,sgp,sgl,asp))
 
     def reset_stats(self):
         self.good2good_agent_completed_transactions  = 0
@@ -312,12 +470,16 @@ class ReputationSim(Model):
         self.rank_days[id] =0
 
     def add_rank(self,id,rank):
-            self.rank_sums[id] += rank
-            self.rank_days[id]  += 1
+        self.rank_sums[id] += rank
+        self.rank_days[id]  += 1
+
+    def get_avg_rank(self,id):
+        average_rank = int(round(self.rank_sums[id]/ self.rank_days[id])) if self.rank_days[id]>0 else -1
+        return average_rank
 
     def finalize_rank(self,id):
         if self.rank_days[id]>0:
-            average_rank = int(round(self.rank_sums[id]/ self.rank_days[id]))
+            average_rank = self.get_avg_rank(id)
             self.average_rank_history.write("{0}\t{1}\n".format(id,average_rank))
 
     def finalize_all_ranks(self):
@@ -356,8 +518,8 @@ class ReputationSim(Model):
             heading_list.append(self.agents[i].unique_id)
         #make room for columns to be added on. they need to have headings now so pandas can parse them
         num_extra_agents = int(((self.parameters['num_users'] * self.parameters['chance_of_criminal']*self.end_tick
-                            )/self.parameters['scam_parameters']['scam_period']))+1
-        for i in range(num_extra_agents):
+                            )/self.parameters['scam_parameters']['scam_period'][0]))+1
+        for i in range(num_extra_agents+5):
             heading_list.append('alias{0}'.format(i))
         #file.write('\n')
         heading_list.append('\n')
@@ -371,7 +533,7 @@ class ReputationSim(Model):
         #self.rank_history_heading = '{0}\t'.format('time')
         time = int(round(self.schedule.time))
         self.rank_history.write('{0}\t'.format(time))
-        key_sort = [int(key) for key in self.ranks.keys()]
+        key_sort = [self.parse(key)['agent'] for key in self.ranks.keys()]
         key_sort.sort()
         od = OrderedDict()
         for key in key_sort:
@@ -479,9 +641,9 @@ class ReputationSim(Model):
             if rating:
                 self.reputation_system.put_ratings([{'from': from_agent, 'type': type, 'to': to_agent,
                                                               'value': value_val,'weight':int(payment), 'time': date}])
-                if self.error_log:
-                    self.error_log.write(str([{'from': from_agent, 'type': type, 'to': to_agent,
-                                                                    'value': value_val,'weight':int(payment), 'time': date}])+ "\n")
+                # if self.error_log:
+                #     self.error_log.write(str([{'from': from_agent, 'type': type, 'to': to_agent,
+                #                                                     'value': value_val,'weight':int(payment), 'time': date}])+ "\n")
 
             else:
                 self.reputation_system.put_ratings([{'from': from_agent, 'type': type, 'to': to_agent,
@@ -491,7 +653,7 @@ class ReputationSim(Model):
                                            'value': value_val, 'time': date}]) + "\n")
 
     def print_transaction_report_line(self, from_agent, to_agent, payment, tags,  payment_unit='', parent = '',rating = '',
-                                      type = 'payment'):
+                                      type = 'payment', scam = False):
         time = (self.schedule.time * self.parameters['days_per_tick']* self.seconds_per_day) + self.initial_epoch
         time = int(time + random.uniform (0,self.seconds_per_day/10))
 
@@ -513,9 +675,9 @@ class ReputationSim(Model):
         parent_unit_val = payment_unit if rating else ''
 
         self.transaction_report.write(
-            "{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}\t{13}\t{14}\t{15}\n".format(
+            "{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}\t{11}\t{12}\t{13}\t{14}\t{15}\t{16}\n".format(
             network_val,timestamp_val,type_val,from_val,to_val,value_val,unit_val,child_val,parent_val,title_val,
-            input_val,tags_val,format_val,block_val,parent_value_val,parent_unit_val))
+            input_val,tags_val,format_val,block_val,parent_value_val,parent_unit_val,scam))
 
         #self.transaction_report.flush()
 
@@ -619,6 +781,15 @@ class ReputationSim(Model):
 
 
 
+    def parse(self,agent_string):
+        parse = {}
+        agent_string_split = agent_string.split(".")
+        parse['agent']= int(agent_string_split[0])  #if self.p['product_mode'] else int(agent_string)
+
+        parse['category']= agent_string_split[1] if len(agent_string_split)==3 else None
+        parse['product']= int(agent_string_split[2])if len(agent_string_split)==3 else None
+        return parse
+
     def get_truncated_normal(self,mean=0.5, sd=0.2, low=0, upp=1.0):
         rv = truncnorm((low - mean) / sd, (upp - mean) / sd, loc=mean, scale=sd)
         return rv
@@ -627,9 +798,10 @@ class ReputationSim(Model):
         self.ranks = self.reputation_system.get_ranks_dict({'date':prev_date})
 
         current_suppliers = set([supplier for good, supplierlist in self.suppliers.items() for supplier in supplierlist])
-        for agent,rank in self.ranks.items():
-            if int(agent) in current_suppliers:
-                self.add_rank(int(agent),rank)
+        for agentstring,rank in self.ranks.items():
+            agent = self.parse(agentstring)['agent']
+            if agent in current_suppliers:
+                self.add_rank(agent,rank)
 
         #generation_increment = (self.model.daynum // self.p['scam_period']) * self.p['num_users']
         #if self.p['scam_inactive_period']:  #there is a campaign in which ids are shifted, so subtract the increment
@@ -637,7 +809,8 @@ class ReputationSim(Model):
 
     def step(self):
         present = int(round(self.schedule.time))
-        print('time {0}'.format(present))
+       # print('time {0}'.format(present))
+        print('.',end='')
         if self.error_log:
             self.error_log.write('time {0}\n'.format(self.schedule.time))
         """Advance the model by one step."""
@@ -653,14 +826,16 @@ class ReputationSim(Model):
                 self.reputation_system.update_ranks(prev_date)
             #if present > 60:
                 self.get_ranks(prev_date)
-            self.write_rank_history_line()
-            if self.error_log:
-                self.error_log.write("ranks: {0}\n".format(str(self.ranks)))
+            if not self.parameters['product_mode']:
+                self.write_rank_history_line()
+            # if self.error_log:
+            #     self.error_log.write("ranks: {0}\n".format(str(self.ranks)))
 
     def go(self):
         while self.schedule.time < self.get_end_tick():
             self.step()
         self.finalize_all_ranks()
+        self.print_stats_product()
         self.market_volume_report.close()
         self.transaction_report.close()
         if self.error_log:
@@ -668,6 +843,39 @@ class ReputationSim(Model):
         if self.rank_history:
             self.rank_history.write(self.rank_history_heading)
             self.rank_history.close()
+
+
+
+    def initialize_reputation_system(self,config):
+
+        now = dt.datetime.now()
+        epoch = now.strftime('%s')
+        dirname = 'test' + epoch
+        rs = None if config['parameters']['observer_mode'] else (PythonReputationService(
+        ) if not config['parameters']['use_java'] else AigentsAPIReputationService(
+            'http://localtest.com:{0}/'.format(config['parameters']['port']),
+            'john@doe.org', 'q', 'a', False, dirname, True))
+        if rs is not None:
+            rs.set_parameters({
+                'precision': config['parameters']['reputation_parameters']['precision'],
+                'default': config['parameters']['reputation_parameters']['default'],
+                'conservatism': config['parameters']['reputation_parameters']['conservatism'],
+                'fullnorm': config['parameters']['reputation_parameters']['fullnorm'],
+                'weighting': config['parameters']['reputation_parameters']['weighting'],
+                'logratings': config['parameters']['reputation_parameters']['logratings'],
+                'decayed': config['parameters']['reputation_parameters']['decayed'],
+                'liquid': config['parameters']['reputation_parameters']['liquid'],
+                'logranks': config['parameters']['reputation_parameters']['logranks'],
+                'downrating': config['parameters']['reputation_parameters']['downrating'],
+                'update_period': config['parameters']['reputation_parameters']['update_period'],
+                'aggregation': config['parameters']['reputation_parameters']['aggregation'],
+                'denomination': config['parameters']['reputation_parameters']['denomination'],
+                'unrated': config['parameters']['reputation_parameters']['unrated'],
+                'ratings': config['parameters']['reputation_parameters']['ratings'],
+                'spendings': config['parameters']['reputation_parameters']['spendings']
+
+            })
+        return rs
 
 class Runner():
 
@@ -682,7 +890,7 @@ class Runner():
         allcols = ['code', 'folder', 'spendings', 'ratings', 'unrated', 'denom',
                    'logratings', 'fullnorm', 'conserv',
                    'default', 'downrating', 'decayed', 'period',
-                   'precision', 'recall', 'f1',
+                   'precision', 'recall', 'f1', 'inequity', 'utility','satisfaction',
                    'pearson_by_good', 'pearsong_by_good', 'pearsonb_by_good',
                    'loss_to_scam', 'profit_from_scam',  'market_volume']
         #
@@ -712,8 +920,9 @@ class Runner():
             "discrete_rank_tests.tsv",
             "correlation_by_good_tests.tsv",
             "scam_loss_tests.tsv",
-         #   "utility_tests.tsv",
-        #    "inequity_tests.tsv",
+            "utility_tests.tsv",
+            "satisfaction_tests.tsv",
+            "inequity_tests.tsv",
             "market_volume_tests.tsv",
          #   "price_variance_tests.tsv",
          #   "correlation_tests.tsv",
@@ -745,7 +954,7 @@ class Runner():
             paramvals.append(str(p['update_period']))
             paramvals.append(config['parameters']['output_path'][: -1])
             row = paramvals
-            print(row)
+           # print(row)
 
             copy = deepcopy(row)
             copy.append(code)
@@ -757,13 +966,14 @@ class Runner():
             try:
                 df = pd.read_csv(path, delimiter='\t')
                 df['folder'] = row[11]
-                print(path)
-                print(df)
+                #print(path)
+                #print(df)
                 # if len(df.index)== len(codelist):
                 runs = pd.merge(runs, df, on=['folder', 'code'])
                 # print(runs)
             except FileNotFoundError as e:
-                print(e)
+                #print(e)
+                pass
             except:
                 pass
         #dflist.append(runs)
@@ -795,12 +1005,12 @@ class Runner():
         #test.go(config)
         test = DiscreteRankTests()
         test.go(config)
-        #test = GoodnessTests()
-        #test.go(config)
+        test = GoodnessTests()
+        test.go(config)
         test = MarketVolumeTests()
         test.go(config)
-        #test = TransactionsTests()
-        #test.go(config)
+        test = TransactionsTests()
+        test.go(config)
         self.get_param_list(config['batch']['parameter_combinations'])
         self.createTestCsv(config, set(self.param_list))
 
@@ -838,7 +1048,12 @@ class Runner():
                         #my_param_str == 'r_10_0.5_'
                         # my_param_str == 'r_sp182_' or
                         # my_param_str == 'r_sp92_' or
-                        # my_param_str == 'r_sp30_'
+                        #my_param_str == 'r_sp30_'
+                        #my_param_str == 'r_norep_' or
+                        #my_param_str == 'r_regular_'
+                        #my_param_str == 'r_weighted_' or
+                       # my_param_str == 'r_SOM_' or
+                        #my_param_str == 'r_TOM_'
                 #):
                 #if not my_param_str.startswith("r"):
 
@@ -854,16 +1069,16 @@ class Runner():
             if configfile['parameters']['macro_view']:
                 configfile = Adapters(configfile).translate()
             repsim = ReputationSim(study_path =configfile, rs=rs, opened_config = True)
-            if configfile['parameters']['use_java']:
-                print ("{0} : {1}  port:{2} ".format(configfile['parameters']['output_path'],param_str,configfile['parameters']['port']))
-            print("{0} : {1}".format(configfile['parameters']['output_path'], param_str))
+            #if configfile['parameters']['use_java']:
+             #   print ("{0} : {1}  port:{2} ".format(configfile['parameters']['output_path'],param_str,configfile['parameters']['port']))
+            #print("{0} : {1}".format(configfile['parameters']['output_path'], param_str))
 
             repsim.go()
 
 
 def main():
     runner = Runner()
-    print (os.getcwd())
+    #print (os.getcwd())
     study_path = sys.argv[1] if len(sys.argv)>1 else 'study.json'
     with open(study_path) as json_file:
         config = json.load(json_file, object_pairs_hook=OrderedDict)
@@ -874,35 +1089,7 @@ def main():
             #config = Adapters(config).translate()
 
         if config['batch']['on']:
-            now = dt.datetime.now()
-            epoch = now.strftime('%s')
-            dirname = 'test'+ epoch
-
-
-            rs = None if config['parameters']['observer_mode'] else (PythonReputationService(
-                ) if not config['parameters']['use_java']else AigentsAPIReputationService(
-                    'http://localtest.com:{0}/'.format(config['parameters']['port']),
-                        'john@doe.org','q', 'a', False, dirname, True))
-            if rs is not None:
-                rs.set_parameters({
-                    'precision': config['parameters']['reputation_parameters']['precision'],
-                    'default': config['parameters']['reputation_parameters']['default'],
-                    'conservatism':config['parameters']['reputation_parameters']['conservatism'],
-                    'fullnorm':config['parameters']['reputation_parameters']['fullnorm'],
-                    'weighting': config['parameters']['reputation_parameters']['weighting'],
-                    'logratings': config['parameters']['reputation_parameters']['logratings'] ,
-                    'decayed': config['parameters']['reputation_parameters']['decayed'] ,
-                    'liquid': config['parameters']['reputation_parameters']['liquid'],
-                     'logranks': config['parameters']['reputation_parameters']['logranks'] ,
-                     'downrating': config['parameters']['reputation_parameters']['downrating'],
-                     'update_period': config['parameters']['reputation_parameters']['update_period'],
-                     'aggregation': config['parameters']['reputation_parameters']['aggregation'],
-                     'denomination': config['parameters']['reputation_parameters']['denomination'],
-                     'unrated': config['parameters']['reputation_parameters']['unrated'],
-                     'ratings': config['parameters']['reputation_parameters']['ratings'],
-                     'spendings': config['parameters']['reputation_parameters']['spendings']
-
-                })
+            rs = None
             runner.call(config['batch']['parameter_combinations'], config,rs=rs)
             if config['parameters']["run_automatic_tests"]:
                 runner.run_tests(config)
