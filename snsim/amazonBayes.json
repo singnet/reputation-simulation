@@ -149,14 +149,14 @@
           {
             "parameters": {
               "reputation_parameters": {
-                "spendings": 1.0
+                "ratings": 1.0
               }
             }
           },
           {
             "parameters": {
               "reputation_parameters": {
-                "ratings": 0.0
+                "spendings": 0.0
               }
             }
           }
@@ -179,14 +179,14 @@
           {
             "parameters": {
               "reputation_parameters": {
-                "spendings": 1.0
+                "ratings": 1.0
               }
             }
           },
           {
             "parameters": {
               "reputation_parameters": {
-                "ratings": 0.0
+                "spendings": 0.0
               }
             }
           }
@@ -209,14 +209,14 @@
           {
             "parameters": {
               "reputation_parameters": {
-                "spendings": 1.0
+                "ratings": 1.0
               }
             }
           },
           {
             "parameters": {
               "reputation_parameters": {
-                "ratings": 0.0
+                "spendings": 0.0
               }
             }
           }
@@ -239,14 +239,44 @@
           {
             "parameters": {
               "reputation_parameters": {
-                "spendings": 0.5
+                "ratings": 0.5
               }
             }
           },
           {
             "parameters": {
               "reputation_parameters": {
-                "ratings": 0.5
+                "spendings": 0.5
+              }
+            }
+          }
+        ],
+        "r_bias": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "rating_bias": true
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "unrated": false
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "ratings": 1.0
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "spendings": 0.0
               }
             }
           }
@@ -257,7 +287,7 @@
   "parameters": {
     "reputation_parameters": {
       "precision": 0.01,
-      "default": 0.0,
+      "default": 0.5,
       "conservatism": 0.5,
       "fullnorm": true,
       "weighting": true,
@@ -271,11 +301,12 @@
       "denomination": false,
       "unrated": false,
       "ratings": 1.0,
-      "spendings": 0.0
+      "spendings": 0.0,
+      "rating_bias": false
     },
     "macro_view": "antons_view",
     "use_java": false,
-    "run_automatic_tests": false,
+    "run_automatic_tests": true,
     "port": 1181,
     "output_path": "amazonBayes/",
     "seed": 9573,
@@ -440,13 +471,15 @@
     "chance_of_criminal": 0.05,
     "goodness": [
       0.65,
-      0.30
+      0.30,
+      0.01,
+      1
     ],
     "criminal_goodness": [
       0.25,
       0.10,
       0.01,
-      100
+      1
     ],
     "transactions_per_day": [
       10,
@@ -502,7 +535,7 @@
     "criminal_suppliers_change_names": true,
     "criminal_suppliers_purchase_reviewers": true,
     "criminal_suppliers_replace_products": true,
-    "PLRo_overall": "PLRo_overall_2",
+    "PLRo_overall": "PLRo_overall_30",
     "num_stars": {
             "0.0": "product_quality_onestars",
             "0.25": "product_quality_twostars",
@@ -522,11 +555,11 @@
           "product_quality_fivestars": 0.05
         },
         "PLRo_overall": {
-          "PLRo_overall_2": 0.2,
+          "PLRo_overall_0": 0.2,
           "PLRo_overall_5": 0.2,
-          "PLRo_overall_10": 0.2,
-          "PLRo_overall_15": 0.2,
-          "PLRo_overall_30": 0.2
+          "PLRo_overall_30": 0.2,
+          "PLRo_overall_50": 0.2,
+          "PLRo_overall_100": 0.2
         }
       },
       "conditional_probability": {
@@ -537,64 +570,64 @@
           ],
           "CPT": [
             [
-              "PLRo_overall_2",
+              "PLRo_overall_0",
               "product_quality_onestars",
               "PLRo",
-              0.1
+              0.0
             ],
             [
-              "PLRo_overall_2",
+              "PLRo_overall_0",
               "product_quality_twostars",
               "PLRo",
-              0.02
+              0.0
             ],
             [
-              "PLRo_overall_2",
+              "PLRo_overall_0",
               "product_quality_threestars",
               "PLRo",
-              0.005
+              0.0
             ],
             [
-              "PLRo_overall_2",
+              "PLRo_overall_0",
               "product_quality_fourstars",
               "PLRo",
-              0.02
+              0.0
             ],
             [
-              "PLRo_overall_2",
+              "PLRo_overall_0",
               "product_quality_fivestars",
               "PLRo",
-              0.1
+              0.0
             ],
             [
-              "PLRo_overall_2",
+              "PLRo_overall_0",
               "product_quality_onestars",
               "PLRoNot",
-              0.9
+              1.0
             ],
             [
-              "PLRo_overall_2",
+              "PLRo_overall_0",
               "product_quality_twostars",
               "PLRoNot",
-              0.98
+              1.0
             ],
             [
-              "PLRo_overall_2",
+              "PLRo_overall_0",
               "product_quality_threestars",
               "PLRoNot",
-              0.995
+              1.0
             ],
             [
-              "PLRo_overall_2",
+              "PLRo_overall_0",
               "product_quality_fourstars",
               "PLRoNot",
-              0.98
+              1.0
             ],
             [
-              "PLRo_overall_2",
+              "PLRo_overall_0",
               "product_quality_fivestars",
               "PLRoNot",
-              0.9
+              1.0
             ],
             [
               "PLRo_overall_5",
@@ -655,126 +688,6 @@
               "product_quality_fivestars",
               "PLRoNot",
               0.75
-            ],
-            [
-              "PLRo_overall_10",
-              "product_quality_onestars",
-              "PLRo",
-              0.2
-            ],
-            [
-              "PLRo_overall_10",
-              "product_quality_twostars",
-              "PLRo",
-              0.1
-            ],
-            [
-              "PLRo_overall_10",
-              "product_quality_threestars",
-              "PLRo",
-              0.08
-            ],
-            [
-              "PLRo_overall_10",
-              "product_quality_fourstars",
-              "PLRo",
-              0.1
-            ],
-            [
-              "PLRo_overall_10",
-              "product_quality_fivestars",
-              "PLRo",
-              0.2
-            ],
-            [
-              "PLRo_overall_10",
-              "product_quality_onestars",
-              "PLRoNot",
-              0.8
-            ],
-            [
-              "PLRo_overall_10",
-              "product_quality_twostars",
-              "PLRoNot",
-              0.9
-            ],
-            [
-              "PLRo_overall_10",
-              "product_quality_threestars",
-              "PLRoNot",
-              0.92
-            ],
-            [
-              "PLRo_overall_10",
-              "product_quality_fourstars",
-              "PLRoNot",
-              0.9
-            ],
-            [
-              "PLRo_overall_10",
-              "product_quality_fivestars",
-              "PLRoNot",
-              0.8
-            ],
-            [
-              "PLRo_overall_15",
-              "product_quality_onestars",
-              "PLRo",
-              0.3
-            ],
-            [
-              "PLRo_overall_15",
-              "product_quality_twostars",
-              "PLRo",
-              0.15
-            ],
-            [
-              "PLRo_overall_15",
-              "product_quality_threestars",
-              "PLRo",
-              0.12
-            ],
-            [
-              "PLRo_overall_15",
-              "product_quality_fourstars",
-              "PLRo",
-              0.15
-            ],
-            [
-              "PLRo_overall_15",
-              "product_quality_fivestars",
-              "PLRo",
-              0.3
-            ],
-            [
-              "PLRo_overall_15",
-              "product_quality_onestars",
-              "PLRoNot",
-              0.7
-            ],
-            [
-              "PLRo_overall_15",
-              "product_quality_twostars",
-              "PLRoNot",
-              0.85
-            ],
-            [
-              "PLRo_overall_15",
-              "product_quality_threestars",
-              "PLRoNot",
-              0.88
-            ],
-            [
-              "PLRo_overall_15",
-              "product_quality_fourstars",
-              "PLRoNot",
-              0.85
-            ],
-            [
-              "PLRo_overall_15",
-              "product_quality_fivestars",
-              "PLRoNot",
-              0.7
             ],
             [
               "PLRo_overall_30",
@@ -835,6 +748,126 @@
               "product_quality_fivestars",
               "PLRoNot",
               0.4
+            ],
+            [
+              "PLRo_overall_50",
+              "product_quality_onestars",
+              "PLRo",
+              0.4
+            ],
+            [
+              "PLRo_overall_50",
+              "product_quality_twostars",
+              "PLRo",
+              0.12
+            ],
+            [
+              "PLRo_overall_50",
+              "product_quality_threestars",
+              "PLRo",
+              0.20
+            ],
+            [
+              "PLRo_overall_50",
+              "product_quality_fourstars",
+              "PLRo",
+              0.12
+            ],
+            [
+              "PLRo_overall_50",
+              "product_quality_fivestars",
+              "PLRo",
+              0.4
+            ],
+            [
+              "PLRo_overall_50",
+              "product_quality_onestars",
+              "PLRoNot",
+              0.6
+            ],
+            [
+              "PLRo_overall_50",
+              "product_quality_twostars",
+              "PLRoNot",
+              0.88
+            ],
+            [
+              "PLRo_overall_50",
+              "product_quality_threestars",
+              "PLRoNot",
+              0.8
+            ],
+            [
+              "PLRo_overall_50",
+              "product_quality_fourstars",
+              "PLRoNot",
+              0.88
+            ],
+            [
+              "PLRo_overall_50",
+              "product_quality_fivestars",
+              "PLRoNot",
+              0.6
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_onestars",
+              "PLRo",
+              1.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_twostars",
+              "PLRo",
+              1.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_threestars",
+              "PLRo",
+              1.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_fourstars",
+              "PLRo",
+              1.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_fivestars",
+              "PLRo",
+              1.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_onestars",
+              "PLRoNot",
+              0.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_twostars",
+              "PLRoNot",
+              0.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_threestars",
+              "PLRoNot",
+              0.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_fourstars",
+              "PLRoNot",
+              0.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_fivestars",
+              "PLRoNot",
+              0.0
             ]
           ]
         }
@@ -863,19 +896,19 @@
               "supplier_min_score",
               "supplier_profit",
               "supplier_switch",
-              0.0
+              0.001
             ],
             [
               "supplier_min_scoreNot",
               "supplier_profit",
               "supplier_switch",
-              0.0
+              0.005
             ],
             [
               "supplier_min_score",
               "supplier_profitNot",
               "supplier_switch",
-              0.0
+              0.015
             ],
             [
               "supplier_min_scoreNot",
@@ -887,19 +920,19 @@
               "supplier_min_score",
               "supplier_profit",
               "supplier_switchNot",
-              1.0
+              0.999
             ],
             [
               "supplier_min_scoreNot",
               "supplier_profit",
               "supplier_switchNot",
-              1.0
+              0.995
             ],
             [
               "supplier_min_score",
               "supplier_profitNot",
               "supplier_switchNot",
-              1.0
+              0.985
             ],
             [
               "supplier_min_scoreNot",
@@ -934,19 +967,19 @@
               "product_min_score",
               "product_profit",
               "product_switch",
-              0.0
+              0.001
             ],
             [
               "product_min_scoreNot",
               "product_profit",
               "product_switch",
-              0.0
+              0.005
             ],
             [
               "product_min_score",
               "product_profitNot",
               "product_switch",
-              0.0
+              0.015
             ],
             [
               "product_min_scoreNot",
@@ -958,19 +991,19 @@
               "product_min_score",
               "product_profit",
               "product_switchNot",
-              1.0
+              0.999
             ],
             [
               "product_min_scoreNot",
               "product_profit",
               "product_switchNot",
-              1.0
+              0.995
             ],
             [
               "product_min_score",
               "product_profitNot",
               "product_switchNot",
-              1.0
+              0.985
             ],
             [
               "product_min_scoreNot",

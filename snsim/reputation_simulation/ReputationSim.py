@@ -417,8 +417,8 @@ class ReputationSim(Model):
     def add_sponsored_buy(self,price, quality, commission):
         # sgp_denom = Σsponsoredbuys(Price * (1 + CR))
         # sgl_num = (Σsponsoredbuys(Price * (1 + CR) * OQ))
-        self.sgp_denom += price * (1+commission)
-        self.sgl_num += price * (1+commission) * quality
+        self.sgp_denom += commission
+        self.sgl_num += commission * quality
 
     def add_identity_change(self):
         self.num_changes += 1
@@ -430,6 +430,8 @@ class ReputationSim(Model):
         criminals = [bad for good,bad in self.criminal_suppliers.items()]
         asp = (len(criminals)* self.get_end_tick())/self.num_changes if self.num_changes != 0 else -1
         print ("\nbsl:{0},sgp:{1},sgl:{2},asp:{3}\n".format(bsl,sgp,sgl,asp))
+        if self.error_log:
+            self.error_log.write("\nbsl:{0},sgp:{1},sgl:{2},asp:{3}\n".format(bsl,sgp,sgl,asp))
 
     def reset_stats(self):
         self.good2good_agent_completed_transactions  = 0
@@ -464,14 +466,39 @@ class ReputationSim(Model):
         file = open(path, "w")
         return(file)
 
+    def reset_current_ranks(self):
+        for good,supplierlist in self.suppliers.items():
+            for supplier in supplierlist:
+                self.reset_current_rank(supplier)
+
+
+    def reset_current_rank(self,id):
+        #an alias has first appeared
+        self.current_rank_sums[id] = 0
+        self.current_rank_products[id] =0
+
+    def add_rank(self,id,rank):
+        self.rank_sums[id] += rank
+        self.rank_days[id]  += 1
+        self.current_rank_sums[id] += rank
+        self.current_rank_products[id]  += 1
+
+    def get_current_rank(self,id):
+        current_rank = int(round(self.current_rank_sums[id]/ self.current_rank_products[id])) if self.current_rank_products[id]>0 else -1
+        return current_rank
+
+    def get_current_ranks(self):
+        current_ranks = {}
+        for good,supplierlist in self.suppliers.items():
+            for supplier in supplierlist:
+                current_ranks[supplier] = self.get_current_rank(supplier)
+        return current_ranks
+
     def initialize_rank(self,id):
         #an alias has first appeared
         self.rank_sums[id] = 0
         self.rank_days[id] =0
 
-    def add_rank(self,id,rank):
-        self.rank_sums[id] += rank
-        self.rank_days[id]  += 1
 
     def get_avg_rank(self,id):
         average_rank = int(round(self.rank_sums[id]/ self.rank_days[id])) if self.rank_days[id]>0 else -1
@@ -503,6 +530,8 @@ class ReputationSim(Model):
         file.write(average_rank_history_heading)
         self.rank_sums = {}
         self.rank_days = {}
+        self.current_rank_sums = {}
+        self.current_rank_products = {}
         return(file)
 
     def rank_history(self):
@@ -582,6 +611,50 @@ class ReputationSim(Model):
             #     rank = od[id] if id in od else -1
             #     self.rank_history.write('{0}\t'.format(rank))
             # self.rank_history.write('\n')
+
+    def write_current_rank_history_line(self):
+                heading_list = []
+                heading_list.append('time')
+                time = int(round(self.schedule.time))
+                self.rank_history.write('{0}\t'.format(time))
+                ranks = self.get_current_ranks()
+                key_sort = [key for key in ranks.keys()]
+                key_sort.sort()
+                od = OrderedDict()
+                for key in key_sort:
+                    strkey = str(key)
+                    od[strkey] = ranks[key]
+                lastAgent = None
+                if len(od):
+                    for agent, rank in od.items():
+                        if not agent is None:
+                            intagent = int(agent)
+                            if lastAgent is None:
+                                lastAgent = intagent
+                                for i in range(0, intagent):
+                                    self.rank_history.write('{0}\t'.format(-1))
+                                    heading_list.append(i)
+                            if intagent < len(self.agents):
+                                for i in range(lastAgent + 1, intagent):
+                                    self.rank_history.write('{0}\t'.format(-1))
+                                    heading_list.append(i)
+                            else:
+                                for i in range(lastAgent + 1, len(self.agents)):
+                                    self.rank_history.write('{0}\t'.format(-1))
+                                    heading_list.append(i)
+                            self.rank_history.write('{0}\t'.format(rank))
+                            heading_list.append(intagent)
+                            lastAgent = intagent
+                    for i in range(lastAgent + 1, len(self.agents)):
+                        self.rank_history.write('{0}\t'.format(-1))
+                        heading_list.append(i)
+                    self.rank_history.write('\n')
+                    heading_list.append('\n')
+                    self.rank_history_heading = "\t".join(map(str, heading_list))
+                else:
+
+                    self.rank_history.write('\n')
+
 
     def market_volume_report(self):
         #path = self.parameters['output_path'] + 'transactions_' +self.parameters['param_str'] + self.time[0:10] + '.tsv'
@@ -813,6 +886,7 @@ class ReputationSim(Model):
         print('.',end='')
         if self.error_log:
             self.error_log.write('time {0}\n'.format(self.schedule.time))
+        self.reset_current_ranks()
         """Advance the model by one step."""
         self.schedule.step()
         self.print_market_volume_report_line()
@@ -826,7 +900,9 @@ class ReputationSim(Model):
                 self.reputation_system.update_ranks(prev_date)
             #if present > 60:
                 self.get_ranks(prev_date)
-            if not self.parameters['product_mode']:
+            if self.parameters['product_mode']:
+                self.write_current_rank_history_line()
+            else:
                 self.write_rank_history_line()
             # if self.error_log:
             #     self.error_log.write("ranks: {0}\n".format(str(self.ranks)))
@@ -890,8 +966,9 @@ class Runner():
         allcols = ['code', 'folder', 'spendings', 'ratings', 'unrated', 'denom',
                    'logratings', 'fullnorm', 'conserv',
                    'default', 'downrating', 'decayed', 'period',
-                   'precision', 'recall', 'f1', 'inequity', 'utility','satisfaction',
-                   'pearson_by_good', 'pearsong_by_good', 'pearsonb_by_good',
+           #        'precision', 'recall', 'f1', 'satisfaction',
+                   'inequity', 'utility',
+           #        'pearson_by_good', 'pearsong_by_good', 'pearsonb_by_good',
                    'loss_to_scam', 'profit_from_scam',  'market_volume']
         #
         # allcols = ['code', 'folder', 'spendings', 'ratings', 'unrated', 'denom',
@@ -900,7 +977,7 @@ class Runner():
         #            'loss_to_scam', 'profit_from_scam', 'inequity', 'utility', 'market_volume']
 
         columns = ['ratings', 'spendings', 'unrated', 'downrating', 'denom',
-                   'logratings', 'fullnorm', 'default', 'conserv', 'decayed', 'period', 'folder', 'code']
+                   'logratings', 'fullnorm', 'default', 'conserv', 'decayed', 'period','folder', 'code']
 
 
 
@@ -917,11 +994,11 @@ class Runner():
         #codelist = config['tests'].keys()
 
         testfiles = [
-            "discrete_rank_tests.tsv",
-            "correlation_by_good_tests.tsv",
+         #   "discrete_rank_tests.tsv",
+         #   "correlation_by_good_tests.tsv",
             "scam_loss_tests.tsv",
             "utility_tests.tsv",
-            "satisfaction_tests.tsv",
+         #   "satisfaction_tests.tsv",
             "inequity_tests.tsv",
             "market_volume_tests.tsv",
          #   "price_variance_tests.tsv",
@@ -952,6 +1029,7 @@ class Runner():
             paramvals.append(str(p['conservatism']))
             paramvals.append(str(p['decayed']))
             paramvals.append(str(p['update_period']))
+           # paramvals.append(str(p['rating_bias']))
             paramvals.append(config['parameters']['output_path'][: -1])
             row = paramvals
            # print(row)
@@ -999,12 +1077,12 @@ class Runner():
 
 
     def run_tests(self,config):
-        test = ContinuousRankByGoodTests()
-        test.go(config)
+        #test = ContinuousRankByGoodTests()
+        #test.go(config)
         #test = ContinuousRankTests()
         #test.go(config)
-        test = DiscreteRankTests()
-        test.go(config)
+        # test = DiscreteRankTests()
+        # test.go(config)
         test = GoodnessTests()
         test.go(config)
         test = MarketVolumeTests()
@@ -1049,7 +1127,7 @@ class Runner():
                         # my_param_str == 'r_sp182_' or
                         # my_param_str == 'r_sp92_' or
                         #my_param_str == 'r_sp30_'
-                        #my_param_str == 'r_norep_' or
+                        #my_param_str == 'r_norep_' #or
                         #my_param_str == 'r_regular_'
                         #my_param_str == 'r_weighted_' or
                        # my_param_str == 'r_SOM_' or

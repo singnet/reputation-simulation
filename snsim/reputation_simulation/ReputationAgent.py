@@ -77,6 +77,7 @@ class ReputationAgent(Agent):
                     self.supplying[good]= price
                     self.model.suppliers[good].add(unique_id)
                     self.model.initialize_rank(unique_id)
+                    self.model.reset_current_rank(unique_id)
                     if not self.good:
                         self.model.criminal_suppliers[good].add(self.unique_id)
         else:
@@ -87,6 +88,7 @@ class ReputationAgent(Agent):
                 self.supplying[good]= price
                 self.model.suppliers[good].add(unique_id)
                 self.model.initialize_rank(unique_id)
+                self.model.reset_current_rank(unique_id)
                 if not self.p['product_mode']:
                     self.initialize_criminal_ring(good)
 
@@ -132,7 +134,7 @@ class ReputationAgent(Agent):
         self.initialize_products() if self.p['product_mode'] else {}
 
 
-    def switch_project(self,category,product):
+    def switch_product(self,category,product):
         #first check and see if it would make a difference in the personal name and dont change if it wouldnt,
         # but  once it makes a difference, test and decide
         evidence = {}
@@ -145,7 +147,7 @@ class ReputationAgent(Agent):
     def check_and_remove_products (self):
         for category, productdict in self.products.items():
             for product, _ in productdict.items():
-                if self.switch_project(category,product ):
+                if self.switch_product(category,product ):
                     self.remove_product (category,product)
                     self.new_product(category)
 
@@ -397,7 +399,7 @@ class ReputationAgent(Agent):
 
 
     def avg_score_over_threshold(self):
-        avg_rank = self.model.get_avg_rank(self.unique_id)
+        avg_rank = self.model.get_current_rank(self.unique_id)
         over = True if avg_rank > self.reputation_system_threshold else False
         return over
 
@@ -785,6 +787,7 @@ class ReputationAgent(Agent):
                 self.model.criminal_suppliers[good].add(supplier)
                 self.model.suppliers[good].add(supplier)
                 self.model.initialize_rank(supplier)
+                self.model.reset_current_rank(supplier)
                 scam_periods_so_far = (self.model.daynum // self.scam_period) + 1
                 for i in range(scam_periods_so_far):
                     alias = (i * self.p['num_users']) + self.model.orig[supplier]
@@ -882,7 +885,7 @@ class ReputationAgent(Agent):
                               and (not ratings_tuple[1] < threshold)
                               and (not self.supplier_inactive(supplier))
                       )
-                      } if good in self.personal_experience else {}
+                      } if good in self.personal_experience and threshold < 0.95 else {}
             if len(knowns_comfortable_with):
             #   you have all the guys that you would stick to because they are so good. now choose
             # amongst those in proportion to their perceived goodness whether this is observed or not

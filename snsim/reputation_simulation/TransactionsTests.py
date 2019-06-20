@@ -25,7 +25,7 @@ class TransactionsTests(unittest.TestCase):
         self.unittest = False
         self.config = config
         self.setUp()
-        self.test_price_variance()
+        #self.test_price_variance()
         self.test_utility()
         self.tearDown()
 
@@ -211,6 +211,18 @@ class TransactionsTests(unittest.TestCase):
         self.output_tsv.close()
 
 
+    def agent_satisfaction(self,code,agent):
+        consumer_mean = 0
+        if code[0] == 'r':
+            rating_col = 5
+            price_col = 14
+            just_consumer = self.transactions[code][self.transactions[code].iloc[:,3] == agent]
+            just_consumer["weighted_rating"]= just_consumer[rating_col]*just_consumer[price_col]
+            consumer_mean = just_consumer["weighted_rating"].mean()
+            if math.isnan(consumer_mean):
+                consumer_mean = 0
+        return consumer_mean
+
     def agent_utility(self,code,agent):
         consumer_mean = 0
         if code[0] == 'r':
@@ -220,6 +232,41 @@ class TransactionsTests(unittest.TestCase):
             if math.isnan(consumer_mean):
                 consumer_mean = 0
         return consumer_mean
+
+
+    def test_satisfaction(self):
+
+        self.error_log.write("\nFile:{0} ".format(self.error_path))
+        print("File:{0} ".format(self.error_path))
+        out_path = "./" + self.config['parameters']["output_path"] + "satisfaction_tests.tsv"
+        self.output_tsv = open(out_path, "w")
+        self.output_tsv.write("code\tsatisfaction")
+
+        for i, code in enumerate(self.codes):
+            self.output_tsv.write("\n{0}\t".format(code))
+            if code[0] == 'r':
+                all_agents = self.boolean_users[code].iloc[:,0]
+                honest_agents = [agent for agent in all_agents if self.is_honest(code,agent)] if all_agents is not None and len (all_agents) else []
+                separate_satisfactions = [self.agent_satisfaction(code, agent) for agent in honest_agents]
+                if len(separate_satisfactions):
+                    satisfaction = sum(separate_satisfactions)/len(separate_satisfactions)
+                    self.output_tsv.write("{0}".format(satisfaction))
+                    self.error_log.write("\ntime: {0} code: {1} satisfaction: {2} lower: {3} upper: {4}".format(
+                        datetime.datetime.now(),code, satisfaction, self.t[code]['satisfaction']['lower'],self.t[code]['satisfaction']['upper']))
+                    print("time: {0} code: {1} satisfaction: {2} lower: {3} upper: {4}".format(
+                        datetime.datetime.now(),code, satisfaction, self.t[code]['satisfaction']['lower'],self.t[code]['satisfaction']['upper']))
+                    try:
+                        self.assertGreaterEqual(satisfaction, self.t[code]['satisfaction']['lower'])
+                    except AssertionError as e:
+                        self.softAssertionErrors.append(str(e))
+                    try:
+                        self.assertLessEqual(satisfaction, self.t[code]['satisfaction']['upper'])
+                    except AssertionError as e:
+                        self.softAssertionErrors.append(str(e))
+
+        self.output_tsv.close()
+
+
 
     def test_utility(self):
 

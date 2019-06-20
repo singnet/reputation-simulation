@@ -3,23 +3,23 @@
     "antons_view": {
       "adapter": "antons_view",
       "parameters": {
-        "CRg": 9,
-        "CRb": 9,
+        "CRg": 0.1,
+        "CRb": 0.1,
         "GR": 19,
-        "NTg": 1,
-        "NTb": 2,
+        "NTg": 60,
+        "NTb": 1,
         "NIg": 1,
         "NIb": 1,
-        "NA": 10,
-        "D": 10,
-        "SP": 1,
+        "NA": 1000,
+        "D": 180,
+        "SP": 180,
         "SIP": 0,
         "PLRg": 60,
         "PLRb": 100,
         "PR": 9,
-        "NP": 2,
+        "NP": 10,
         "Pmin": 50,
-        "Pmax": 150
+        "Pmax": 1500
       },
       "supplement": {
         "amounts_stdev": 0.01,
@@ -113,141 +113,59 @@
   "batch": {
     "on": true,
     "parameter_combinations": {
-     "model": {
-        "r_SOM": [
+      "usage": {
+        "r_WTA": [
           {
             "parameters": {
-              "reputation_parameters": {
-				"unrated": false
-			  }
-            }
-          },
-		   {
-            "parameters": {
-              "reputation_parameters": {
-				"ratings": 0.5
-			  }
-            }
-          },
-		   {
-            "parameters": {
-              "reputation_parameters": {
-				"spendings": 0.5
-			  }
+              "choice_method": "winner_take_all"
             }
           }
         ],
-        "r_TOM": [
-            {
+        "r_roulette": [
+          {
             "parameters": {
-              "reputation_parameters": {
-				"unrated": true
-			  }
-            }
-          },
-		   {
-            "parameters": {
-              "reputation_parameters": {
-				"ratings": 1.0
-			  }
-            }
-          },
-		   {
-            "parameters": {
-              "reputation_parameters": {
-				"spendings": 0.0
-			  }
-            }
-          }
-          ],
-
-        "r_SOMTOM": [
-           {
-            "parameters": {
-              "reputation_parameters": {
-				"unrated": true
-			  }
-            }
-          },
-		   {
-            "parameters": {
-              "reputation_parameters": {
-				"ratings": 0.5
-			  }
-            }
-          },
-		   {
-            "parameters": {
-              "reputation_parameters": {
-				"spendings": 0.5
-			  }
+              "choice_method": "roulette_wheel"
             }
           }
         ]
       },
-      "scam_period": {
-        "sp90": [
+      "model": {
+        "pageRank": [
           {
-            "macro_views": {
-              "antons_view": {
-                "parameters": {
-                  "SP": 90
-                }
-              }
-            }
-          },
-          {
-            "macro_views": {
-              "antons_view": {
-                "parameters": {
-                  "SIP": 45
-                }
-              }
-            }
-          }
-        ],
-        "sp30": [
-          {
-            "macro_views": {
-              "antons_view": {
-                "parameters": {
-                  "SP": 30
-                }
-              }
-            }
-          },
-          {
-            "macro_views": {
-              "antons_view": {
-                "parameters": {
-                  "SIP": 15
-                }
+            "parameters": {
+              "reputation_parameters": {
+                "weighting": false
               }
             }
           }
         ]
       },
-
-      "num_users": {
-        "na10000": [
+      "seed": {
+        "seed10": [
           {
-            "macro_views": {
-              "antons_view": {
-                "parameters": {
-                  "NA": 100
-                }
-              }
+            "parameters": {
+              "seed": 10
             }
           }
         ],
-        "na1000": [
+        "seed20": [
           {
-            "macro_views": {
-              "antons_view": {
-                "parameters": {
-                  "NA": 50
-                }
-              }
+            "parameters": {
+              "seed": 20
+            }
+          }
+        ],
+        "seed30": [
+          {
+            "parameters": {
+              "seed": 30
+            }
+          }
+        ],
+        "seed40": [
+          {
+            "parameters": {
+              "seed": 40
             }
           }
         ]
@@ -268,16 +186,16 @@
       "downrating": true,
       "update_period": 1,
       "aggregation": false,
-      "denomination": true,
+      "denomination": false,
       "unrated": false,
-      "ratings": 0.5,
-      "spendings": 0.5
+      "ratings": 1.0,
+      "spendings": 0.0
     },
     "macro_view": "antons_view",
     "use_java": false,
     "run_automatic_tests": true,
     "port": 1181,
-    "output_path": "debugRn/",
+    "output_path": "debugRn10/",
     "seed": 9573,
     "observer_mode": false,
     "randomize_initial_needs": true,
@@ -293,7 +211,7 @@
       "payment": "AGI",
       "rating": ""
     },
-    "suppliers_are_consumers": false,
+    "suppliers_are_consumers": true,
     "scam_parameters": {
       "scam_period": 15,
       "scam_inactive_period": 10
