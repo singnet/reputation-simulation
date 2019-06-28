@@ -1,0 +1,1434 @@
+{
+  "macro_views": {
+    "antons_view": {
+      "adapter": "antons_view",
+      "parameters": {
+        "CRg": 9,
+        "CRb": 9,
+        "GR": 19,
+        "NTg": 1,
+        "NTb": 1,
+        "NIg": 1,
+        "NIb": 1,
+        "NA": 10000,
+        "D": 90,
+        "SP": 10,
+        "SIP": 0,
+        "PLRg": 60,
+        "PLRb": 100,
+        "PR": 9,
+        "NP": 5,
+        "Pmin": 1,
+        "Pmax": 50,
+        "GF": 0.2
+      },
+      "supplement": {
+        "overwrite_criminal_agent_ring_size": "market_research",
+        "purch": 100,
+        "profit_margin": 10,
+        "beta": 0.442,
+        "alpha": 0.596,
+        "amounts_stdev": 0.01,
+        "amounts_min": 0,
+        "amounts_max": 1000,
+        "cobb_douglas_stdev": 0.01,
+        "need_cycle_stdev": 0.01,
+        "need_cycle_min": 0,
+        "need_cycle_max": 1000,
+        "price_stdev": 0.01,
+        "zipf_parameter": 1.1
+      }
+    }
+  },
+  "tests": {
+    "default": {
+      "OMUT": {
+        "lower": 0,
+        "upper": 1
+      },
+      "maxproduct": {
+        "lower": 0,
+        "upper": 1
+      },
+      "bsl": {
+        "lower": 0,
+        "upper": 1
+      },
+      "sgp": {
+        "lower": 0,
+        "upper": 1
+      },
+      "sgl": {
+        "lower": 0,
+        "upper": 1
+      },
+      "asp": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      }
+    }
+  },
+  "output_columns": [
+    {
+      "parameters": {
+        "reputation_parameters": [
+          "default",
+          "conservatism",
+          "fullnorm",
+          "weighting",
+          "logratings",
+          "decayed",
+          "liquid",
+          "logranks",
+          "downrating",
+          "update_period",
+          "aggregation",
+          "denomination",
+          "unrated",
+          "ratings",
+          "spendings",
+          "rating_bias",
+          "predictiveness"
+        ]
+      }
+    },
+    {
+      "parameters": [
+        "output_path",
+        "PLRo_overall",
+        "seed",
+        "observer_mode",
+        "reputation_system_threshold"
+      ]
+    },
+    {
+      "macro_views": {
+        "antons_view": {
+          "parameters": [
+            "CRg",
+            "CRb",
+            "GR",
+            "NTg",
+            "NTb",
+            "NIg",
+            "NIb",
+            "NA",
+            "D",
+            "SP",
+            "SIP",
+            "PLRg",
+            "PLRb",
+            "PR",
+            "NP",
+            "Pmin",
+            "Pmax",
+            "GF"
+          ]
+        }
+      }
+    }
+  ],
+  "batch": {
+    "on": true,
+    "parameter_combinations": {
+      "model": {
+        "r_biaspredict": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "rating_bias": true
+              }
+            }
+          },{
+            "parameters": {
+              "reputation_parameters": {
+                "predictiveness": 1.0
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "weighting": true
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "denomination": true
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "unrated": false
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "ratings": 1.0
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "spendings": 0.0
+              }
+            }
+          }
+        ]
+      },
+      "seed": {
+        "seed10": [
+          {
+            "parameters": {
+              "seed": 10
+            }
+          }
+        ],
+        "seed20": [
+          {
+            "parameters": {
+              "seed": 20
+            }
+          }
+        ],
+        "seed30": [
+          {
+            "parameters": {
+              "seed": 30
+            }
+          }
+        ],
+        "seed40": [
+          {
+            "parameters": {
+              "seed": 40
+            }
+          }
+        ],
+        "seed50": [
+          {
+            "parameters": {
+              "seed": 50
+            }
+          }
+        ],
+        "seed60": [
+          {
+            "parameters": {
+              "seed": 60
+            }
+          }
+        ],
+        "seed70": [
+          {
+            "parameters": {
+              "seed": 70
+            }
+          }
+        ],
+        "seed80": [
+          {
+            "parameters": {
+              "seed": 80
+            }
+          }
+        ],
+        "seed10": [
+          {
+            "parameters": {
+              "seed": 10
+            }
+          }
+        ],
+        "seed20": [
+          {
+            "parameters": {
+              "seed": 20
+            }
+          }
+        ],
+        "seed30": [
+          {
+            "parameters": {
+              "seed": 30
+            }
+          }
+        ],
+        "seed40": [
+          {
+            "parameters": {
+              "seed": 40
+            }
+          }
+        ],
+        "seed50": [
+          {
+            "parameters": {
+              "seed": 50
+            }
+          }
+        ],
+        "seed60": [
+          {
+            "parameters": {
+              "seed": 60
+            }
+          }
+        ],
+        "seed70": [
+          {
+            "parameters": {
+              "seed": 70
+            }
+          }
+        ],
+        "seed80": [
+          {
+            "parameters": {
+              "seed": 80
+            }
+          }
+        ],
+        "seed90": [
+          {
+            "parameters": {
+              "seed": 90
+            }
+          }
+        ],
+        "seed100": [
+          {
+            "parameters": {
+              "seed": 100
+            }
+          }
+        ]
+      },
+      "decayed": {
+        "decayed9": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "decayed": 0.9
+              }
+            }
+          }
+        ],
+        "decayed5": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "decayed": 0.5
+              }
+            }
+          }
+        ],
+        "decayed1": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "decayed": 0.1
+              }
+            }
+          }
+        ]
+      },
+      "default": {
+        "default9": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "default": 0.9
+              }
+            }
+          }
+        ],
+        "default5": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "default": 0.5
+              }
+            }
+          }
+        ],
+        "default1": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "default": 0.1
+              }
+            }
+          }
+        ]
+      },
+      "conservatism": {
+        "conservatism9": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "conservatism": 0.9
+              }
+            }
+          }
+        ],
+        "conservatism5": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "conservatism": 0.5
+              }
+            }
+          }
+        ],
+        "conservatism1": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "conservatism": 0.1
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "reputation_parameters": {
+      "precision": 0.01,
+      "default": 0.5,
+      "conservatism": 0.5,
+      "fullnorm": true,
+      "weighting": true,
+      "logratings": false,
+      "decayed": 0.5,
+      "liquid": true,
+      "logranks": true,
+      "downrating": false,
+      "update_period": 1,
+      "aggregation": false,
+      "denomination": true,
+      "unrated": false,
+      "ratings": 1.0,
+      "spendings": 0.0,
+      "rating_bias": false,
+      "predictiveness": 0.0
+    },
+    "macro_view": "antons_view",
+    "use_java": true,
+    "run_automatic_tests": false,
+    "port": 1187,
+    "output_path": "amazonBayesBiasPredictParamSearchLarge/",
+    "seed": 9573,
+    "observer_mode": false,
+    "randomize_initial_needs": true,
+    "ranks_update_period": 1,
+    "error_log": true,
+    "deterministic_mode": true,
+    "num_users": 10000,
+    "initial_date": "01.01.2018 11:05:02",
+    "final_date": "30.06.2018 11:05:02",
+    "days_per_tick": 1.0,
+    "network": "singularity",
+    "types_and_units": {
+      "payment": "AGI",
+      "rating": ""
+    },
+    "suppliers_are_consumers": false,
+    "scam_parameters": {
+      "scam_period": [
+        10,
+        2,
+        2,
+        100
+      ],
+      "scam_inactive_period": [
+        5,
+        0.001,
+        0.0,
+        100
+      ]
+    },
+    "exclusive_criminal_ring": false,
+    "criminal_agent_ring_size": [
+      50,
+      2,
+      2,
+      100
+    ],
+    "open_to_new_experiences": [
+      0.85,
+      0.1
+    ],
+    "fire_supplier_threshold": [
+      0.3,
+      0.1
+    ],
+    "reputation_system_threshold": [
+      60,
+      1,
+      1,
+      1000
+    ],
+    "average_reputation_system_threshold": false,
+    "choice_method": "roulette_wheel",
+    "forget_discount": [
+      0.99,
+      0.02
+    ],
+    "param_str": "r_sp182_",
+    "prices": {
+      "milk": [
+        1,
+        0.2,
+        1,
+        100
+      ],
+      "honey": [
+        2,
+        0.3,
+        1,
+        100
+      ]
+    },
+    "criminal_prices": {
+      "milk": [
+        1,
+        0.2,
+        1,
+        100
+      ],
+      "honey": [
+        2,
+        0.3,
+        1,
+        100
+      ]
+    },
+    "amounts": {
+      "milk": [
+        20.0,
+        1.0,
+        1,
+        1000
+      ],
+      "honey": [
+        20.0,
+        1.0,
+        1,
+        1000
+      ]
+    },
+    "criminal_amounts": {
+      "milk": [
+        1.0,
+        0.01,
+        1,
+        1000
+      ],
+      "honey": [
+        1.0,
+        0.01,
+        1,
+        1000
+      ]
+    },
+    "chance_of_supplying": {
+      "milk": 0.05,
+      "honey": 0.05
+    },
+    "criminal_chance_of_supplying": {
+      "milk": 0.06,
+      "honey": 0.04
+    },
+    "cobb_douglas_constant": 1.5,
+    "cobb_douglas_utilities": {
+      "milk": [
+        0.05,
+        0.01
+      ],
+      "honey": [
+        0.1,
+        0.3
+      ]
+    },
+    "need_cycle": {
+      "milk": [
+        2,
+        1,
+        0,
+        20
+      ],
+      "honey": [
+        1,
+        2,
+        0,
+        30
+      ]
+    },
+    "criminal_need_cycle": {
+      "milk": [
+        0,
+        0.2
+      ],
+      "honey": [
+        0,
+        0.2
+      ]
+    },
+    "random_change_suppliers": 1.0,
+    "include_ratings": true,
+    "chance_of_criminal": 0.05,
+    "goodness": [
+      0.95,
+      0.01,
+      0.01,
+      1
+    ],
+    "criminal_goodness": [
+      0.05,
+      0.01,
+      0.01,
+      1
+    ],
+    "transactions_per_day": [
+      10,
+      0.0001,
+      0,
+      1000
+    ],
+    "criminal_transactions_per_day": [
+      100,
+      0.0001,
+      0,
+      1000
+    ],
+    "ratings_goodness_thresholds": {
+      "0.0": 0.15,
+      "0.25": 0.35,
+      "0.5": 0.65,
+      "0.75": 0.85,
+      "1.0": 1.0
+    },
+    "rating_perception": [
+      0,
+      0.01,
+      -1,
+      1
+    ],
+    "chance_of_rating_good2good": 0.6,
+    "chance_of_rating_good2bad": 0.6,
+    "criminal_chance_of_rating": 1.0,
+    "non_rating_val": "",
+    "min_scam_purchases": -200,
+    "max_scam_purchases": 200,
+    "change_num_scams_incr": 50,
+    "product_mode": true,
+    "scam_goods_satisfy_needs": true,
+    "quality_deviation_from_supplier": [
+      0.0,
+      0.1,
+      -0.3,
+      0.3
+    ],
+    "num_products_supplied": [
+      100,
+      30,
+      10,
+      200
+    ],
+    "bad_consumers_change_names": false,
+    "one_review_per_product": true,
+    "criminal_category_list": [
+      "1"
+    ],
+    "change_product_names_when_change_supplers_name": true,
+    "criminal_suppliers_change_names": true,
+    "criminal_suppliers_purchase_reviewers": true,
+    "criminal_suppliers_replace_products": true,
+    "PLRo_overall": "PLRo_overall_30",
+    "num_stars": {
+      "0.0": "product_quality_onestars",
+      "0.25": "product_quality_twostars",
+      "0.5": "product_quality_threestars",
+      "0.75": "product_quality_fourstars",
+      "1.0": "product_quality_fivestars"
+    }
+  },
+  "bayesian_networks": {
+    "PLRo": {
+      "discrete_distributions": {
+        "product_quality": {
+          "product_quality_onestars": 0.05,
+          "product_quality_twostars": 0.2,
+          "product_quality_threestars": 0.5,
+          "product_quality_fourstars": 0.2,
+          "product_quality_fivestars": 0.05
+        },
+        "PLRo_overall": {
+          "PLRo_overall_0": 0.2,
+          "PLRo_overall_2": 0.2,
+          "PLRo_overall_5": 0.1,
+          "PLRo_overall_10": 0.1,
+          "PLRo_overall_15": 0.1,
+          "PLRo_overall_30": 0.1,
+          "PLRo_overall_70": 0.1,
+          "PLRo_overall_100": 0.1
+        }
+      },
+      "conditional_probability": {
+        "PLRo": {
+          "RVs": [
+            "PLRo_overall",
+            "product_quality"
+          ],
+          "CPT": [
+            [
+              "PLRo_overall_0",
+              "product_quality_onestars",
+              "PLRo",
+              0.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_twostars",
+              "PLRo",
+              0.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_threestars",
+              "PLRo",
+              0.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_fourstars",
+              "PLRo",
+              0.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_fivestars",
+              "PLRo",
+              0.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_onestars",
+              "PLRoNot",
+              1.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_twostars",
+              "PLRoNot",
+              1.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_threestars",
+              "PLRoNot",
+              1.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_fourstars",
+              "PLRoNot",
+              1.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_fivestars",
+              "PLRoNot",
+              1.0
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_onestars",
+              "PLRo",
+              0.1
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_twostars",
+              "PLRo",
+              0.02
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_threestars",
+              "PLRo",
+              0.005
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_fourstars",
+              "PLRo",
+              0.02
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_fivestars",
+              "PLRo",
+              0.1
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_onestars",
+              "PLRoNot",
+              0.9
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_twostars",
+              "PLRoNot",
+              0.98
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_threestars",
+              "PLRoNot",
+              0.995
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_fourstars",
+              "PLRoNot",
+              0.98
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_fivestars",
+              "PLRoNot",
+              0.9
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_onestars",
+              "PLRo",
+              0.25
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_twostars",
+              "PLRo",
+              0.06
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_threestars",
+              "PLRo",
+              0.005
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_fourstars",
+              "PLRo",
+              0.06
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_fivestars",
+              "PLRo",
+              0.25
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_onestars",
+              "PLRoNot",
+              0.75
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_twostars",
+              "PLRoNot",
+              0.94
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_threestars",
+              "PLRoNot",
+              0.995
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_fourstars",
+              "PLRoNot",
+              0.94
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_fivestars",
+              "PLRoNot",
+              0.75
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_onestars",
+              "PLRo",
+              0.2
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_twostars",
+              "PLRo",
+              0.1
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_threestars",
+              "PLRo",
+              0.08
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_fourstars",
+              "PLRo",
+              0.1
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_fivestars",
+              "PLRo",
+              0.2
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_onestars",
+              "PLRoNot",
+              0.8
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_twostars",
+              "PLRoNot",
+              0.9
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_threestars",
+              "PLRoNot",
+              0.92
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_fourstars",
+              "PLRoNot",
+              0.9
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_fivestars",
+              "PLRoNot",
+              0.8
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_onestars",
+              "PLRo",
+              0.3
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_twostars",
+              "PLRo",
+              0.15
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_threestars",
+              "PLRo",
+              0.12
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_fourstars",
+              "PLRo",
+              0.15
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_fivestars",
+              "PLRo",
+              0.3
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_onestars",
+              "PLRoNot",
+              0.7
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_twostars",
+              "PLRoNot",
+              0.85
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_threestars",
+              "PLRoNot",
+              0.88
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_fourstars",
+              "PLRoNot",
+              0.85
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_fivestars",
+              "PLRoNot",
+              0.7
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_onestars",
+              "PLRo",
+              0.6
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_twostars",
+              "PLRo",
+              0.3
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_threestars",
+              "PLRo",
+              0.23
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_fourstars",
+              "PLRo",
+              0.3
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_fivestars",
+              "PLRo",
+              0.6
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_onestars",
+              "PLRoNot",
+              0.4
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_twostars",
+              "PLRoNot",
+              0.7
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_threestars",
+              "PLRoNot",
+              0.77
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_fourstars",
+              "PLRoNot",
+              0.7
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_fivestars",
+              "PLRoNot",
+              0.4
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_onestars",
+              "PLRo",
+              0.95
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_twostars",
+              "PLRo",
+              0.8
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_threestars",
+              "PLRo",
+              0.55
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_fourstars",
+              "PLRo",
+              0.8
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_fivestars",
+              "PLRo",
+              0.95
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_onestars",
+              "PLRoNot",
+              0.05
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_twostars",
+              "PLRoNot",
+              0.20
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_threestars",
+              "PLRoNot",
+              0.45
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_fourstars",
+              "PLRoNot",
+              0.20
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_fivestars",
+              "PLRoNot",
+              0.05
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_onestars",
+              "PLRo",
+              1.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_twostars",
+              "PLRo",
+              1.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_threestars",
+              "PLRo",
+              1.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_fourstars",
+              "PLRo",
+              1.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_fivestars",
+              "PLRo",
+              1.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_onestars",
+              "PLRoNot",
+              0.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_twostars",
+              "PLRoNot",
+              0.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_threestars",
+              "PLRoNot",
+              0.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_fourstars",
+              "PLRoNot",
+              0.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_fivestars",
+              "PLRoNot",
+              0.0
+            ]
+          ]
+        }
+      }
+    },
+    "supplier_switch": {
+      "discrete_distributions": {
+        "supplier_profit": {
+          "supplier_profit": 0.8,
+          "supplier_profitNot": 0.2
+        },
+        "supplier_min_score": {
+          "supplier_min_score": 0.5,
+          "supplier_min_scoreNot": 0.5
+        }
+      },
+      "conditional_probability": {
+        "supplier_switch": {
+          "RVs": [
+            "supplier_min_score",
+            "supplier_profit"
+          ],
+          "CPT": [
+            [
+              "supplier_min_score",
+              "supplier_profit",
+              "supplier_switch",
+              0.001
+            ],
+            [
+              "supplier_min_scoreNot",
+              "supplier_profit",
+              "supplier_switch",
+              0.005
+            ],
+            [
+              "supplier_min_score",
+              "supplier_profitNot",
+              "supplier_switch",
+              0.015
+            ],
+            [
+              "supplier_min_scoreNot",
+              "supplier_profitNot",
+              "supplier_switch",
+              0.025
+            ],
+            [
+              "supplier_min_score",
+              "supplier_profit",
+              "supplier_switchNot",
+              0.999
+            ],
+            [
+              "supplier_min_scoreNot",
+              "supplier_profit",
+              "supplier_switchNot",
+              0.995
+            ],
+            [
+              "supplier_min_score",
+              "supplier_profitNot",
+              "supplier_switchNot",
+              0.985
+            ],
+            [
+              "supplier_min_scoreNot",
+              "supplier_profitNot",
+              "supplier_switchNot",
+              0.975
+            ]
+          ]
+        }
+      }
+    },
+    "product_switch": {
+      "discrete_distributions": {
+        "product_profit": {
+          "product_profit": 0.8,
+          "product_profitNot": 0.2
+        },
+        "product_min_score": {
+          "product_min_score": 0.5,
+          "product_min_scoreNot": 0.5
+        }
+      },
+      "conditional_probability": {
+        "product_switch": {
+          "RVs": [
+            "product_min_score",
+            "product_profit"
+          ],
+          "CPT": [
+            [
+              "product_min_score",
+              "product_profit",
+              "product_switch",
+              0.001
+            ],
+            [
+              "product_min_scoreNot",
+              "product_profit",
+              "product_switch",
+              0.005
+            ],
+            [
+              "product_min_score",
+              "product_profitNot",
+              "product_switch",
+              0.015
+            ],
+            [
+              "product_min_scoreNot",
+              "product_profitNot",
+              "product_switch",
+              0.025
+            ],
+            [
+              "product_min_score",
+              "product_profit",
+              "product_switchNot",
+              0.999
+            ],
+            [
+              "product_min_scoreNot",
+              "product_profit",
+              "product_switchNot",
+              0.995
+            ],
+            [
+              "product_min_score",
+              "product_profitNot",
+              "product_switchNot",
+              0.985
+            ],
+            [
+              "product_min_scoreNot",
+              "product_profitNot",
+              "product_switchNot",
+              0.975
+            ]
+          ]
+        }
+      }
+    },
+    "num_bought_scams": {
+      "discrete_distributions": {
+        "product_profit": {
+          "product_profit": 0.8,
+          "product_profitNot": 0.2
+        },
+        "product_best_score": {
+          "product_best_score": 0.5,
+          "product_best_scoreNot": 0.5
+        }
+      },
+      "conditional_probability": {
+        "product_scam": {
+          "RVs": [
+            "product_best_score",
+            "product_profit"
+          ],
+          "CPT": [
+            [
+              "product_best_score",
+              "product_profit",
+              "product_scam_even",
+              0.85
+            ],
+            [
+              "product_best_scoreNot",
+              "product_profit",
+              "product_scam_even",
+              0.85
+            ],
+            [
+              "product_best_score",
+              "product_profitNot",
+              "product_scam_even",
+              0.00
+            ],
+            [
+              "product_best_scoreNot",
+              "product_profitNot",
+              "product_scam_even",
+              0.0
+            ],
+            [
+              "product_best_score",
+              "product_profit",
+              "product_scam_higher",
+              0.1
+            ],
+            [
+              "product_best_scoreNot",
+              "product_profit",
+              "product_scam_higher",
+              0.1
+            ],
+            [
+              "product_best_score",
+              "product_profitNot",
+              "product_scam_higher",
+              0.5
+            ],
+            [
+              "product_best_scoreNot",
+              "product_profitNot",
+              "product_scam_higher",
+              0.1
+            ],
+            [
+              "product_best_score",
+              "product_profit",
+              "product_scam_lower",
+              0.05
+            ],
+            [
+              "product_best_scoreNot",
+              "product_profit",
+              "product_scam_lower",
+              0.05
+            ],
+            [
+              "product_best_score",
+              "product_profitNot",
+              "product_scam_lower",
+              0.50
+            ],
+            [
+              "product_best_scoreNot",
+              "product_profitNot",
+              "product_scam_lower",
+              0.9
+            ]
+          ]
+        }
+      }
+    }
+  }
+}
+
+

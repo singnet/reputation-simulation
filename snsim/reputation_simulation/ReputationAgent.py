@@ -192,8 +192,8 @@ class ReputationAgent(Agent):
                 self.products[category][pid] ["product_id"]= pid
                 self.products[category][pid]["price"]= int(round(self.model.price_distributions[category].rvs(
                     ) if self.good else self.model.criminal_price_distributions[category].rvs() ))
-                self.products[category][pid]["quality"]=(self.goodness +
-                                                        self.model.quality_deviation_from_supplier_distribution.rvs())
+                quality = self.goodness +self.model.quality_deviation_from_supplier_distribution.rvs()
+                self.products[category][pid]["quality"]= 1 if quality > 1 else 0 if quality < 0 else quality
                 self.products[category][pid]["production_cost"] = (self.products[category][pid]["price"] *
                                                                        self.products[category][pid]["quality"])/2
                 self.products[category][pid]["black_market"] = not self.good
@@ -902,15 +902,17 @@ class ReputationAgent(Agent):
                                 winner = key
                                 product = self.product_details[key][good]
                                 supplier_agent = self.model.agents[self.model.orig[key]]
-                                product_quality = supplier_agent.products[good][product]['quality']
-                                if product_quality < threshold:
-                                    product = self.choose_random_product(key, good)
-                                    self.set_supplier(key,good,product)
+                                if product in supplier_agent.products[good]:
+                                    product_quality = supplier_agent.products[good][product]['quality']
+                                    if product_quality < threshold:
+                                        product = self.choose_random_product(key, good)
+                                        self.set_supplier(key,good,product)
+                                    else:
+                                        self.set_supplier(key,good)
+                                    # if not open to a new experience just use last product they used for that good
+                                    #self.suppliers[good].append(key)
                                 else:
-                                    self.set_supplier(key,good)
-                                # if not open to a new experience just use last product they used for that good
-                                #self.suppliers[good].append(key)
-
+                                    print ("Product {0} is not in suppliers product list but is in product details")
             elif len(self.suppliers[good]) < 1:
 
                 under_threshold = set([key for key, ratings_tuple in
@@ -1017,12 +1019,16 @@ class ReputationAgent(Agent):
             #    print ("agnet {0} repeat{1} purcahse of good{2}".format(self.unique_id, i, good))
 
             self.model.save_info_for_market_volume_report(self, self.model.orig[supplier], price)
+            self.model.add_legit_transaction(supplier, price)
             perception, rating = self.rate_product(supplier, good, product) if self.p['product_mode'] else self.rate(
                 supplier)
             if self.p['scam_goods_satisfy_needs'] or self.model.agents[self.model.orig[supplier]].good:
                 merchandise_recieved = True
             self.update_personal_experience(good, supplier_id, perception)
-            self.model.add_organic_buy(price,perception)
+            self.model.add_good_consumer_rating(perception)
+
+            quality = supplier_agent.products[good][product]["quality"]
+            self.model.add_organic_buy(price,quality)
             if self.p['product_mode']:
                 supplier_agent.note_product_purchase(good, product, amount)
 
@@ -1178,6 +1184,11 @@ class ReputationAgent(Agent):
             leaves_rating = self.leaves_rating(rating)
             if (not leaves_rating):
                 rating = self.p['non_rating_val']
+
+        if perception > 1:
+            perception = 1
+        if perception < 0:
+            perception = 0
 
         return (perception,rating)
 

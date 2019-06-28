@@ -65,8 +65,9 @@ class ReputationSim(Model):
 
                 self.config = json.load(json_file, object_pairs_hook=OrderedDict)
 
-        if rs is None:
-           rs = self.initialize_reputation_system(self.config)
+        self.reputation_system = self.make_reputation_system(self.config) if rs is None else rs
+        if self.reputation_system is not None:
+           self.initialize_reputation_system(self.config)
 
         #save the config with the output
 
@@ -102,6 +103,7 @@ class ReputationSim(Model):
         self.market_volume_report = self.market_volume_report()
         self.error_log = self.error_log() if self.parameters['error_log'] else None
 
+
         self.seconds_per_day = 86400
 
 
@@ -110,6 +112,8 @@ class ReputationSim(Model):
 
         tuplist = [(good, set()) for good, chance in self.parameters["criminal_chance_of_supplying"].items()]
         self.criminal_suppliers = OrderedDict(tuplist)
+
+        self.individual_agent_market_volume ={}
 
 
         self.initial_epoch = self.get_epoch(self.parameters['initial_date'])
@@ -166,7 +170,9 @@ class ReputationSim(Model):
                       ]
 
         self.schedule = StagedActivation(self, stage_list=stage_list, shuffle=True, shuffle_between_stages=True)
+        self.original_suppliers = set()
 
+        self.output_stats = self.output_stats(self.config)
         # Create agents
         agent_count = 0
 
@@ -211,13 +217,16 @@ class ReputationSim(Model):
                     self.schedule.add(a)
                     self.agents[agent_count]=a
                     self.criminal_suppliers[good].add(agent_count)
+                    self.original_suppliers.add(agent_count)
                     agent_count += 1
 
             #criminal consumers
-            for _ in range(num_criminals - num_suppliers1):
+            self.num_criminal_consumers = num_criminals - num_suppliers1
+            for _ in range(self.num_criminal_consumers):
                 a = globals()['ReputationAgent'](agent_count, self, criminal=True, supply_list=[])
                 self.schedule.add(a)
                 self.agents[agent_count]=a
+                self.original_suppliers.add(agent_count)
                 agent_count += 1
 
             #good suppliers
@@ -247,6 +256,7 @@ class ReputationSim(Model):
                     agent_count += 1
 
             #good consumers
+            self.num_good_consumers = self.parameters['num_users'] - agent_count
             for i in range(agent_count,self.parameters['num_users']):
                 a = globals()['ReputationAgent'](agent_count, self,criminal=False, supply_list=[])
                 self.schedule.add(a)
@@ -271,7 +281,6 @@ class ReputationSim(Model):
         self.bad2bad_agent_cumul_completed_transactions = 0
         self.bad2bad_agent_cumul_total_price = 0
 
-        self.reputation_system = rs
         self.ranks = {}
         if not self.parameters['observer_mode']:
             self.reset_reputation_system()
@@ -280,6 +289,17 @@ class ReputationSim(Model):
 
         self.reset_stats_product()
         #print ('Last line of ReputationSim __init__')
+
+    def output_stats(self, config):
+        path = config['parameters']['output_path'] + 'output_stats.tsv'
+
+        if not os.path.exists(config['parameters']['output_path']):
+            os.makedirs(config['parameters']['output_path'])
+        file = open(path, 'a')
+        #file.write("hellow world")
+        #file.close()
+
+        return file
 
     def next_product_id(self):
         product_id = self.current_product_id
@@ -404,6 +424,13 @@ class ReputationSim(Model):
         self.sgl_num = 0
         self.sgl_denom = 0
         self.num_changes = 0
+        self.sum_good_consumer_ratings = 0
+        self.num_good_consumer_rated_purchases = 0
+
+    def add_good_consumer_rating(self, rating):
+        self.sum_good_consumer_ratings += rating
+        self.num_good_consumer_rated_purchases += 1
+
 
     def add_organic_buy(self,price,quality):
         # bsl_num = Σorganicbuys(Price * (1 - OQ))
@@ -412,6 +439,12 @@ class ReputationSim(Model):
         self.bsl_num += price * (1.0-quality)
         self.bsl_denom += price
         self.sgl_denom += price * quality
+
+    def add_legit_transaction(self, supplier, price):
+        real_supplier = self.orig[supplier]
+        if not real_supplier in self.individual_agent_market_volume:
+            self.individual_agent_market_volume[real_supplier]=0
+        self.individual_agent_market_volume[real_supplier] +=price
 
 
     def add_sponsored_buy(self,price, quality, commission):
@@ -423,15 +456,158 @@ class ReputationSim(Model):
     def add_identity_change(self):
         self.num_changes += 1
 
+    def bsl(self):
+        bsl = self.bsl_num / self.bsl_denom if self.bsl_denom != 0 else -1
+        return bsl
+
+    def sgp(self):
+        sgp = self.bsl_num / self.sgp_denom if self.sgp_denom != 0 else -1
+        return sgp
+
+    def sgl(self):
+        sgl = self.sgl_num / self.sgl_denom if self.sgl_denom != 0 else -1
+        return sgl
+
+    def asp(self):
+        criminals = [bad for good, bad in self.criminal_suppliers.items()]
+        asp = (len(criminals) * self.get_end_tick()) / self.num_changes if self.num_changes != 0 else -1
+        return asp
+
+    def market_volume(self):
+        market_volume = ( self.good2good_agent_cumul_total_price +
+        self.bad2good_agent_cumul_total_price +
+        self.good2bad_agent_cumul_total_price +
+        self.bad2bad_agent_cumul_total_price  )
+        return market_volume
+
+    def maxproduct(self):
+        maxproduct = self.current_product_id
+        return maxproduct
+
+    def loss_to_scam(self):
+        good2all = (self.good2good_agent_cumul_total_price
+                    + self.good2bad_agent_cumul_total_price)
+        loss2scam = self.good2bad_agent_cumul_total_price / good2all if good2all > 0 else -1
+        return loss2scam
+
+    def profit_from_scam(self):
+        # dont include bad2good because that can be thought of as living expenses
+        profit_from_scam = (self.good2bad_agent_cumul_total_price /
+                            self.bad2bad_agent_cumul_total_price if self.bad2bad_agent_cumul_total_price > 0 else -1)
+
+        return profit_from_scam
+
+    def omut(self):
+        all2good = (self.good2good_agent_cumul_total_price + self.bad2good_agent_cumul_total_price)
+        organic_market_volume = all2good + self.good2bad_agent_cumul_total_price
+        num_consumers = self.num_good_consumers + self.num_criminal_consumers
+        good_consumer_fraction = self.num_good_consumers/num_consumers if num_consumers > 0 else 0
+        possible_market_volume = organic_market_volume * good_consumer_fraction
+        omut = self.good2good_agent_cumul_total_price/possible_market_volume if possible_market_volume > 0 else -1
+        return omut
+
+    def utility(self):
+        utility = (self.sum_good_consumer_ratings/
+                   self.num_good_consumer_rated_purchases if self.num_good_consumer_rated_purchases > 0 else -1)
+        return utility
+
+    def goodness(self,agentnum):
+        agent =  self.agents[self.orig[agentnum]]
+        goodness = agent.goodness if agent is not None else -1
+        return goodness
+
+    def inequity(self):
+
+        equitable_shares = [
+            self.individual_agent_market_volume[agent]/self.goodness(agent)
+            if agent in self.individual_agent_market_volume and self.goodness(agent) > 0
+            else self.individual_agent_market_volume[agent] / 0.0001
+            if agent in self.individual_agent_market_volume else 0
+            for agent in self.original_suppliers]
+        sorted_shares = sorted(equitable_shares)
+        N = len(sorted_shares)
+        if N and sum(sorted_shares):
+            B = sum(xi * (N - i) for i, xi in enumerate(sorted_shares)) / (N * sum(sorted_shares))
+            inequity = (1 + (1 / N) - 2 * B)
+        else:
+            inequity = sys.maxsize
+
+        return inequity
+
     def print_stats_product(self):
-        bsl = self.bsl_num/self.bsl_denom if self.bsl_denom != 0 else -1
-        sgp = self.bsl_num/self.sgp_denom if self.sgp_denom != 0 else -1
-        sgl = self.sgl_num/self.sgl_denom if self.sgl_denom != 0 else -1
-        criminals = [bad for good,bad in self.criminal_suppliers.items()]
-        asp = (len(criminals)* self.get_end_tick())/self.num_changes if self.num_changes != 0 else -1
-        print ("\nbsl:{0},sgp:{1},sgl:{2},asp:{3}\n".format(bsl,sgp,sgl,asp))
+        bsl = self.bsl()
+        sgp = self.sgp()
+        sgl = self.sgl()
+        asp = self.asp()
+        omut = self.omut()
+        market_volume = self.market_volume()
+        maxproduct = self.maxproduct()
+        lts = self.loss_to_scam()
+        pfs = self.profit_from_scam()
+        utility = self.utility()
+        inequity = self.inequity()
+
+        if self.daynum % 30 == 0:
+            print("""\n time:{11}, bsl:{0:.4f}, sgp:{1:.4f}, sgl:{2:.4f}, asp:{3:.4f}, omut:{4:.4f}, market volume:{5:.4f}, maxproduct:{6:.4f}, lts:{7:.4f}, pfs:{8:.4f}, utility:{9:.4}, inequity:{10:.4f}\n""".format(
+            bsl,sgp,sgl,asp,omut,market_volume,maxproduct,lts,pfs,utility,inequity,self.daynum))
         if self.error_log:
-            self.error_log.write("\nbsl:{0},sgp:{1},sgl:{2},asp:{3}\n".format(bsl,sgp,sgl,asp))
+            self.error_log.write("""\n time:{11}, bsl:{0:.4f}, sgp:{1:.4f}, sgl:{2:.4f}, asp:{3:.4f}, omut:{4:.4f}, market volume:{5:.4f}, maxproduct:{6:.4f}, lts:{7:.4f}, pfs:{8:.4f}, utility:{9:.4}, inequity:{10:.4f}\n""".format(
+            bsl,sgp,sgl,asp,omut,market_volume,maxproduct,lts,pfs,utility,inequity,self.daynum))
+
+
+    def write_output_stats_line(self):
+        line = []
+        for new_val in self.config['output_columns']:
+            # old_val = configfile['parameters']
+            old_val = self.config
+            old_old_val = old_val
+            while isinstance(new_val, dict) and len(new_val) == 1:
+                # while isinstance(new_val, dict):
+                nextKey = next(iter(new_val.items()))[0]
+                old_old_val = old_val
+                old_val = old_val[nextKey]
+                new_val = new_val[nextKey]
+            #old_old_val[nextKey] = new_val
+            paramlist = new_val
+            for param in paramlist:
+                length = len(old_old_val[nextKey][param])if isinstance(old_old_val[nextKey][param],list)else 1
+
+                if length > 1:
+                    for i in range(length):
+                        new_param = "{0}{1}".format(param,i)
+                        line.append(old_old_val[nextKey][param][i])
+                else:
+                    line.append(old_old_val[nextKey][param])
+        for test,_ in self.config['tests']['default'].items():
+            v=""
+            if test == "OMUT":
+                v = self.omut()
+            elif test == "maxproduct":
+                v = self.maxproduct()
+            elif test == "bsl":
+                v = self.bsl()
+            elif test == "sgp":
+                v = self.sgp()
+            elif test == "sgl":
+                v = self.sgl()
+            elif test == "asp":
+                v = self.asp()
+            elif test == "loss_to_scam":
+                v = self.loss_to_scam()
+            elif test == "profit_from_scam":
+                v = self.profit_from_scam()
+            elif test == "market_volume":
+                v = self.market_volume()
+            elif test == "inequity":
+                v = self.inequity()
+            elif test == "utility":
+                v = self.utility()
+            line.append(v)
+        line.append("\n")
+        linestr = "\t".join(map (str, line))
+        self.output_stats.write(linestr)
+        self.output_stats.flush()
+
 
     def reset_stats(self):
         self.good2good_agent_completed_transactions  = 0
@@ -879,7 +1055,6 @@ class ReputationSim(Model):
         #generation_increment = (self.model.daynum // self.p['scam_period']) * self.p['num_users']
         #if self.p['scam_inactive_period']:  #there is a campaign in which ids are shifted, so subtract the increment
 
-
     def step(self):
         present = int(round(self.schedule.time))
        # print('time {0}'.format(present))
@@ -889,6 +1064,7 @@ class ReputationSim(Model):
         self.reset_current_ranks()
         """Advance the model by one step."""
         self.schedule.step()
+        self.print_stats_product()
         self.print_market_volume_report_line()
         #self.market_volume_report.flush()
         if self.error_log:
@@ -911,7 +1087,9 @@ class ReputationSim(Model):
         while self.schedule.time < self.get_end_tick():
             self.step()
         self.finalize_all_ranks()
-        self.print_stats_product()
+        self.write_output_stats_line()
+        self.output_stats.flush()
+        self.output_stats.close()
         self.market_volume_report.close()
         self.transaction_report.close()
         if self.error_log:
@@ -921,18 +1099,10 @@ class ReputationSim(Model):
             self.rank_history.close()
 
 
-
     def initialize_reputation_system(self,config):
 
-        now = dt.datetime.now()
-        epoch = now.strftime('%s')
-        dirname = 'test' + epoch
-        rs = None if config['parameters']['observer_mode'] else (PythonReputationService(
-        ) if not config['parameters']['use_java'] else AigentsAPIReputationService(
-            'http://localtest.com:{0}/'.format(config['parameters']['port']),
-            'john@doe.org', 'q', 'a', False, dirname, True))
-        if rs is not None:
-            rs.set_parameters({
+        if self.reputation_system is not None:
+            self.reputation_system.set_parameters({
                 'precision': config['parameters']['reputation_parameters']['precision'],
                 'default': config['parameters']['reputation_parameters']['default'],
                 'conservatism': config['parameters']['reputation_parameters']['conservatism'],
@@ -948,18 +1118,91 @@ class ReputationSim(Model):
                 'denomination': config['parameters']['reputation_parameters']['denomination'],
                 'unrated': config['parameters']['reputation_parameters']['unrated'],
                 'ratings': config['parameters']['reputation_parameters']['ratings'],
-                'spendings': config['parameters']['reputation_parameters']['spendings']
+                'spendings': config['parameters']['reputation_parameters']['spendings'],
+                'rating_bias': config['parameters']['reputation_parameters']['rating_bias'],
+                'predictiveness': config['parameters']['reputation_parameters']['predictiveness']
+
 
             })
+
+
+    def make_reputation_system(self,config):
+
+        now = dt.datetime.now()
+        epoch = now.strftime('%s')
+        dirname = 'test' + epoch
+        rs = None if config['parameters']['observer_mode'] else (PythonReputationService(
+        ) if not config['parameters']['use_java'] else AigentsAPIReputationService(
+            'http://localtest.com:{0}/'.format(config['parameters']['port']),
+            'john@doe.org', 'q', 'a', False, dirname, True))
+
         return rs
 
 class Runner():
 
-    def __init__(self):
+    def __init__(self,config):
         self.param_list = []
+        self.config = config
+        self.output_stats = self.output_stats(config)
+        self.output_stats.close()
+
+    def make_reputation_system(self, config):
+        now = dt.datetime.now()
+        epoch = now.strftime('%s')
+        dirname = 'test' + epoch
+        rs = None if config['parameters']['observer_mode'] else (PythonReputationService(
+        ) if not config['parameters']['use_java'] else AigentsAPIReputationService(
+            'http://localtest.com:{0}/'.format(config['parameters']['port']),
+            'john@doe.org', 'q', 'a', False, dirname, True))
+
+        return rs
+
+    def get_output_stats_header(self):
+        heading = []
+        for new_val in self.config['output_columns']:
+            # old_val = configfile['parameters']
+            old_val = self.config
+            old_old_val = old_val
+            while isinstance(new_val, dict) and len(new_val) == 1:
+                # while isinstance(new_val, dict):
+                nextKey = next(iter(new_val.items()))[0]
+                old_old_val = old_val
+                old_val = old_val[nextKey]
+                new_val = new_val[nextKey]
+            #old_old_val[nextKey] = new_val
+            paramlist = new_val
+            for param in paramlist:
+                length = len(old_old_val[nextKey][param])if isinstance(old_old_val[nextKey][param],list)else 1
+                if length > 1:
+                    for i in range(length):
+                        new_param = "{0}{1}".format(param,i)
+                        heading.append(new_param)
+                else:
+                    heading.append(param)
+        for test,_ in self.config['tests']['default'].items():
+            heading.append(test)
+        heading.append("\n")
+        headingstr = "\t".join(map (str, heading))
+        return(headingstr)
+
+
+
+    def output_stats(self,config):
+        path = config['parameters']['output_path'] + 'output_stats.tsv'
+
+        if not os.path.exists(config['parameters']['output_path']):
+            os.makedirs(config['parameters']['output_path'])
+
+        with open(path, 'w') as file:
+            header = self.get_output_stats_header()
+            file.write(header)
+        return file
+
+
 
     def createTestCsv(self,config,codelist=None):
         import pandas as pd
+
         from copy import deepcopy
 
         outpath = config['parameters']['output_path'] + 'results.csv'
@@ -1029,7 +1272,8 @@ class Runner():
             paramvals.append(str(p['conservatism']))
             paramvals.append(str(p['decayed']))
             paramvals.append(str(p['update_period']))
-           # paramvals.append(str(p['rating_bias']))
+            paramvals.append(str(p['rating_bias']))
+            paramvals.append(str(p['predictiveness']))
             paramvals.append(config['parameters']['output_path'][: -1])
             row = paramvals
            # print(row)
@@ -1076,7 +1320,7 @@ class Runner():
             self.param_list.append(param_str[:-1])
 
 
-    def run_tests(self,config):
+    def run_tests(self):
         #test = ContinuousRankByGoodTests()
         #test.go(config)
         #test = ContinuousRankTests()
@@ -1084,13 +1328,13 @@ class Runner():
         # test = DiscreteRankTests()
         # test.go(config)
         test = GoodnessTests()
-        test.go(config)
+        test.go(self.config)
         test = MarketVolumeTests()
-        test.go(config)
+        test.go(self.config)
         test = TransactionsTests()
-        test.go(config)
-        self.get_param_list(config['batch']['parameter_combinations'])
-        self.createTestCsv(config, set(self.param_list))
+        test.go(self.config)
+        self.get_param_list(self.config['batch']['parameter_combinations'])
+        self.createTestCsv(self.config, set(self.param_list))
 
 
     def set_param(self,configfile, setting):
@@ -1149,13 +1393,13 @@ class Runner():
             repsim = ReputationSim(study_path =configfile, rs=rs, opened_config = True)
             #if configfile['parameters']['use_java']:
              #   print ("{0} : {1}  port:{2} ".format(configfile['parameters']['output_path'],param_str,configfile['parameters']['port']))
-            #print("{0} : {1}".format(configfile['parameters']['output_path'], param_str))
+            print("{0} : {1}".format(configfile['parameters']['output_path'], param_str))
 
             repsim.go()
 
 
 def main():
-    runner = Runner()
+
     #print (os.getcwd())
     study_path = sys.argv[1] if len(sys.argv)>1 else 'study.json'
     with open(study_path) as json_file:
@@ -1165,12 +1409,13 @@ def main():
         #     random.seed(config['parameters']['seed'] )
         #if config['parameters']['macro_view']:
             #config = Adapters(config).translate()
-
+        runner = Runner(config)
         if config['batch']['on']:
-            rs = None
-            runner.call(config['batch']['parameter_combinations'], config,rs=rs)
+            rs = runner.make_reputation_system(config) #if config['parameters']['use_java'] else None
+            runner.call(config['batch']['parameter_combinations'],config, rs=rs)
             if config['parameters']["run_automatic_tests"]:
-                runner.run_tests(config)
+                runner.run_tests()
+            #runner.output_stats.close()
         else:
             repsim = ReputationSim(sys.argv[1]) if len(sys.argv) > 1 else ReputationSim()
             repsim.go()
