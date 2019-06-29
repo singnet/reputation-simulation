@@ -204,62 +204,7 @@
         ]
       },
       "seed": {
-        "seed10": [
-          {
-            "parameters": {
-              "seed": 10
-            }
-          }
-        ],
-        "seed20": [
-          {
-            "parameters": {
-              "seed": 20
-            }
-          }
-        ],
-        "seed30": [
-          {
-            "parameters": {
-              "seed": 30
-            }
-          }
-        ],
-        "seed40": [
-          {
-            "parameters": {
-              "seed": 40
-            }
-          }
-        ],
-        "seed50": [
-          {
-            "parameters": {
-              "seed": 50
-            }
-          }
-        ],
-        "seed60": [
-          {
-            "parameters": {
-              "seed": 60
-            }
-          }
-        ],
-        "seed70": [
-          {
-            "parameters": {
-              "seed": 70
-            }
-          }
-        ],
-        "seed80": [
-          {
-            "parameters": {
-              "seed": 80
-            }
-          }
-        ],
+
         "seed10": [
           {
             "parameters": {
