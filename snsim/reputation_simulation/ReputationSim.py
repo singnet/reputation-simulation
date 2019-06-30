@@ -1101,7 +1101,9 @@ class ReputationSim(Model):
 
     def initialize_reputation_system(self,config):
 
-        if self.reputation_system is not None:
+        if config['parameters']['observer_mode']:
+            self.reputation_system = None
+        elif self.reputation_system is not None:
             self.reputation_system.set_parameters({
                 'precision': config['parameters']['reputation_parameters']['precision'],
                 'default': config['parameters']['reputation_parameters']['default'],
@@ -1120,7 +1122,8 @@ class ReputationSim(Model):
                 'ratings': config['parameters']['reputation_parameters']['ratings'],
                 'spendings': config['parameters']['reputation_parameters']['spendings'],
                 'rating_bias': config['parameters']['reputation_parameters']['rating_bias'],
-                'predictiveness': config['parameters']['reputation_parameters']['predictiveness']
+                'predictiveness': config['parameters']['reputation_parameters']['predictiveness'],
+                'parents': config['parameters']['reputation_parameters']['parents']
 
 
             })
@@ -1131,10 +1134,12 @@ class ReputationSim(Model):
         now = dt.datetime.now()
         epoch = now.strftime('%s')
         dirname = 'test' + epoch
-        rs = None if config['parameters']['observer_mode'] else (PythonReputationService(
-        ) if not config['parameters']['use_java'] else AigentsAPIReputationService(
-            'http://localtest.com:{0}/'.format(config['parameters']['port']),
-            'john@doe.org', 'q', 'a', False, dirname, True))
+        rs = None
+        if not config['parameters']['observer_mode']:
+            rs =  (PythonReputationService(
+            ) if not config['parameters']['use_java'] else AigentsAPIReputationService(
+                'http://localtest.com:{0}/'.format(config['parameters']['port']),
+                'john@doe.org', 'q', 'a', False, dirname, True))
 
         return rs
 
@@ -1150,10 +1155,12 @@ class Runner():
         now = dt.datetime.now()
         epoch = now.strftime('%s')
         dirname = 'test' + epoch
-        rs = None if config['parameters']['observer_mode'] else (PythonReputationService(
-        ) if not config['parameters']['use_java'] else AigentsAPIReputationService(
-            'http://localtest.com:{0}/'.format(config['parameters']['port']),
-            'john@doe.org', 'q', 'a', False, dirname, True))
+        rs = None
+        if not config['parameters']['observer_mode']:
+            rs =  (PythonReputationService(
+            ) if not config['parameters']['use_java'] else AigentsAPIReputationService(
+                'http://localtest.com:{0}/'.format(config['parameters']['port']),
+                'john@doe.org', 'q', 'a', False, dirname, True))
 
         return rs
 
@@ -1274,6 +1281,7 @@ class Runner():
             paramvals.append(str(p['update_period']))
             paramvals.append(str(p['rating_bias']))
             paramvals.append(str(p['predictiveness']))
+            paramvals.append(str(p['parents']))
             paramvals.append(config['parameters']['output_path'][: -1])
             row = paramvals
            # print(row)
