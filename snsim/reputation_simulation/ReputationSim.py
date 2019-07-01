@@ -654,6 +654,7 @@ class ReputationSim(Model):
         self.current_rank_products[id] =0
 
     def add_rank(self,id,rank):
+
         self.rank_sums[id] += rank
         self.rank_days[id]  += 1
         self.current_rank_sums[id] += rank
@@ -1045,12 +1046,16 @@ class ReputationSim(Model):
 
     def get_ranks(self, prev_date):
         self.ranks = self.reputation_system.get_ranks_dict({'date':prev_date})
-
+        #only put current suppliers and products
         current_suppliers = set([supplier for good, supplierlist in self.suppliers.items() for supplier in supplierlist])
         for agentstring,rank in self.ranks.items():
             agent = self.parse(agentstring)['agent']
             if agent in current_suppliers:
-                self.add_rank(agent,rank)
+                category = self.parse(agentstring)['category']
+                product = self.parse(agentstring)['product']
+                supplier_agent = self.agents[self.orig[agent]]
+                if product in supplier_agent.products[category]:
+                    self.add_rank(agent,rank)
 
         #generation_increment = (self.model.daynum // self.p['scam_period']) * self.p['num_users']
         #if self.p['scam_inactive_period']:  #there is a campaign in which ids are shifted, so subtract the increment

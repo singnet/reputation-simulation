@@ -108,7 +108,8 @@
           "ratings",
           "spendings",
           "rating_bias",
-          "predictiveness"
+          "predictiveness",
+          "parents"
         ]
       }
     },
@@ -384,7 +385,8 @@
       "ratings": 1.0,
       "spendings": 0.0,
       "rating_bias": false,
-      "predictiveness": 0.0
+      "predictiveness": 0.0,
+      "parents": 0.0
     },
     "macro_view": "antons_view",
     "use_java": true,
