@@ -9,6 +9,7 @@ import math
 from random import shuffle
 import copy
 import json
+import re
 
 
 class ReputationAgent(Agent):
@@ -241,7 +242,7 @@ class ReputationAgent(Agent):
 
     def supplier_has_available_products(self,supplier, good):
         supplier_has_available_products = True
-        supplier_agent = self.model.agents[self.model.orig[supplier]]
+        supplier_agent = self.model.agents[self.model.m[self.model.orig[supplier]]]
         testset = self.historic_products[good] if good in self.historic_products else set()
         if supplier_agent.get_available_criminal_product(good,testset) is None:
             supplier_has_available_products = False
@@ -263,7 +264,7 @@ class ReputationAgent(Agent):
 
     def needs_criminal_consumer(self, supplier,good):
         needs = False
-        supplier_agent = self.model.agents[self.model.orig[supplier]]
+        supplier_agent = self.model.agents[self.model.m[self.model.orig[supplier]]]
         if self.p['product_mode']:
             if good in supplier_agent.hiring_product:
                 for product,hiring  in supplier_agent.hiring_product[good].items():
@@ -304,7 +305,7 @@ class ReputationAgent(Agent):
                 #     not self.supplier_inactive(supplier) ]
             if len(possible_suppliers) > 0:
                 supplier = possible_suppliers[random.randint(0,len(possible_suppliers)-1)]
-                supplier_agent = self.model.agents[self.model.orig[supplier]]
+                supplier_agent = self.model.agents[self.model.m[self.model.orig[supplier]]]
                 if self.p['product_mode']:
                     testset = self.historic_products[good] if good in self.historic_products else set()
                     product = supplier_agent.get_available_criminal_product(good,testset)
@@ -319,7 +320,7 @@ class ReputationAgent(Agent):
     def clear_supplierlist (self, good,supplierlist):
         if not self.good:
             for supplier in supplierlist:
-                supplier_agent = self.model.agents[self.model.orig[supplier]]
+                supplier_agent = self.model.agents[self.model.m[self.model.orig[supplier]]]
                 if self.p['product_mode']:
                     if good in supplier_agent.criminal_consumers_product:
                         for product,consumerset in  supplier_agent.criminal_consumers_product[good].items():
@@ -397,6 +398,11 @@ class ReputationAgent(Agent):
         return net_income
 
 
+    def avg_score_above_mean(self):
+        avg_rank = self.model.get_current_rank(self.unique_id)
+        avg_avg_rank = self.model.get_current_avg_rank()
+        over = True if avg_rank > avg_avg_rank else False
+        return over
 
     def avg_score_over_threshold(self):
         avg_rank = self.model.get_current_rank(self.unique_id)
@@ -408,7 +414,8 @@ class ReputationAgent(Agent):
         # but  once it makes a difference, test and decide
         evidence = {}
         evidence['supplier_profit'] = 'supplier_profit' if self.avg_profit_positive() else 'supplier_profitNot'
-        evidence['supplier_min_score'] = 'supplier_min_score' if self.avg_score_over_threshold() else 'supplier_min_scoreNot'
+        #evidence['supplier_min_score'] = 'supplier_min_score' if self.avg_score_over_threshold() else 'supplier_min_scoreNot'
+        evidence['supplier_min_score'] = 'supplier_min_score' if self.avg_score_above_mean() else 'supplier_min_scoreNot'
         result = self.model.roll_bayes(evidence,"supplier_switch")
         change = True if result == "supplier_switch" else False
         return change
@@ -441,7 +448,7 @@ class ReputationAgent(Agent):
             if good in self.criminal_suppliers:
                 supplierlist = self.criminal_suppliers[good]
                 for supplier in supplierlist:
-                    supplier_agent = self.model.agents[self.model.orig[supplier]]
+                    supplier_agent = self.model.agents[self.model.m[self.model.orig[supplier]]]
                     if (self.p['random_change_suppliers'] == 1.0
                             or self.supplier_inactive(supplier)
                             or self.p['one_review_per_product']):
@@ -477,11 +484,49 @@ class ReputationAgent(Agent):
                 if len(supplierlist) < 1:
                     self.adopt_criminal_supplier(good)
 
+    def incr_root_id(self, incr):
+        root_id_match = self.model.id_pattern.search(self.unique_id)
+        root_id = root_id_match.group(1)
+        increment = root_id_match.group(2)
+        new_root_id = int(root_id) +incr
+        new_id = str(new_root_id) + "-" + increment
+        return new_id
+
+
+
+    def new_id(self):
+        #use the original id value, as an agent may have changed ids
+        original_unique_id = self.model.orig[self.unique_id]
+        root_id_match = self.model.id_pattern.search(original_unique_id)
+        root_id = root_id_match.group(1)
+        increment = root_id_match.group(2)
+        new_increment = int(increment) +1
+        new_id = root_id + "-" + str(new_increment)
+        return new_id
+
+    def leave_and_enter(self):
+        # an agent dies in that its memory is deleted,
+        # and another agent with his supplying and
+        # criminality requirements takes its place.
+
+        self.model.finalize_rank(self.unique_id)
+        self.model.average_rank_history.flush()
+        new_id = self.new_id()
+        self.model.orig[new_id] = new_id
+        self.model.m[new_id] = self.model.m[self.unique_id]
+        supply_list = [item for item, _ in self.supplying.items()]
+        self.__init__(new_id, self.model, (not self.good), supply_list)
 
     def step(self):
         #print ("first line of ReputationAgent step")
         #first increment the  number of days that have taken place to shop for all goods
         #tempDict = {good: days-1 for good, days in self.days_until_shop.items() if days > 0 }
+
+        if len(self.supplying) <= 0:
+            roll = random.uniform(0, 1) if self.p["chance_of_leaving_and_entering"]> 0.0 else 1.0
+            if roll < self.p["chance_of_leaving_and_entering"]:
+                self.leave_and_enter()
+
         tempDict = {good: days-1 for good, days in self.days_until_shop.items()  }
         self.days_until_shop.update(tempDict)
         tempDict = {good: days-1 for good, days in self.criminal_days_until_shop.items()  }
@@ -596,13 +641,13 @@ class ReputationAgent(Agent):
                 winner = int(over_threshold[roll])
         elif self.p['choice_method'] == "winner_take_all":
 
-
-            non_criminal_experiences = {int(agent): rating for agent, rating in self.model.ranks.items()
+            non_criminal_experiences = {agent_string: rating for agent_string, rating in self.model.ranks.items()
                                         if
-                                        rating > self.reputation_system_threshold
-                                        and int(agent) in self.model.suppliers[good]
-                                        #and good in self.model.agents[self.model.orig[int(agent)]].supplying
-                                        and not self.supplier_inactive(int(agent))}
+                                        (rating > self.reputation_system_threshold)
+                                        and self.parse(agent_string)['agent'] in self.model.suppliers[good]
+                                        # and (good in self.model.agents[self.model.orig[int(agent)]].supplying )
+                                        and (not self.parse(agent_string)['agent'] in under_threshold)
+                                        and (not self.supplier_inactive(self.parse(agent_string)['agent']))}
             sorted_suppliers = sorted(non_criminal_experiences.items(), key=lambda x: x[1], reverse=True)
             if len(sorted_suppliers):
                 winner = sorted_suppliers[0][0]
@@ -631,7 +676,7 @@ class ReputationAgent(Agent):
     def parse(self,agent_string):
         parse = {}
         agent_string_split = agent_string.split(".")
-        parse['agent']= int(agent_string_split[0])  #if self.p['product_mode'] else int(agent_string)
+        parse['agent']= agent_string_split[0]  #if self.p['product_mode'] else int(agent_string)
 
         parse['category']= agent_string_split[1]if len(agent_string_split)==3 else None
         parse['product']= int(agent_string_split[2])if len(agent_string_split)==3 else None
@@ -642,12 +687,14 @@ class ReputationAgent(Agent):
     def supplier_inactive(self, supplier):
         #inactive if agent is in SAP or if agents orig is in sap, or if the agent is hiding its name.
         #now, inactive means just inactive to bad agents.  The supplier is always active to good agents
-        if self.good:
+        supplier_agent = self.model.agents[self.model.m[self.model.orig[supplier]]]
+        if supplier_agent.unique_id != supplier:
+            inactive = True
+        elif self.good:
             inactive = False
         else:
             inactive = True
 
-            supplier_agent = self.model.agents[self.model.orig[supplier]]
             if supplier_agent.good:
                 inactive = False
             else:
@@ -656,7 +703,8 @@ class ReputationAgent(Agent):
                 scam_active_period = supplier_agent.scam_period - supplier_agent.scam_inactive_period
                 if (supplier_agent.scam_cycle_day < scam_active_period):
                     inactive = False
-                if (supplier != self.model.orig[supplier]+generation_increment) :
+                if (self.model.int_id(supplier) != self.model.int_id(self.model.orig[supplier])+generation_increment) :
+                #if (supplier != self.model.orig[supplier]+generation_increment) :
                     inactive = True
 
         return inactive
@@ -770,7 +818,7 @@ class ReputationAgent(Agent):
 
         calc = self.calculate_present_increment(self.unique_id)
         self.name_increment = calc
-        supplier = self.get_criminal_suppliers_increment(self.unique_id) + self.unique_id
+        supplier = self.incr_root_id(self.get_criminal_suppliers_increment(self.unique_id))
         self.model.orig[supplier] = self.unique_id
         if not self.good:
             if self.p['product_mode']:
@@ -790,7 +838,7 @@ class ReputationAgent(Agent):
                 self.model.reset_current_rank(supplier)
                 scam_periods_so_far = (self.model.daynum // self.scam_period) + 1
                 for i in range(scam_periods_so_far):
-                    alias = (i * self.p['num_users']) + self.model.orig[supplier]
+                    alias = (i * self.p['num_users']) + self.model.int_id(self.model.orig[supplier])
                     if alias != supplier and alias in self.model.suppliers[good]:
                         self.model.suppliers[good].remove(alias)
                         if not self.good:
@@ -901,7 +949,7 @@ class ReputationAgent(Agent):
                             if cumul > roll:
                                 winner = key
                                 product = self.product_details[key][good]
-                                supplier_agent = self.model.agents[self.model.orig[key]]
+                                supplier_agent = self.model.agents[self.model.m[self.model.orig[key]]]
                                 if product in supplier_agent.products[good]:
                                     product_quality = supplier_agent.products[good][product]['quality']
                                     if product_quality < threshold:
@@ -974,7 +1022,7 @@ class ReputationAgent(Agent):
     def choose_random_product(self, supplier, good):
         product = None
         if self.p['product_mode']:
-            supplier_agent = self.model.agents[self.model.orig[supplier]]
+            supplier_agent = self.model.agents[self.model.m[self.model.orig[supplier]]]
             product = random.choice(list(supplier_agent.products[good]))
         return product
 
@@ -983,12 +1031,13 @@ class ReputationAgent(Agent):
             merchandise_recieved = False
             supplier_idx = 0 if len(self.suppliers[good]) == 1 else random.randint(0, len(self.suppliers[good]) - 1)
             supplier = self.suppliers[good][supplier_idx]
-            supplier_agent = self.model.agents[self.model.orig[supplier]]
+            supplier_agent = self.model.agents[self.model.m[self.model.orig[supplier]]]
 
             consumer_id = self.unique_id  if supplier_agent.good else (
-                self.get_criminal_suppliers_increment (supplier)  + self.unique_id if self.p["bad_consumers_change_names"] else self.unique_id)
+                self.incr_root_id(self.get_criminal_suppliers_increment (supplier) )
+                if self.p["bad_consumers_change_names"] else self.unique_id)
             supplier_id =  supplier if supplier_agent.good else (
-                self.get_criminal_suppliers_increment (supplier) + self.model.orig[supplier])
+                supplier_agent.incr_root_id (self.get_criminal_suppliers_increment (supplier) ))
 
             #if not supplier_id in self.model.suppliers[good]:
                 #self.add_new_supplier_with_good(supplier_id, good)
@@ -999,10 +1048,10 @@ class ReputationAgent(Agent):
                 if product not in supplier_agent.products[good]:
                     product = self.choose_random_product(supplier, good)
                 unit_price = (supplier_agent.products[good][product]['price'] if self.p['product_mode']
-                              else self.model.agents[self.model.orig[supplier]].supplying[good])
+                              else self.model.agents[self.model.m[self.model.orig[supplier]]].supplying[good])
             else:
                 product = -1
-                unit_price = self.model.agents[self.model.orig[supplier]].supplying[good]
+                unit_price = self.model.agents[self.model.m[self.model.orig[supplier]]].supplying[good]
             price = amount * unit_price
 
             good_string = "{0}.{1}".format(good, product) if self.p['product_mode'] else good
@@ -1022,7 +1071,7 @@ class ReputationAgent(Agent):
             self.model.add_legit_transaction(supplier, price)
             perception, rating = self.rate_product(supplier, good, product) if self.p['product_mode'] else self.rate(
                 supplier)
-            if self.p['scam_goods_satisfy_needs'] or self.model.agents[self.model.orig[supplier]].good:
+            if self.p['scam_goods_satisfy_needs'] or self.model.agents[self.model.m[self.model.orig[supplier]]].good:
                 merchandise_recieved = True
             self.update_personal_experience(good, supplier_id, perception)
             self.model.add_good_consumer_rating(perception)
@@ -1066,14 +1115,15 @@ class ReputationAgent(Agent):
                 self.cobb_douglas_utilities[good] = self.cobb_douglas_utilities_original[good]
 
     def calculate_present_increment(self,supplier):
-        supplier_agent = self.model.agents[self.model.orig[supplier]]
+
+        supplier_agent = self.model.agents[self.model.m[self.model.orig[supplier]]]
         our_day = self.model.daynum + supplier_agent.orig_scam_cycle_day
         generation_increment = (our_day // supplier_agent.scam_period) * self.p['num_users']
         return generation_increment
 
     def get_criminal_suppliers_increment(self,supplier):
 
-        supplier_agent = self.model.agents[self.model.orig[supplier]]
+        supplier_agent = self.model.agents[self.model.m[self.model.orig[supplier]]]
         return supplier_agent.name_increment
 
 
@@ -1082,10 +1132,13 @@ class ReputationAgent(Agent):
             supplier_idx = 0 if len(self.criminal_suppliers[good]) == 1 else random.randint(0, len(self.criminal_suppliers[good]) - 1)
             supplier = self.criminal_suppliers[good][supplier_idx]
 
-            supplier_agent = self.model.agents[self.model.orig[supplier]]
+            supplier_agent = self.model.agents[self.model.m[self.model.orig[supplier]]]
 
-            consumer_id =  self.get_criminal_suppliers_increment (supplier)  + self.unique_id if self.p["bad_consumers_change_names"] else self.unique_id
-            supplier_id =  self.model.orig[supplier] if supplier_agent.good else self.get_criminal_suppliers_increment (supplier) + self.model.orig[supplier]
+            consumer_id = (self.incr_root_id(self.get_criminal_suppliers_increment (supplier) )
+                           if self.p["bad_consumers_change_names"] else self.unique_id)
+            supplier_id =  (self.model.orig[supplier] if supplier_agent.good else
+                            supplier_agent.incr_root_id(self.get_criminal_suppliers_increment(supplier)))
+                            #self.get_criminal_suppliers_increment (supplier) + self.model.orig[supplier])
             if self.p["bad_consumers_change_names"]:
                 self.model.orig[consumer_id] = self.unique_id
             self.model.orig[supplier_id] = self.model.orig[supplier]
@@ -1098,10 +1151,10 @@ class ReputationAgent(Agent):
                 if product not in supplier_agent.products[good]:
                     product = self.choose_random_product(supplier, good)
                 unit_price = (supplier_agent.products[good][product]['price']if self.p['product_mode']
-                              else self.model.agents[self.model.orig[supplier]].supplying[good])
+                              else self.model.agents[self.model.m[self.model.orig[supplier]]].supplying[good])
             else:
                 product = -1
-                unit_price = self.model.agents[self.model.orig[supplier]].supplying[good]
+                unit_price = self.model.agents[self.model.m[self.model.orig[supplier]]].supplying[good]
             price = amount * unit_price
 
 
@@ -1165,9 +1218,9 @@ class ReputationAgent(Agent):
         # puts some randomness in the ratings.  This is only for good rateds
 
         bias = self.model.rating_perception_distribution.rvs(
-            ) if self.model.agents[self.model.orig[supplier]].good else 0
+            ) if self.model.agents[self.model.m[self.model.orig[supplier]]].good else 0
 
-        supplier_agent = self.model.agents[self.model.orig[supplier]]
+        supplier_agent = self.model.agents[self.model.m[self.model.orig[supplier]]]
         perception = (supplier_agent.products[category][product]['quality']
             if self.p['product_mode'] and product in supplier_agent.products[category] else supplier_agent.goodness)
         perception += bias
@@ -1197,9 +1250,9 @@ class ReputationAgent(Agent):
         # puts some randomness in the ratings.  This is only for good rateds
 
         bias = self.model.rating_perception_distribution.rvs(
-            ) if self.model.agents[self.model.orig[supplier]].good else 0
+            ) if self.model.agents[self.model.m[self.model.orig[supplier]]].good else 0
 
-        supplier_agent = self.model.agents[self.model.orig[supplier]]
+        supplier_agent = self.model.agents[self.model.m[self.model.orig[supplier]]]
         perception = (supplier_agent.products[category][product]['quality']
             if self.p['product_mode'] and product in supplier_agent.products[category] else supplier_agent.goodness)
         perception += bias
@@ -1214,8 +1267,8 @@ class ReputationAgent(Agent):
             if (perception < threshold or threshold == dd[next(reversed(dd))])and rating is None:
                 rating = rating_val
         if (rating is None or
-                (self.model.agents[self.model.orig[supplier]].good and roll > self.p['chance_of_rating_good2good']) or
-                ((not self.model.agents[self.model.orig[supplier]].good) and roll > self.p['chance_of_rating_good2bad'])
+                (self.model.agents[self.model.m[self.model.orig[supplier]]].good and roll > self.p['chance_of_rating_good2good']) or
+                ((not self.model.agents[self.model.m[self.model.orig[supplier]]].good) and roll > self.p['chance_of_rating_good2bad'])
             ):
             rating = self.p['non_rating_val']
 

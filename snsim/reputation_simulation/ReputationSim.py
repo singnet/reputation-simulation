@@ -73,6 +73,7 @@ class ReputationSim(Model):
 
         self.bayesian_network = self.get_bayesian_networks()
 
+        self.id_pattern = re.compile(r'(\d+)\-(\d+)')
         self.transaction_numbers = []
         transaction_number = 0
         # print(json.dumps(config['ontology'], indent=2))
@@ -81,7 +82,9 @@ class ReputationSim(Model):
         super().__init__()
         super().reset_randomizer(self.parameters['seed'])
 
-        self.orig = {i:i for i in range(self.config['parameters']['num_users'])}
+        #self.orig = {i:i for i in range(self.config['parameters']['num_users'])}
+        self.orig = {}
+        self.m = {}
 
         self.time = dt.datetime.now().isoformat()
 
@@ -213,20 +216,26 @@ class ReputationSim(Model):
             self.agents = {}
             for good, num_suppliers in nsuppliers.items():
                 for _ in range(num_suppliers):
-                    a = globals()['ReputationAgent'](agent_count, self, criminal=True, supply_list=[good])
+                    agent_str = str(agent_count) + "-0"
+                    a = globals()['ReputationAgent'](agent_str, self, criminal=True, supply_list=[good])
                     self.schedule.add(a)
                     self.agents[agent_count]=a
-                    self.criminal_suppliers[good].add(agent_count)
-                    self.original_suppliers.add(agent_count)
+                    self.criminal_suppliers[good].add(agent_str)
+                    self.original_suppliers.add(agent_str)
+                    self.orig[agent_str]= agent_str
+                    self.m[agent_str]= agent_count
                     agent_count += 1
 
             #criminal consumers
             self.num_criminal_consumers = num_criminals - num_suppliers1
             for _ in range(self.num_criminal_consumers):
-                a = globals()['ReputationAgent'](agent_count, self, criminal=True, supply_list=[])
+                agent_str = str(agent_count) + "-0"
+                a = globals()['ReputationAgent'](agent_str, self, criminal=True, supply_list=[])
                 self.schedule.add(a)
                 self.agents[agent_count]=a
-                self.original_suppliers.add(agent_count)
+                self.original_suppliers.add(agent_str)
+                self.orig[agent_str]= agent_str
+                self.m[agent_str]= agent_count
                 agent_count += 1
 
             #good suppliers
@@ -250,23 +259,32 @@ class ReputationSim(Model):
 
             for good, num_suppliers in nsuppliers.items():
                 for _ in range(num_suppliers):
-                    a = globals()['ReputationAgent'](agent_count, self, criminal=False, supply_list=[good])
+                    agent_str = str(agent_count) + "-0"
+                    a = globals()['ReputationAgent'](agent_str, self, criminal=False, supply_list=[good])
                     self.schedule.add(a)
                     self.agents[agent_count]=a
+                    self.orig[agent_str]= agent_str
+                    self.m[agent_str]= agent_count
                     agent_count += 1
 
             #good consumers
             self.num_good_consumers = self.parameters['num_users'] - agent_count
             for i in range(agent_count,self.parameters['num_users']):
-                a = globals()['ReputationAgent'](agent_count, self,criminal=False, supply_list=[])
+                agent_str = str(agent_count) + "-0"
+                a = globals()['ReputationAgent'](agent_str, self,criminal=False, supply_list=[])
                 self.schedule.add(a)
                 self.agents[agent_count]=a
+                self.orig[agent_str]= agent_str
+                self.m[agent_str]= agent_count
                 agent_count += 1
 
         else:
             for _ in range(self.parameters['num_users']):
-                a = globals()['ReputationAgent'](agent_count, self)
+                agent_str = str(agent_count) + "-0"
+                a = globals()['ReputationAgent'](agent_str, self)
                 self.schedule.add(a)
+                self.orig[agent_str]= agent_str
+                self.m[agent_str]= agent_count
                 agent_count += 1
 
         self.print_agent_goodness()
@@ -511,8 +529,9 @@ class ReputationSim(Model):
                    self.num_good_consumer_rated_purchases if self.num_good_consumer_rated_purchases > 0 else -1)
         return utility
 
-    def goodness(self,agentnum):
-        agent =  self.agents[self.orig[agentnum]]
+    def goodness(self,agentstr):
+        agentnum = self.m[self.orig[agentstr]]
+        agent =  self.agents[agentnum]
         goodness = agent.goodness if agent is not None else -1
         return goodness
 
@@ -660,6 +679,13 @@ class ReputationSim(Model):
         self.current_rank_sums[id] += rank
         self.current_rank_products[id]  += 1
 
+    def get_current_avg_rank(self):
+        current_rank_sums = [sum for id, sum in self.current_rank_sums.items()]
+        current_rank_products = [sum for id, sum in self.current_rank_products.items()]
+        denom = sum(current_rank_products)
+        current_rank = int(round(sum(current_rank_sums)/ denom)) if denom>0 else -1
+        return current_rank
+
     def get_current_rank(self,id):
         current_rank = int(round(self.current_rank_sums[id]/ self.current_rank_products[id])) if self.current_rank_products[id]>0 else -1
         return current_rank
@@ -682,7 +708,7 @@ class ReputationSim(Model):
         return average_rank
 
     def finalize_rank(self,id):
-        if self.rank_days[id]>0:
+        if id in self.rank_days and  self.rank_days[id]>0:
             average_rank = self.get_avg_rank(id)
             self.average_rank_history.write("{0}\t{1}\n".format(id,average_rank))
 
@@ -790,6 +816,8 @@ class ReputationSim(Model):
             # self.rank_history.write('\n')
 
     def write_current_rank_history_line(self):
+        pass
+        """
                 heading_list = []
                 heading_list.append('time')
                 time = int(round(self.schedule.time))
@@ -830,7 +858,7 @@ class ReputationSim(Model):
                     self.rank_history_heading = "\t".join(map(str, heading_list))
                 else:
 
-                    self.rank_history.write('\n')
+                    self.rank_history.write('\n')"""
 
 
     def market_volume_report(self):
@@ -980,8 +1008,9 @@ class ReputationSim(Model):
         self.reset_stats()
 
 
-    def save_info_for_market_volume_report(self, consumer, supplier, payment):
+    def save_info_for_market_volume_report(self, consumer, supplierstr, payment):
             # if increment num transactions and add cum price to the correct agent category of seller
+            supplier = self.m[supplierstr]
             if self.agents[supplier].good and consumer.good:
                 self.good2good_agent_completed_transactions += 1
                 self.good2good_agent_cumul_completed_transactions += 1
@@ -1030,11 +1059,16 @@ class ReputationSim(Model):
         outfile.close()
 
 
+    def int_id(self, id):
+        root_id_match = self.id_pattern.search(id)
+        root_id = root_id_match.group(1)
+        return int(root_id)
 
     def parse(self,agent_string):
         parse = {}
         agent_string_split = agent_string.split(".")
-        parse['agent']= int(agent_string_split[0])  #if self.p['product_mode'] else int(agent_string)
+        parse['agentint']= self.int_id(agent_string_split[0])  #if self.p['product_mode'] else int(agent_string)
+        parse['agent']= agent_string_split[0]  #if self.p['product_mode'] else int(agent_string)
 
         parse['category']= agent_string_split[1] if len(agent_string_split)==3 else None
         parse['product']= int(agent_string_split[2])if len(agent_string_split)==3 else None
@@ -1053,7 +1087,7 @@ class ReputationSim(Model):
             if agent in current_suppliers:
                 category = self.parse(agentstring)['category']
                 product = self.parse(agentstring)['product']
-                supplier_agent = self.agents[self.orig[agent]]
+                supplier_agent = self.agents[self.m[self.orig[agent]]]
                 if product in supplier_agent.products[category]:
                     self.add_rank(agent,rank)
 
@@ -1205,7 +1239,7 @@ class Runner():
         if not os.path.exists(config['parameters']['output_path']):
             os.makedirs(config['parameters']['output_path'])
 
-        with open(path, 'w') as file:
+        with open(path, 'a') as file:
             header = self.get_output_stats_header()
             file.write(header)
         return file
