@@ -327,7 +327,8 @@ class ReputationSim(Model):
     def roll_bayes(self,evidence,net):
         #result = self.model.roll_bayes(evidence, "supplier_switch")
         description = self.bayesian_network[net].predict_proba(evidence)
-        result = (json.loads(description[2].to_json()))['parameters'][0]
+        description_last_entry = len(description) -1
+        result = (json.loads(description[description_last_entry].to_json()))['parameters'][0]
         winner = None
         roll = random.uniform(0, 1)
         cumul = 0
@@ -439,8 +440,10 @@ class ReputationSim(Model):
         self.bsl_num = 0
         self.bsl_denom = 0
         self.sgp_denom = 0
-        self.sgl_num = 0
-        self.sgl_denom = 0
+        self.sgl_num_num = 0
+        self.sgl_denom_num = 0
+        self.sgl_num_denom = 0
+        self.sgl_denom_denom = 0
         self.num_changes = 0
         self.sum_good_consumer_ratings = 0
         self.num_good_consumer_rated_purchases = 0
@@ -453,10 +456,12 @@ class ReputationSim(Model):
     def add_organic_buy(self,price,quality):
         # bsl_num = Σorganicbuys(Price * (1 - OQ))
         # bsl_denom = Σorganicbuys(Price)
-        # sgl_denom = (Σorganicbuys(Price * OQ))
+        # sgl_denom_num = (Σorganicbuys(Price * OQ))
+        # sgl_denom_denom =  Σorganicbuys(OQ)
         self.bsl_num += price * (1.0-quality)
         self.bsl_denom += price
-        self.sgl_denom += price * quality
+        self.sgl_denom_num += price * quality
+        self.sgl_denom_denom += quality
 
     def add_legit_transaction(self, supplier, price):
         real_supplier = self.orig[supplier]
@@ -467,9 +472,11 @@ class ReputationSim(Model):
 
     def add_sponsored_buy(self,price, quality, commission):
         # sgp_denom = Σsponsoredbuys(Price * (1 + CR))
-        # sgl_num = (Σsponsoredbuys(Price * (1 + CR) * OQ))
+        # sgl_num_num = (Σsponsoredbuys(Price * (1 + CR) * OQ))
+        # sgl_num_denom = Σsponsoredbuys(OQ)
         self.sgp_denom += commission
-        self.sgl_num += commission * quality
+        self.sgl_num_num += commission * quality
+        self.sgl_num_denom += quality
 
     def add_identity_change(self):
         self.num_changes += 1
@@ -483,7 +490,9 @@ class ReputationSim(Model):
         return sgp
 
     def sgl(self):
-        sgl = self.sgl_num / self.sgl_denom if self.sgl_denom != 0 else -1
+        sgl_num = self.sgl_num_num / self.sgl_num_denom if self.sgl_num_denom != 0 else -1
+        sgl_denom = self.sgl_denom_num / self.sgl_denom_denom if self.sgl_denom_denom != 0 else 0
+        sgl = sgl_num / sgl_denom if sgl_num != -1 and sgl_denom != 0 else -1
         return sgl
 
     def asp(self):
@@ -670,24 +679,28 @@ class ReputationSim(Model):
     def reset_current_rank(self,id):
         #an alias has first appeared
         self.current_rank_sums[id] = 0
-        self.current_rank_products[id] =0
+        #self.current_rank_products[id] =0
+        self.current_rank_num_adds[id] =0
 
     def add_rank(self,id,rank):
 
         self.rank_sums[id] += rank
         self.rank_days[id]  += 1
         self.current_rank_sums[id] += rank
-        self.current_rank_products[id]  += 1
+        self.current_rank_num_adds[id]  += 1
 
     def get_current_avg_rank(self):
+        return self.daily_avg_rank
+
+    def calculate_daily_avg_rank(self):
         current_rank_sums = [sum for id, sum in self.current_rank_sums.items()]
-        current_rank_products = [sum for id, sum in self.current_rank_products.items()]
-        denom = sum(current_rank_products)
-        current_rank = int(round(sum(current_rank_sums)/ denom)) if denom>0 else -1
-        return current_rank
+        current_rank_num_adds = [sum for id, sum in self.current_rank_num_adds.items()]
+        denom = sum(current_rank_num_adds)
+        daily_avg_rank = int(round(sum(current_rank_sums)/ denom)) if denom>0 else -1
+        return daily_avg_rank
 
     def get_current_rank(self,id):
-        current_rank = int(round(self.current_rank_sums[id]/ self.current_rank_products[id])) if self.current_rank_products[id]>0 else -1
+        current_rank = int(round(self.current_rank_sums[id]/ self.current_rank_num_adds[id])) if self.current_rank_num_adds[id]>0 else -1
         return current_rank
 
     def get_current_ranks(self):
@@ -734,7 +747,7 @@ class ReputationSim(Model):
         self.rank_sums = {}
         self.rank_days = {}
         self.current_rank_sums = {}
-        self.current_rank_products = {}
+        self.current_rank_num_adds = {}
         return(file)
 
     def rank_history(self):
@@ -1078,8 +1091,27 @@ class ReputationSim(Model):
         rv = truncnorm((low - mean) / sd, (upp - mean) / sd, loc=mean, scale=sd)
         return rv
 
+    def order_product_ranks(self):
+        current_product_ranking = {}
+        for agentstring,rank in self.ranks.items():
+            category = self.parse(agentstring)['category']
+            product = self.parse(agentstring)['product']
+            if category not in current_product_ranking:
+                current_product_ranking[category] = []
+            current_product_ranking[category].append((product,rank))
+        for category, product_tuplist in current_product_ranking.items():
+            product_tuplist.sort(key=lambda tup: tup[1],reverse = True)
+        self.topNPercent = {}
+        self.bottomNPercent = {}
+        for category, product_tuplist in current_product_ranking.items():
+            topN = int(self.parameters["top_n_percent"] * 0.01 * len(product_tuplist))
+            bottomN =  int(self.parameters["bottom_n_percent"] * 0.01 * len(product_tuplist))
+            self.topNPercent[category] = set(product_tuplist[:topN])
+            self.bottomNPercent[category] = set(product_tuplist[bottomN:])
+
     def get_ranks(self, prev_date):
         self.ranks = self.reputation_system.get_ranks_dict({'date':prev_date})
+
         #only put current suppliers and products
         current_suppliers = set([supplier for good, supplierlist in self.suppliers.items() for supplier in supplierlist])
         for agentstring,rank in self.ranks.items():
@@ -1091,6 +1123,7 @@ class ReputationSim(Model):
                 if product in supplier_agent.products[category]:
                     self.add_rank(agent,rank)
 
+        self.order_product_ranks()
         #generation_increment = (self.model.daynum // self.p['scam_period']) * self.p['num_users']
         #if self.p['scam_inactive_period']:  #there is a campaign in which ids are shifted, so subtract the increment
 
@@ -1100,6 +1133,7 @@ class ReputationSim(Model):
         print('.',end='')
         if self.error_log:
             self.error_log.write('time {0}\n'.format(self.schedule.time))
+        self.daily_avg_rank = self.calculate_daily_avg_rank()
         self.reset_current_ranks()
         """Advance the model by one step."""
         self.schedule.step()

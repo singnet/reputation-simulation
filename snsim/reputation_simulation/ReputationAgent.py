@@ -53,7 +53,9 @@ class ReputationAgent(Agent):
         self.criminal_needs = []
         length = len (self.p['cobb_douglas_utilities'])
         count = 0
-
+        self.last_last_num_product_change = {}
+        self.last_num_product_change = {}
+        self.never_bought_scam = True
 
         #every agent has its own cobb douglass utility function values for the goods,
         ## according to the distribution given in the config file
@@ -132,14 +134,14 @@ class ReputationAgent(Agent):
                 self.scam_cycle_day = random.randint(0,self.scam_period -1)
                 self.orig_scam_cycle_day = self.scam_cycle_day
 
+        self.exogenous_reputation = self.get_initial_exogenous_reputation()
         self.initialize_products() if self.p['product_mode'] else {}
-
 
     def switch_product(self,category,product):
         #first check and see if it would make a difference in the personal name and dont change if it wouldnt,
         # but  once it makes a difference, test and decide
         evidence = {}
-        evidence['product_profit'] = 'product_profit' if self.product_profit_positive(category,product) else 'product_profitNot'
+        evidence['product_profit_current'] = 'product_profit_current' if self.product_profit_positive(category,product) else 'product_profit_currentNot'
         evidence['product_min_score'] = 'product_min_score' if self.product_min_score(category,product) else 'product_min_scoreNot'
         result = self.model.roll_bayes(evidence,"product_switch")
         change = True if result == "product_switch" else False
@@ -171,6 +173,9 @@ class ReputationAgent(Agent):
             self.products[category][pid]["production_cost"] = (self.products[category][pid]["price"] *
                                                                    self.products[category][pid]["quality"])/2
             self.products[category][pid]["black_market"] = not self.good
+            self.products[category][pid]["last_last_sold"]= 0
+            self.products[category][pid]["last_last_income"]= 0
+            self.products[category][pid]["last_last_cost"]= 0
             self.products[category][pid]["last_sold"]= 0
             self.products[category][pid]["last_income"]= 0
             self.products[category][pid]["last_cost"]= 0
@@ -198,6 +203,9 @@ class ReputationAgent(Agent):
                 self.products[category][pid]["production_cost"] = (self.products[category][pid]["price"] *
                                                                        self.products[category][pid]["quality"])/2
                 self.products[category][pid]["black_market"] = not self.good
+                self.products[category][pid]["last_last_sold"]= 0
+                self.products[category][pid]["last_last_income"]= 0
+                self.products[category][pid]["last_last_cost"]= 0
                 self.products[category][pid]["last_sold"]= 0
                 self.products[category][pid]["last_income"]= 0
                 self.products[category][pid]["last_cost"]= 0
@@ -211,6 +219,9 @@ class ReputationAgent(Agent):
     def reset_daily_purchase_stats(self):
         for category,cdict in self.products.items():
             for pid,pdict in cdict.items():
+                pdict["last_last_sold"]= pdict["last_sold"]
+                pdict["last_last_income"]= pdict["last_income"]
+                pdict["last_last_cost"]= pdict["last_cost"]
                 pdict["last_sold"]= 0
                 pdict["last_income"]= 0
                 pdict["last_cost"]= 0
@@ -416,6 +427,9 @@ class ReputationAgent(Agent):
         evidence['supplier_profit'] = 'supplier_profit' if self.avg_profit_positive() else 'supplier_profitNot'
         #evidence['supplier_min_score'] = 'supplier_min_score' if self.avg_score_over_threshold() else 'supplier_min_scoreNot'
         evidence['supplier_min_score'] = 'supplier_min_score' if self.avg_score_above_mean() else 'supplier_min_scoreNot'
+        evidence['supplier_exogenousReputation'] = ('supplier_exogenousReputation'
+                if self.exogenous_reputation else 'supplier_exogenousReputationNot')
+
         result = self.model.roll_bayes(evidence,"supplier_switch")
         change = True if result == "supplier_switch" else False
         return change
@@ -709,6 +723,7 @@ class ReputationAgent(Agent):
 
         return inactive
 
+
     def product_profit_positive(self,good,product):
 
         profit = True if self.products[good][product]["last_income"]-self.products[good][product]["last_cost"] > 0 else False
@@ -726,63 +741,162 @@ class ReputationAgent(Agent):
         score = True if rank > self.reputation_system_threshold else False
         return score
 
-    def initialize_criminal_product_ring(self, good, product):
+    def product_initial_decisions(self,good,product):
+        if good not in self.last_num_product_change:
+            self.last_num_product_change[good] = {}
+        if good not in self.last_last_num_product_change:
+            self.last_last_num_product_change[good] = {}
+        if product not in self.last_num_product_change[good]:
+            self.last_num_product_change[good][product] = None
+        if product not in self.last_last_num_product_change[good]:
+            self.last_last_num_product_change[good][product] = None
+
+        is_initial = True if (self.last_last_num_product_change[good][product] is None
+                     or self.last_num_product_change[good][product]  is None) else False
+        return is_initial
+
+
+    def product_Dprofit(self,category,product):
+        #     "product_Dprofit":
+        #         "product_DprofitLoss"
+        #         "product_DprofitGain"
+        #         "product_DprofitEven"
+
+        product_Dprofit = "product_DprofitEven"
+        profit = self.products[category][product]["last_income"]-self.products[category][product]["last_cost"]
+        former_profit = self.products[category][product]["last_last_income"]-self.products[category][product]["last_last_cost"]
+        if profit - former_profit > self.p["profit_equality_tolerance"]:
+            product_Dprofit = "product_DprofitGain"
+        elif former_profit - profit > self.p["profit_equality_tolerance"]:
+            product_Dprofit = "product_DprofitLoss"
+
+        return product_Dprofit
+
+    def product_reputation(self,category,product):
+        #"product_reputation":
+        #         "product_reputation_belowAverage"
+        #         "product_reputation_medium"
+        #         "product_reputation_topTen"
+
+        reputation = "product_reputation_medium"
+        if product in self.model.topNPercent[category]:
+            reputation = "product_reputation_topTen"
+        elif product in self.model.bottomNPercent[category]:
+            reputation = "product_reputation_belowAverage"
+
+        return reputation
+
+    def num_bought_scam_change(self,category, product):
+
+        # "num_bought_scams_initial": looking
+        # for ""product_initialScam_higher",", "product_initialScam_lower", "product_initialScam_even", in "product_initialScam"
+        # "num_bought_scams": looking
+        # for "product_scam_higher", "product_scam_lower", "product_scam_even", in "product_scam"
+        # RV's:
+        # "num_bought_scams_initial":
+        #     "product_reputation":
+        #         "product_reputation_belowAverage"
+        #         "product_reputation_medium"
+        #         "product_reputation_topTen"
+        #     "supplier_exogenousReputation":
+        #         "supplier_exogenousReputation"
+        #         "supplier_exogenousReputationNot"
+        #     "product_profit_current":
+        #         "product_profit_current"
+        #         "product_profit_currentNot"
+        #
+        # "num_bought_scams":
+        #     "product_Dprofit":
+        #         "product_DprofitLoss"
+        #         "product_DprofitGain"
+        #         "product_DprofitEven"
+        #     "product_profit_current":
+        #         "product_profit_current"
+        #         "product_profit_currentNot"
+        #     "supplier_lastScam":
+        #         "supplier_lastScam_higher"
+        #         "supplier_lastScam_lower"
+        #     "supplier_lastLastScam":
+        #         "supplier_lastLastScam_higher"
+        #         "supplier_lastLastScam_lower"
+
+        evidence = {}
+        winner = "product_scam_even"
+        if self.product_initial_decisions(category,product):
+            evidence['product_reputation'] = self.product_reputation(category,product)
+            evidence['product_profit_current'] = 'product_profit_current' if self.product_profit_positive(category, product) else 'product_profit_currentNot'
+            evidence['supplier_exogenousReputation'] = 'supplier_exogenousReputation' if self.exogenous_reputation else 'supplier_exogenousReputationNot'
+            winner = self.model.roll_bayes(evidence, "num_bought_scams_initial")
+        else:
+            evidence['product_Dprofit'] = self.product_Dprofit(category,product)
+            evidence['product_profit_current'] = 'product_profit_current' if self.product_profit_positive(category, product) else 'product_profit_currentNot'
+            evidence['supplier_lastScam'] = 'supplier_lastScam_higher' if (
+                self.last_num_product_change[category][product] == "num_bought_scams_higher")else 'supplier_lastScam_lower'
+            evidence['supplier_lastLastScam'] = 'supplier_lastLastScam_higher' if (
+                    self.last_last_num_product_change[category][product] == "num_bought_scams_higher") else 'supplier_lastLastScam_lower'
+            winner = self.model.roll_bayes(evidence, "num_bought_scams")
+        if winner != "product_scam_even" and winner != "product_initialScam_even":
+            self.last_last_num_product_change [category][product]= self.last_num_product_change[category][product]
+            self.last_num_product_change[category][product] = winner
+        return winner
+
+    def initialize_criminal_product_ring(self, category, product):
         if self.p['criminal_suppliers_purchase_reviewers']:
 
-            if not good in self.hiring_product:
-                self.hiring_product[good]= {}
-            self.hiring_product[good][product] = True
+            if not category in self.hiring_product:
+                self.hiring_product[category]= {}
+            self.hiring_product[category][product] = True
 
-            if not good in self.criminal_consumers_product:
-                self.criminal_consumers_product[good]= {}
-            self.criminal_consumers_product[good][product] = set()
+            if not category in self.criminal_consumers_product:
+                self.criminal_consumers_product[category]= {}
+            self.criminal_consumers_product[category][product] = set()
 
-            if self.products[good][product]['initialization']:
-                self.products[good][product]['initialization']=False
+            if self.products[category][product]['initialization']:
+                self.products[category][product]['initialization']=False
                 macroview = self.model.config['parameters']['macro_view']
                 if macroview and self.model.config['macro_views'][macroview]['supplement'][
                          "overwrite_criminal_agent_ring_size"] == "market_research":
-                    purch = self.model.config['macro_views'][macroview]['supplement']['purch']
-                    profit_margin = self.model.config['macro_views'][macroview]['supplement']['profit_margin']
-                    beta = self.model.config['macro_views'][macroview]['supplement']['beta']
-                    alpha = self.model.config['macro_views'][macroview]['supplement']['alpha']
+                    if not category in self.num_criminal_consumers_product:
+                        self.num_criminal_consumers_product[category]= {}
+                    if self.exogenous_reputation:
+                        self.num_criminal_consumers_product[category][product] = 0
+                    else:
+                        purch = self.model.config['macro_views'][macroview]['supplement']['purch']
+                        profit_margin = self.model.config['macro_views'][macroview]['supplement']['profit_margin']
+                        beta = self.model.config['macro_views'][macroview]['supplement']['beta']
+                        alpha = self.model.config['macro_views'][macroview]['supplement']['alpha']
 
-                    #for good,price in self.supplying.items():
-                    #for product in self.product_details[good]:
-                    price = self.products[good][product]['price']
-                    if not good in self.num_criminal_consumers_product:
-                        self.num_criminal_consumers_product[good]= {}
-                    self.num_criminal_consumers_product[good][product] = 0 if price <= 0 else (
-                        (purch/math.pow(price,beta))*
-                        ((price*profit_margin)/(price + pow(price,alpha)))
-                        )
+                        #for category,price in self.supplying.items():
+                        #for product in self.product_details[category]:
+                        price = self.products[category][product]['price']
+                        self.num_criminal_consumers_product[category][product] = 0 if price <= 0 else (
+                            (purch/math.pow(price,beta))*
+                            ((price*profit_margin)/(price + pow(price,alpha)))
+                            )
                 else:
-                    self.num_criminal_consumers_product[good][product] = int(round(self.model.criminal_agent_ring_size_distribution.rvs()))
+                    self.num_criminal_consumers_product[category][product] = int(round(self.model.criminal_agent_ring_size_distribution.rvs()))
             else:
-                evidence = {}
-                evidence['product_profit'] = 'product_profit' if self.product_profit_positive(good, product) else 'product_profitNot'
-                evidence['product_best_score'] = 'product_best_score' if self.product_best_score(good, product) else 'product_best_scoreNot'
-                winner = self.model.roll_bayes(evidence, "num_bought_scams")
+                winner = self.num_bought_scam_change(category,product)
 
                 change = self.p["change_num_scams_incr"] if winner == 'product_scam_higher' else (
                     -self.p["change_num_scams_incr"] if winner == 'product_scam_lower' else (0))
-                self.num_criminal_consumers_product[good][product] += change
-                if self.num_criminal_consumers_product[good][product] < self.p['min_scam_purchases']:
-                    self.num_criminal_consumers_product[good][product] = self.p['min_scam_purchases']
-                elif self.num_criminal_consumers_product[good][product] > self.p['max_scam_purchases']:
-                    self.num_criminal_consumers_product[good][product] = self.p['max_scam_purchases']
-                #if self.num_criminal_consumers_product[good][product] > 0 :
+                self.num_criminal_consumers_product[category][product] += change
+                if self.num_criminal_consumers_product[category][product] < self.p['min_scam_purchases']:
+                    self.num_criminal_consumers_product[category][product] = self.p['min_scam_purchases']
+                elif self.num_criminal_consumers_product[category][product] > self.p['max_scam_purchases']:
+                    self.num_criminal_consumers_product[category][product] = self.p['max_scam_purchases']
+                #if self.num_criminal_consumers_product[category][product] > 0 :
                 if self.model.error_log:
                     self.model.error_log.write("supplier {4} product {0} category {1} num to buy reviews changes {2} to {3}\n".format(
-                        product,good,change,self.num_criminal_consumers_product[good][product],self.unique_id))
+                        product,category,change,self.num_criminal_consumers_product[category][product],self.unique_id))
 
                 #print("supplier {4} product {0} category {1} num to buy reviews changes {2} to {3}".format(
-                 #   product,good,change,self.num_criminal_consumers_product[good][product],self.unique_id))
+                 #   product,category,change,self.num_criminal_consumers_product[category][product],self.unique_id))
         else:
-            self.num_criminal_consumers_product[good][product] = 0
+            self.num_criminal_consumers_product[category][product] = 0
 
-    def initialize_criminal_ring(self, good):
-        self.hiring[good]= True
+    def initialize_criminal_ring(self, category):
+        self.hiring[category]= True
         macroview = self.model.config['parameters']['macro_view']
         if macroview and self.model.config['macro_views'][macroview]['supplement'][
                  "overwrite_criminal_agent_ring_size"] == "market_research":
@@ -790,27 +904,27 @@ class ReputationAgent(Agent):
             profit_margin = self.model.config['macro_views'][macroview]['supplement']['profit_margin']
             beta = self.model.config['macro_views'][macroview]['supplement']['beta']
             alpha = self.model.config['macro_views'][macroview]['supplement']['alpha']
-            #error why goods done multiple times??
-            #for good,price in self.supplying.items():
-            price = self.supplying[good]
+            #error why categorys done multiple times??
+            #for category,price in self.supplying.items():
+            price = self.supplying[category]
 
-            self.num_criminal_consumers[good] = 0 if price <= 0 else (
+            self.num_criminal_consumers[category] = 0 if price <= 0 else (
                 (purch/math.pow(price,beta))*
                 ((price*profit_margin)/(price + pow(price,alpha)))
                 )
 
     def clear_products(self):
 
-        for good,_ in self.supplying.items():
-            self.criminal_consumers_product[good]={}
-            self.num_criminal_consumers_product[good]={}
-            self.hiring_product[good]= {}
-            self.products[good] = {}
+        for category,_ in self.supplying.items():
+            self.criminal_consumers_product[category]={}
+            self.num_criminal_consumers_product[category]={}
+            self.hiring_product[category]= {}
+            self.products[category] = {}
 
     def initialize_criminal_product_rings(self):
-        for good, pdict in self.products.items():
+        for category, pdict in self.products.items():
             for product, _ in pdict.items():
-                self.initialize_criminal_product_ring(good, product)
+                self.initialize_criminal_product_ring(category, product)
 
 
     def change_name(self):
@@ -1126,6 +1240,12 @@ class ReputationAgent(Agent):
         supplier_agent = self.model.agents[self.model.m[self.model.orig[supplier]]]
         return supplier_agent.name_increment
 
+    def exogenous_reputation_effect(self):
+        self.never_bought_scam = False
+        roll = random.uniform (0,1)
+        chance = self.p["chance_lose_external_reputation_each_scam"]
+        if roll < chance:
+            self.exogenous_reputation = False
 
     def make_criminal_purchases(self,good):
         if (not self.good) and good in self.criminal_suppliers and len(self.criminal_suppliers[good]) > 0:
@@ -1164,6 +1284,7 @@ class ReputationAgent(Agent):
 
             if not self.supplier_inactive(supplier_id):
                 self.model.save_info_for_market_volume_report(self, self.model.orig[supplier], price)
+                supplier_agent.exogenous_reputation_effect()
                 if self.model.error_log:
                     self.model.error_log.write("supplier {0} purchased amount {1} category {2} product {3} scam review from consumer {4}\n".format(
                     supplier_id,amount,good,product,self.unique_id))
@@ -1204,6 +1325,11 @@ class ReputationAgent(Agent):
         best = next(reversed(dd))
         return best
 
+    def get_initial_exogenous_reputation(self):
+        evidence = {}
+        result = self.model.roll_bayes(evidence, "supplier_exogenousReputation")
+        exogenousReputation = True if result == "supplier_exogenousReputation" else False
+        return exogenousReputation
 
     def leaves_rating(self,rating):
         evidence = {}
