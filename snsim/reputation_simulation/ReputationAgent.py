@@ -10,6 +10,8 @@ from random import shuffle
 import copy
 import json
 import re
+from itertools import product
+from statistics import mean
 
 
 class ReputationAgent(Agent):
@@ -136,6 +138,29 @@ class ReputationAgent(Agent):
 
         self.exogenous_reputation = self.get_initial_exogenous_reputation()
         self.initialize_products() if self.p['product_mode'] else {}
+        self.shopping_history = []
+        self.shopping_rating = {}
+        self.anomaly_detection_data =[]
+        self.predictiveness_data = []
+        self.pending_predictiveness_data = {}
+        self.t0 = None
+        self.t1 = None
+        self.conformity = []
+        self.predictiveness = []
+
+    def add_conformity(self,new_conformity):
+        # eventually you may want to limit the time this goes back by fifo n long queue
+        self.conformity.append(new_conformity)
+
+    def avg_conformity(self):
+        return mean(self.conformity)
+
+    def add_predictiveness(self,new_predictiveness):
+        # eventually you may want to limit the time this goes back by fifo n long queue
+        self.predictiveness.append(new_predictiveness)
+
+    def avg_predictiveness(self):
+        return mean(self.predictiveness)
 
     def switch_product(self,category,product):
         #first check and see if it would make a difference in the personal name and dont change if it wouldnt,
@@ -183,6 +208,7 @@ class ReputationAgent(Agent):
             self.products[category][pid]["total_income"]= 0
             self.products[category][pid]["total_cost"]= 0
             self.products[category][pid]["initialization"]= True
+            self.products[category][pid]["ratings"] = {}
             self.initialize_criminal_product_ring(category,pid)
 
     def initialize_products(self):
@@ -213,6 +239,7 @@ class ReputationAgent(Agent):
                 self.products[category][pid]["total_income"]= 0
                 self.products[category][pid]["total_cost"]= 0
                 self.products[category][pid]["initialization"]= True
+                self.products[category][pid]["ratings"]= {}
                 self.initialize_criminal_product_ring(category,pid)
 
 
@@ -225,6 +252,158 @@ class ReputationAgent(Agent):
                 pdict["last_sold"]= 0
                 pdict["last_income"]= 0
                 pdict["last_cost"]= 0
+
+        # self.shopping_history = []
+        # self.shopping_rating = {}
+        # self.anomaly_detection_data =[]
+        # self.predictiveness_data = []
+        # self.pending_predictiveness_data = {}
+
+    def add_pending_predictiveness_data(self,t0,t1,ratings):
+        day_to_add_data = self.model.daynum + int(self.p["days_until_prediction"])
+        self.pending_predictiveness_data[day_to_add_data] = (t0,t1,ratings)
+
+    def map_rank_to_bayesian_number(self,rank):
+        bayesian_number = 0
+        rating = None
+        ratings_version = self.p['ratings_goodness_thresholds']
+        rtups = [(key,val * 100) for key,val in ratings_version.items()]
+        ranks_version = OrderedDict(rtups)
+        #for rating_val, threshold in ratings_version.items():
+        for rating_val, threshold in ranks_version.items():
+           if (rank < threshold or threshold == ranks_version[next(reversed(ranks_version))])and rating is None:
+            #if (rank < threshold or threshold == ratings_version[next(reversed(ratings_version))])and rating is None:
+                rating = rating_val
+        bayesian_number = (self.p['ratings_bayesian_map'][rating]
+                           if rating in self.p["ratings_bayesian_map"] else -1)
+        return bayesian_number
+
+    def add_predictive_row(self):
+        if self.model.daynum in self.pending_predictiveness_data:
+            t0_t1_ratings_tuple = self.pending_predictiveness_data[self.model.daynum]
+            t0 = t0_t1_ratings_tuple [0]
+            t1 = t0_t1_ratings_tuple [1]
+            past_ratings = copy.deepcopy(t0_t1_ratings_tuple [2])
+            current_ratings = {}
+            for category, good_string_dict in past_ratings.items():
+                if category not in current_ratings:
+                    current_ratings[category] = {}
+                for good_string, _ in good_string_dict.items():
+                    if good_string in self.model.orig_ranks:
+                        current_rank = self.model.orig_ranks[good_string]
+                        #current_rank_str = str(current_rank)
+                        bayesian_number = self.map_rank_to_bayesian_number(current_rank)
+                        current_ratings[category][good_string]= bayesian_number
+            num_categories = len(self.p["chance_of_supplying"])
+
+            new_row = []
+            for i in range(num_categories):
+                stri = str(i)
+                val = 1 if t0[stri] else 0
+                new_row.append(val)
+            for i in range(num_categories):
+                stri = str(i)
+                val = 1 if t1[stri] else 0
+                new_row.append(val)
+            for category, good_string_dict in past_ratings.items():
+                for good_string, val in good_string_dict.items():
+                    case = copy.deepcopy(new_row)
+                    if (val > 0 and category in current_ratings and good_string in current_ratings[category] and
+                            current_ratings[category][good_string] > 0):
+                        case.append(val)
+                        case.append(current_ratings[category][good_string])
+                        self.predictiveness_data.append(case)
+
+
+    def add_predictive_row_all_goods(self):
+        if self.model.daynum in self.pending_predictiveness_data:
+            t0_t1_ratings_tuple = self.pending_predictiveness_data[self.model.daynum]
+            t0 = t0_t1_ratings_tuple [0]
+            t1 = t0_t1_ratings_tuple [1]
+            past_ratings = copy.deepcopy(t0_t1_ratings_tuple [2])
+            current_ratings = {}
+            for category, good_string_dict in past_ratings.items():
+                for good_string, _ in good_string_dict.items():
+                    if good_string in self.model.orig_ranks:
+                        current_rank = self.model.orig_ranks[good_string]
+                        #current_rank_str = str(current_rank)
+                        bayesian_number = self.map_rank_to_bayesian_number(current_rank)
+                        current_ratings[category]= bayesian_number
+            num_categories = len(self.p["chance_of_supplying"])
+
+            dictdict = {}
+            for i in range(num_categories):
+                stri = str(i)
+                dictdict[stri] = past_ratings[stri] if stri in past_ratings else {'empty':0}
+            val_dict = {}
+            for cat , adict in dictdict.items():
+                val_dict.update(adict)
+            keytuplelist = list(product(*dictdict.values()))
+            for key_list in keytuplelist:
+                new_row = []
+                for i in range(num_categories):
+                    stri = str(i)
+                    val = 1 if t0[stri] else 0
+                    new_row.append(val)
+                for i in range(num_categories):
+                    stri = str(i)
+                    val = 1 if t1[stri] else 0
+                    new_row.append(val)
+                for key in key_list:
+                    val = val_dict[key] if key in val_dict else 0
+                    new_row.append(val)
+                for i in range(num_categories):
+                    stri = str(i)
+                    val = current_ratings[stri] if stri in current_ratings else 0
+                    new_row.append(val)
+                #if any(new_row):
+                self.predictiveness_data.append(new_row)
+
+
+    def add_anomaly_row(self,t0,t1):
+        num_categories = len(self.p["chance_of_supplying"])
+        new_row = []
+        for i in range(num_categories):
+            stri = str(i)
+            val = 1 if t0[stri] else 0
+            new_row.append(val)
+        for i in range(num_categories):
+            stri = str(i)
+            val = 1 if t1[stri] else 0
+            new_row.append(val)
+        #if (any(new_row)):
+        self.anomaly_detection_data.append(new_row)
+
+    def reset_shopping_stats(self):
+        self.add_predictive_row()
+        if len(self.shopping_history) > 1:
+            self.t0 = self.shopping_history.pop(0)
+            self.t1 = copy.deepcopy(self.shopping_history[0])
+            #print("agent ${0} t0:${1} t1:${2}".format(self.unique_id, self.t0, self.t1))
+            self.add_anomaly_row(self.t0,self.t1)
+            ratings = self.shopping_rating
+            if len(ratings)> 0:
+                self.add_pending_predictiveness_data(self.t0, self.t1, ratings)
+        today= {good: False for good, chance in self.p["chance_of_supplying"].items()}
+        self.shopping_history.append(today)
+        self.shopping_rating = {}
+
+
+    def record_shopping(self,supplier_agent,supplier_id,category,pid,rating):
+        good_string = "{0}.{1}".format(category, pid) if self.p['product_mode'] else category
+        reputation_string = "{0}.{1}".format(supplier_id, good_string) if self.p['product_mode'] else supplier_id
+        place = len(self.shopping_history) - 1
+        shopdict = self.shopping_history[place]
+        shopdict[category] = True
+        if self.p['include_ratings'] and rating and rating != "":
+            if category not in self.shopping_rating:
+                self.shopping_rating[category] = {}
+            bayesian_number = (self.p['ratings_bayesian_map'][rating]
+                                   if rating in self.p['ratings_bayesian_map'] else 0)
+            self.shopping_rating[category][reputation_string] = bayesian_number
+
+            supplier_agent.products[category][pid]["ratings"][self.unique_id] = float(rating)
+
 
 
     def note_product_purchase(self,category,pid,amount,scam=False):
@@ -270,7 +449,7 @@ class ReputationAgent(Agent):
                         < min(self.num_criminal_consumers_product[good][product],self.p['max_scam_purchases']) and
                         not product in previously_bought):
                     available.append(product)
-        random_available = random.choice(available) if len(available)else None
+        random_available = random.choice(available) if len(available)> 0 else None
         return random_available
 
     def needs_criminal_consumer(self, supplier,good):
@@ -296,7 +475,7 @@ class ReputationAgent(Agent):
         taken = False
         if not self.good and self.p['exclusive_criminal_ring']:
             suppliers = [supplier  for good, supplierlist in self.criminal_suppliers.items()for supplier in supplierlist]
-            taken = True if len(suppliers) else False
+            taken = True if len(suppliers)> 0 else False
         return taken
 
     def adopt_criminal_supplier(self, good):
@@ -346,7 +525,7 @@ class ReputationAgent(Agent):
         sum = 0
         for agent,rank in self.model.ranks.items():
             sum += rank
-        if len(self.model.ranks):
+        if len(self.model.ranks)> 0:
             sum /= len(self.model.ranks)
         else:
             sum = self.reputation_system_threshold
@@ -537,10 +716,15 @@ class ReputationAgent(Agent):
         #tempDict = {good: days-1 for good, days in self.days_until_shop.items() if days > 0 }
 
         if len(self.supplying) <= 0:
-            roll = random.uniform(0, 1) if self.p["chance_of_leaving_and_entering"]> 0.0 else 1.0
-            if roll < self.p["chance_of_leaving_and_entering"]:
+            roll = random.uniform(0, 1) if self.p["consumer_chance_of_leaving_and_entering"]> 0.0 else 1.0
+            if roll < self.p["consumer_chance_of_leaving_and_entering"]:
+                self.leave_and_enter()
+        else:
+            roll = random.uniform(0, 1) if self.p["supplier_chance_of_leaving_and_entering"]> 0.0 else 1.0
+            if roll < self.p["supplier_chance_of_leaving_and_entering"]:
                 self.leave_and_enter()
 
+        self.reset_shopping_stats()
         tempDict = {good: days-1 for good, days in self.days_until_shop.items()  }
         self.days_until_shop.update(tempDict)
         tempDict = {good: days-1 for good, days in self.criminal_days_until_shop.items()  }
@@ -586,7 +770,7 @@ class ReputationAgent(Agent):
             wants = list(np.random.choice(keys, n, p=p, replace=False))
             self.needs = [want for want in wants if
                           self.days_until_shop[want] < 1]  # todo: sorting is faster and almost the same
-            if self.model.reputation_system and self.p['average_reputation_system_threshold']:
+            if not self.p['average_reputation_system_threshold'] and self.p['average_reputation_system_threshold']:
                 self.reputation_system_threshold = self.average_ranks()
             self.multiplier = 1
             if num_trades and  num_trades < len(self.needs):
@@ -638,52 +822,52 @@ class ReputationAgent(Agent):
         #choose from your own experiences by your past favorite, one of your past favorites,
         # or using the reputation system.  todo:  add more choice methods that include combinations of these
         winner = None
+        if self.model.ranks:
+            if self.p['choice_method'] == "thresholded_random":
 
-        if self.p['choice_method'] == "thresholded_random":
+                # thresholded random, using the reputation system AND past experience
 
-            # thresholded random, using the reputation system AND past experience
-
-            over_threshold = [agent for agent, rating in self.model.ranks.items()
-                              if
-                              rating > self.reputation_system_threshold
-                              and int(agent) in self.model.suppliers[good]
-                              #and good in self.model.agents[self.model.orig[int(agent)]].supplying
-                              and int(agent) not in under_threshold
-                              and not self.supplier_inactive(int(agent))]
-            if len(over_threshold):
-                roll = np.random.randint(0, len(over_threshold))
-                winner = int(over_threshold[roll])
-        elif self.p['choice_method'] == "winner_take_all":
-
-            non_criminal_experiences = {agent_string: rating for agent_string, rating in self.model.ranks.items()
-                                        if
-                                        (rating > self.reputation_system_threshold)
-                                        and self.parse(agent_string)['agent'] in self.model.suppliers[good]
-                                        # and (good in self.model.agents[self.model.orig[int(agent)]].supplying )
-                                        and (not self.parse(agent_string)['agent'] in under_threshold)
-                                        and (not self.supplier_inactive(self.parse(agent_string)['agent']))}
-            sorted_suppliers = sorted(non_criminal_experiences.items(), key=lambda x: x[1], reverse=True)
-            if len(sorted_suppliers):
-                winner = sorted_suppliers[0][0]
-
-        elif self.p['choice_method'] == "roulette_wheel":
+                over_threshold = [agent for agent, rating in self.model.ranks.items()
+                                  if
+                                  rating > self.reputation_system_threshold
+                                  and int(agent) in self.model.suppliers[good]
+                                  #and good in self.model.agents[self.model.orig[int(agent)]].supplying
+                                  and int(agent) not in under_threshold
+                                  and not self.supplier_inactive(int(agent))]
+                if len(over_threshold)> 0:
+                    roll = np.random.randint(0, len(over_threshold))
+                    winner = int(over_threshold[roll])
+            elif self.p['choice_method'] == "winner_take_all":
 
                 non_criminal_experiences = {agent_string: rating for agent_string, rating in self.model.ranks.items()
                                             if
                                             (rating > self.reputation_system_threshold)
                                             and self.parse(agent_string)['agent'] in self.model.suppliers[good]
-                                            #and (good in self.model.agents[self.model.orig[int(agent)]].supplying )
+                                            # and (good in self.model.agents[self.model.orig[int(agent)]].supplying )
                                             and (not self.parse(agent_string)['agent'] in under_threshold)
                                             and (not self.supplier_inactive(self.parse(agent_string)['agent']))}
-                ratings_sum = sum([rating for key, rating in non_criminal_experiences.items()])
-                if ratings_sum > 0:
-                    roll = random.uniform(0, ratings_sum)
-                    cumul = 0
-                    for key, rating in non_criminal_experiences.items():
-                        if winner is None:
-                            cumul = cumul + rating
-                            if cumul > roll:
-                                winner = key
+                sorted_suppliers = sorted(non_criminal_experiences.items(), key=lambda x: x[1], reverse=True)
+                if len(sorted_suppliers) > 0:
+                    winner = sorted_suppliers[0][0]
+
+            elif self.p['choice_method'] == "roulette_wheel":
+
+                    non_criminal_experiences = {agent_string: rating for agent_string, rating in self.model.ranks.items()
+                                                if
+                                                (rating > self.reputation_system_threshold)
+                                                and self.parse(agent_string)['agent'] in self.model.suppliers[good]
+                                                #and (good in self.model.agents[self.model.orig[int(agent)]].supplying )
+                                                and (not self.parse(agent_string)['agent'] in under_threshold)
+                                                and (not self.supplier_inactive(self.parse(agent_string)['agent']))}
+                    ratings_sum = sum([rating for key, rating in non_criminal_experiences.items()])
+                    if ratings_sum > 0:
+                        roll = random.uniform(0, ratings_sum)
+                        cumul = 0
+                        for key, rating in non_criminal_experiences.items():
+                            if winner is None:
+                                cumul = cumul + rating
+                                if cumul > roll:
+                                    winner = key
 
         return winner
 
@@ -737,7 +921,7 @@ class ReputationAgent(Agent):
 
     def product_min_score(self,good,product):
         rankstring = '{0}.{1}.{2}'.format(self.unique_id,good,product)
-        rank = self.model.ranks[rankstring] if rankstring in self.model.ranks else -1
+        rank = self.model.ranks[rankstring] if self.model.ranks and rankstring in self.model.ranks else -1
         score = True if rank > self.reputation_system_threshold else False
         return score
 
@@ -779,9 +963,10 @@ class ReputationAgent(Agent):
         #         "product_reputation_topTen"
 
         reputation = "product_reputation_medium"
-        if product in self.model.topNPercent[category]:
+
+        if category in self.model.topNPercent and  product in self.model.topNPercent[category]:
             reputation = "product_reputation_topTen"
-        elif product in self.model.bottomNPercent[category]:
+        elif category in self.model.bottomNPercent and   product in self.model.bottomNPercent[category]:
             reputation = "product_reputation_belowAverage"
 
         return reputation
@@ -1048,7 +1233,7 @@ class ReputationAgent(Agent):
                               and (not self.supplier_inactive(supplier))
                       )
                       } if good in self.personal_experience and threshold < 0.95 else {}
-            if len(knowns_comfortable_with):
+            if len(knowns_comfortable_with)> 0:
             #   you have all the guys that you would stick to because they are so good. now choose
             # amongst those in proportion to their perceived goodness whether this is observed or not
 
@@ -1106,7 +1291,7 @@ class ReputationAgent(Agent):
                                         and (not self.supplier_inactive(supplier))
                                       )
                                       ] if good in self.personal_experience else []
-                            if len(knowns):
+                            if len(knowns)> 0:
                                 supplier_index = random.randint(0, len(knowns) - 1)#pick randomly over threshold
                                 #self.suppliers[good].append(knowns[supplier_index])
                                 self.set_supplier(knowns[supplier_index],good)
@@ -1126,7 +1311,7 @@ class ReputationAgent(Agent):
                                 )
                                 ]
 
-                    if len(unknowns):
+                    if len(unknowns)> 0:
                         supplier_index = random.randint(0, len(unknowns) - 1)
                         supplier = unknowns[supplier_index]
                         product = self.choose_random_product(supplier, good)
@@ -1193,6 +1378,7 @@ class ReputationAgent(Agent):
             quality = supplier_agent.products[good][product]["quality"]
             self.model.add_organic_buy(price,quality)
             if self.p['product_mode']:
+                self.record_shopping(supplier_agent,supplier, good, product,rating)
                 supplier_agent.note_product_purchase(good, product, amount)
 
             # if self.p['include_ratings']:
@@ -1291,12 +1477,7 @@ class ReputationAgent(Agent):
 
                # print( "supplier {0} purchased amount {1} category {2} product {3} scam review from consumer {4}".format(
                  #       supplier_id, amount, good, product, self.unique_id))
-                if self.p['product_mode']:
-                    supplier_agent.note_product_purchase(good,product,amount,scam=True)
-                    commission = supplier_agent.products[good][product]["production_cost"] + \
-                                 supplier_agent.products[good][product]["price"]
-                    quality = supplier_agent.products[good][product]["quality"]
-                    self.model.add_sponsored_buy(price, quality, commission)
+                rating = ""
                 if self.p['include_ratings']:
                     rating = self.best_rating() if (
                             random.uniform(0, 1) < self.p['criminal_chance_of_rating']) else self.p[
@@ -1316,6 +1497,13 @@ class ReputationAgent(Agent):
                     self.model.send_trade_to_reputation_system(consumer_id, reputation_to_entry,
                                                                price, good, self.p['types_and_units']['payment'])
 
+                if self.p['product_mode']:
+                    self.record_shopping(supplier_agent, supplier,good, product,rating)
+                    supplier_agent.note_product_purchase(good,product,amount,scam=True)
+                    commission = supplier_agent.products[good][product]["production_cost"] + \
+                                 supplier_agent.products[good][product]["price"]
+                    quality = supplier_agent.products[good][product]["quality"]
+                    self.model.add_sponsored_buy(price, quality, commission)
             self.criminal_days_until_shop[good] = self.criminal_shopping_pattern[good]
             self.criminal_cobb_douglas_utilities[good] = self.cobb_douglas_utilities_original[good]
 

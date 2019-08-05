@@ -306,7 +306,15 @@ class ReputationSim(Model):
         self.reset_stats()
 
         self.reset_stats_product()
-        #print ('Last line of ReputationSim __init__')
+
+        self.topNPercent = {}
+        self.bottomNPercent = {}
+        self.anomaly_net = None
+        self.predictiveness_net = None
+        self.conformity_score = {}
+        self.predictiveness_score = {}
+
+    #print ('Last line of ReputationSim __init__')
 
     def output_stats(self, config):
         path = config['parameters']['output_path'] + 'output_stats.tsv'
@@ -353,7 +361,7 @@ class ReputationSim(Model):
                 states[distname]= state
             cpts = copy.deepcopy(netinfo['conditional_probability'])
             isa_dag = True
-            while len(cpts) and isa_dag:
+            while len(cpts)> 0 and isa_dag:
                 len_before = len(cpts)
                 states_exist = {k:v for k,v in cpts.items() if all(name in states for name in v['RVs'])}
                 for cptname, cptinfo in states_exist.items():
@@ -1109,23 +1117,197 @@ class ReputationSim(Model):
             self.topNPercent[category] = set(product_tuplist[:topN])
             self.bottomNPercent[category] = set(product_tuplist[bottomN:])
 
+    def detect_anomaly(self):
+
+        if self.daynum > 1:
+            unnorm = []
+            for i in range(len(self.schedule.agents)):
+                a = self.schedule.agents[i]
+                if a.t0 and a.t1:
+                    num_categories = len(self.parameters["chance_of_supplying"])
+                    evidence = []
+                    for j in range(num_categories):
+                        stri = str(j)
+                        val = 1 if a.t0[stri] else 0
+                        evidence.append(val)
+                    for j in range(num_categories):
+                        stri = str(j)
+                        val = 1 if a.t1[stri] else 0
+                        evidence.append(val)
+
+                    conformity = self.anomaly_net.log_probability(evidence)
+                    unnorm.append(conformity)
+                else:
+                    unnorm.append(None)
+            if len(unnorm)> 1:
+                remaining_unnorm = list(filter(None, unnorm))
+                min_unnorm = min (remaining_unnorm ) if len(remaining_unnorm) else None
+                positive = [i - min_unnorm if i  else None for i in unnorm] if min_unnorm else []
+                remaining = list(filter(None, positive))
+                max_positive=max(remaining )if len(remaining) else None
+                norm = [float(i)/ max_positive if i else None for i in positive] if max_positive else []
+                if len(norm)> 0:
+                    for i in range(len(self.schedule.agents)):
+                        a = self.schedule.agents[i]
+                        if norm[i]:
+                            a.add_conformity(norm[i])
+                            self.conformity_score[a.unique_id] = a.avg_conformity()
+        return (self.conformity_score)
+
+    def threshold(self,score_weights, threshold):
+        #threhold the socore weights then normalize so sum == 1
+        over_threshold = {k:v for k,v in score_weights.items() if v and v > threshold}
+        return over_threshold
+
+
+    def norm(self,score_weights):
+        #threhold the socore weights then normalize so sum == 1
+        normalized = {}
+        if len(score_weights) > 0:
+            min_unnorm = min(score_weights.values())
+            positive = {k:v - min_unnorm for k,v in score_weights.items()}
+            sum_pos = sum(positive.values())
+            if sum_pos >0:
+                normalized ={k:(v/sum_pos) for k,v in positive.items()}
+        return normalized
+
+    def reputation_system_stub(self,score_weights):
+        rep_system = {}
+        if len(score_weights)> 0:
+            current_suppliers = set(
+                [supplier for good, supplierlist in self.suppliers.items() for supplier in supplierlist])
+            for supplier in current_suppliers:
+                supplier_agent = self.agents[self.m[self.orig[supplier]]]
+                for category, product_dict in supplier_agent.products.items():
+                    for product, product_info_dict in product_dict.items():
+                        sum = 0
+                        fair_rating = False
+                        sum_to_one =self.norm({rater:score_weights[rater] for rater, _ in product_info_dict["ratings"].items(
+                            ) if rater in score_weights})
+                        for rater, rating in product_info_dict["ratings"].items():
+                            if rater in sum_to_one:
+                                sum += rating * sum_to_one[rater]
+                                fair_rating = True
+                        if fair_rating:
+                            good_string = "{0}.{1}".format(category, product) if self.parameters['product_mode'] else category
+                            reputation_entry = "{0}.{1}".format(supplier, good_string) if self.parameters[
+                                'product_mode'] else supplier
+                            rep_system[reputation_entry]= int(sum * 100)
+                            #if sum > 0 and sum < 1:
+                                #print ("product {0} reputation {1}".format(reputation_entry,sum))
+        return(rep_system)
+
+    def find_predictiveness(self):
+
+        if self.daynum > self.parameters["days_until_prediction"]+1:
+            unnorm = []
+            for i in range(len(self.schedule.agents)):
+                a = self.schedule.agents[i]
+                predictiveness = 0
+                if a.t0 and a.t1:
+                    num_categories = len(self.parameters["chance_of_supplying"])
+                    evidence = []
+                    for j in range(num_categories):
+                        stri = str(j)
+                        val = 1 if a.t0[stri] else 0
+                        evidence.append(val)
+                    for j in range(num_categories):
+                        stri = str(j)
+                        val = 1 if a.t1[stri] else 0
+                        evidence.append(val)
+
+                    for val in range(num_categories):
+                        val_plus1 = val +1
+                        case = copy.deepcopy(evidence)
+                        case.append(val_plus1)
+                        case.append(None)
+                        try:
+                            description = self.predictiveness_net.predict_proba(case)
+                        except ValueError as err:
+                            #print( "never seen {0}, err:{1}".format(case,err))
+                            continue
+                        description_last_entry = len(description) -1
+                        result = (json.loads(description[description_last_entry].to_json()))['parameters'][0]
+                        strval = str(val_plus1)
+                        #prob_of_predicted = result[strval]
+                        prob_of_predicted = result[strval] if strval in result else 0.0
+                        predictiveness += prob_of_predicted
+
+                    unnorm.append(predictiveness)
+                else:
+                    unnorm.append(None)
+            if len(unnorm)> 1:
+                #remaining_unnorm = list(filter(None, unnorm))
+                remaining_unnorm = [i for i in unnorm if i is not None]
+                min_unnorm = min (remaining_unnorm ) if len(remaining_unnorm) else None
+                positive = [i - min_unnorm if i  else None for i in unnorm] if min_unnorm else []
+                #remaining = list(filter(None, positive))
+                remaining = [i for i in positive if i is not None]
+                max_positive=max(remaining )if len(remaining) else None
+                norm = [float(i)/ max_positive if i else None for i in positive] if max_positive else []
+                if len(norm)> 0:
+                    for i in range(len(self.schedule.agents)):
+                        if norm[i]:
+                            a = self.schedule.agents[i]
+                            a.add_predictiveness(norm[i])
+                            self.predictiveness_score[a.unique_id] = a.avg_predictiveness()
+        return (self.predictiveness_score)
+
+
     def get_ranks(self, prev_date):
-        self.ranks = self.reputation_system.get_ranks_dict({'date':prev_date})
+
+        if self.parameters['rep_system'] == "aignets" and self.daynum % self.parameters['ranks_update_period'] == 0:
+                self.reputation_system.update_ranks(prev_date)
+
+        elif self.parameters['rep_system']=='anomaly' and (self.daynum - 2) % self.parameters["anomaly_net_creation_period"] == 0:
+            self.anomaly_net = self.create_anomaly_net()
+
+
+        self.orig_ranks = (self.reputation_system_stub(self.threshold(self.detect_anomaly(),self.parameters['conformity_threshold'])) if self.parameters['rep_system'] == "anomaly"
+                else self.reputation_system.get_ranks_dict({'date':prev_date}))
+        predictive_ranks = None
+        min_days = self.daynum - (2 + self.parameters["days_until_prediction"])
+        if (self.parameters['rep_system_booster'] == "predictiveness" and
+                min_days > 0 and
+                min_days % self.parameters["predictiveness_net_creation_period"] == 0):
+            self.predictiveness_net = self.create_predictiveness_net()
+            predictive_ranks = self.reputation_system_stub(self.threshold(self.find_predictiveness(),self.parameters['predictiveness_threshold']))
+
+        self.ranks = predictive_ranks if predictive_ranks else self.orig_ranks
 
         #only put current suppliers and products
-        current_suppliers = set([supplier for good, supplierlist in self.suppliers.items() for supplier in supplierlist])
-        for agentstring,rank in self.ranks.items():
-            agent = self.parse(agentstring)['agent']
-            if agent in current_suppliers:
-                category = self.parse(agentstring)['category']
-                product = self.parse(agentstring)['product']
-                supplier_agent = self.agents[self.m[self.orig[agent]]]
-                if product in supplier_agent.products[category]:
-                    self.add_rank(agent,rank)
+        if self.ranks:
+            current_suppliers = set([supplier for good, supplierlist in self.suppliers.items() for supplier in supplierlist])
 
-        self.order_product_ranks()
+            for agentstring,rank in self.ranks.items():
+                agent = self.parse(agentstring)['agent']
+                if agent in current_suppliers:
+                    category = self.parse(agentstring)['category']
+                    product = self.parse(agentstring)['product']
+                    supplier_agent = self.agents[self.m[self.orig[agent]]]
+                    if product in supplier_agent.products[category]:
+                        self.add_rank(agent,rank)
+
+            self.order_product_ranks()
         #generation_increment = (self.model.daynum // self.p['scam_period']) * self.p['num_users']
         #if self.p['scam_inactive_period']:  #there is a campaign in which ids are shifted, so subtract the increment
+
+
+    def create_anomaly_net(self):
+        X = []
+        for agent in self.schedule.agents:
+#           if any(agent.anomaly_detection_data):
+                X.extend(agent.anomaly_detection_data)
+
+        model = BayesianNetwork.from_samples(X) if len(X)> 0 else None
+        return model
+
+    def create_predictiveness_net(self):
+        X = []
+        for agent in self.schedule.agents:
+            X.extend(agent.predictiveness_data)
+        model = BayesianNetwork.from_samples(X) if len(X)> 0 else None
+        return model
 
     def step(self):
         present = int(round(self.schedule.time))
@@ -1137,6 +1319,7 @@ class ReputationSim(Model):
         self.reset_current_ranks()
         """Advance the model by one step."""
         self.schedule.step()
+
         self.print_stats_product()
         self.print_market_volume_report_line()
         #self.market_volume_report.flush()
@@ -1144,11 +1327,8 @@ class ReputationSim(Model):
             self.error_log.flush()
         self.daynum = int(round(self.schedule.time))
         prev_date = self.since + dt.timedelta(days=(self.daynum - 1))
-        if self.reputation_system:
-            if self.daynum % self.parameters['ranks_update_period'] == 0:
-                self.reputation_system.update_ranks(prev_date)
-            #if present > 60:
-                self.get_ranks(prev_date)
+        if not self.parameters["observer_mode"]:
+            self.get_ranks(prev_date)
             if self.parameters['product_mode']:
                 self.write_current_rank_history_line()
             else:
