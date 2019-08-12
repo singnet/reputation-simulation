@@ -446,6 +446,7 @@ class ReputationSim(Model):
         # num_changes
         #
         self.bsl_num = 0
+        self.sgp2_num = 0
         self.bsl_denom = 0
         self.sgp_denom = 0
         self.sgl_num_num = 0
@@ -456,42 +457,213 @@ class ReputationSim(Model):
         self.sum_good_consumer_ratings = 0
         self.num_good_consumer_rated_purchases = 0
 
+        self.bsl_num_daily = 0
+        self.sgp2_num_daily = 0
+        self.bsl_denom_daily = 0
+        self.sgp_denom_daily = 0
+        self.sgl_num_num_daily = 0
+        self.sgl_denom_num_daily = 0
+        self.sgl_num_denom_daily = 0
+        self.sgl_denom_denom_daily = 0
+        self.num_changes_daily = 0
+        self.sum_good_consumer_ratings_daily = 0
+        self.num_good_consumer_rated_purchases_daily = 0
+
+        self.bsl_num_window = []
+        self.sgp2_num_window = []
+        self.bsl_denom_window = []
+        self.sgp_denom_window = []
+        self.sgl_num_num_window = []
+        self.sgl_denom_num_window = []
+        self.sgl_num_denom_window = []
+        self.sgl_denom_denom_window = []
+        self.num_changes_window = []
+        self.sum_good_consumer_ratings_window = []
+        self.num_good_consumer_rated_purchases_window = []
+        
+        self.change_window_day(self.bsl_num_window)
+        self.change_window_day(self.sgp2_num_window)
+        self.change_window_day(self.bsl_denom_window)
+        self.change_window_day(self.sgp_denom_window )
+        self.change_window_day(self.sgl_num_num_window )
+        self.change_window_day(self.sgl_denom_num_window )
+        self.change_window_day(self.sgl_num_denom_window)
+        self.change_window_day(self.sgl_denom_denom_window )
+        self.change_window_day(self.num_changes_window )
+        self.change_window_day(self.sum_good_consumer_ratings_window )
+        self.change_window_day(self.num_good_consumer_rated_purchases_window )
+
+
+    def daily_stats_reset(self):
+
+        self.bsl_num_daily = 0
+        self.sgp2_num_daily = 0
+        self.bsl_denom_daily = 0
+        self.sgp_denom_daily = 0
+        self.sgl_num_num_daily = 0
+        self.sgl_denom_num_daily = 0
+        self.sgl_num_denom_daily = 0
+        self.sgl_denom_denom_daily = 0
+        self.num_changes_daily = 0
+        self.sum_good_consumer_ratings_daily = 0
+        self.num_good_consumer_rated_purchases_daily = 0
+
+        self.change_window_day(self.bsl_num_window)
+        self.change_window_day(self.sgp2_num_window)
+        self.change_window_day(self.bsl_denom_window)
+        self.change_window_day(self.sgp_denom_window )
+        self.change_window_day(self.sgl_num_num_window )
+        self.change_window_day(self.sgl_denom_num_window )
+        self.change_window_day(self.sgl_num_denom_window)
+        self.change_window_day(self.sgl_denom_denom_window )
+        self.change_window_day(self.num_changes_window )
+        self.change_window_day(self.sum_good_consumer_ratings_window )
+        self.change_window_day(self.num_good_consumer_rated_purchases_window )
+
+    def window_add(self,window,item):
+        #add the item to the present day of the window
+        window[-1].append(item)
+
+    def change_window_day(self,window):
+        if len (window) >= self.parameters["statistics_window_size"] :
+            window.pop(0)
+        window.append([])
+
+    def window_sum(self, window):
+        flat_list = [item for sublist in window for item in sublist]
+        return sum(flat_list)
+
     def add_good_consumer_rating(self, rating):
-        self.sum_good_consumer_ratings += rating
-        self.num_good_consumer_rated_purchases += 1
+        if self.daynum >= self.parameters["statistics_initialization"]:
+            self.sum_good_consumer_ratings += rating
+            self.num_good_consumer_rated_purchases += 1
+            self.sum_good_consumer_ratings_daily += rating
+            self.num_good_consumer_rated_purchases_daily += 1
+            self.window_add(self.sum_good_consumer_ratings_window, rating)
+            self.window_add(self.num_good_consumer_rated_purchases_window,1)
 
-
-    def add_organic_buy(self,price,quality):
+    def add_organic_buy(self, price, quality, black_market):
         # bsl_num = Σorganicbuys(Price * (1 - OQ))
         # bsl_denom = Σorganicbuys(Price)
         # sgl_denom_num = (Σorganicbuys(Price * OQ))
         # sgl_denom_denom =  Σorganicbuys(OQ)
-        self.bsl_num += price * (1.0-quality)
-        self.bsl_denom += price
-        self.sgl_denom_num += price * quality
-        self.sgl_denom_denom += quality
+        if self.daynum >= self.parameters["statistics_initialization"]:
+            self.bsl_num += price * (1.0 - quality)
+            if black_market:
+                self.sgp2_num += price * (1.0 - quality)
+            self.bsl_denom += price
+            self.sgl_denom_num += price * quality
+            self.sgl_denom_denom += quality
+            self.bsl_num_daily += price * (1.0 - quality)
+            if black_market:
+                self.sgp2_num_daily += price * (1.0 - quality)
+            self.bsl_denom_daily += price
+            self.sgl_denom_num_daily += price * quality
+            self.sgl_denom_denom_daily += quality
+            self.window_add(self.bsl_num_window,price * (1.0 - quality))
+            if black_market:
+                self.window_add(self.sgp2_num_window, price * (1.0 - quality))
+            self.window_add(self.bsl_denom_window, price)
+            self.window_add(self.sgl_denom_num_window, price * quality)
+            self.window_add(self.sgl_denom_denom_window, quality)
 
     def add_legit_transaction(self, supplier, price):
-        real_supplier = self.orig[supplier]
-        if not real_supplier in self.individual_agent_market_volume:
-            self.individual_agent_market_volume[real_supplier]=0
-        self.individual_agent_market_volume[real_supplier] +=price
-
+        if self.daynum >= self.parameters["statistics_initialization"]:
+            real_supplier = self.orig[supplier]
+            if not real_supplier in self.individual_agent_market_volume:
+                self.individual_agent_market_volume[real_supplier] = 0
+            self.individual_agent_market_volume[real_supplier] += price
 
     def add_sponsored_buy(self,price, quality, commission):
         # sgp_denom = Σsponsoredbuys(Price * (1 + CR))
         # sgl_num_num = (Σsponsoredbuys(Price * (1 + CR) * OQ))
         # sgl_num_denom = Σsponsoredbuys(OQ)
-        self.sgp_denom += commission
-        self.sgl_num_num += commission * quality
-        self.sgl_num_denom += quality
+        if self.daynum >= self.parameters["statistics_initialization"]:
+            self.sgp_denom += commission
+            self.sgl_num_num += commission * quality
+            self.sgl_num_denom += quality
+            self.sgp_denom_daily += commission
+            self.sgl_num_num_daily += commission * quality
+            self.sgl_num_denom_daily += quality
+            self.window_add(self.sgp_denom_window, commission)
+            self.window_add(self.sgl_num_num_window, commission * quality)
+            self.window_add(self.sgl_num_denom_window ,quality)
 
     def add_identity_change(self):
-        self.num_changes += 1
+        if self.daynum >= self.parameters["statistics_initialization"]:
+            self.num_changes += 1
+            self.num_changes_daily += 1
+            self.window_add(self.num_changes_window, 1)
+
+    def bsl_daily(self):
+        bsl = self.bsl_num_daily / self.bsl_denom_daily if self.bsl_denom_daily != 0 else -1
+        return bsl
+
+    def sgp2_daily(self):
+        sgp = self.sgp2_num_daily / self.sgp_denom_daily if self.sgp_denom_daily != 0 else -1
+        return sgp
+
+    def sgp_daily(self):
+        sgp = self.bsl_num_daily / self.sgp_denom_daily if self.sgp_denom_daily != 0 else -1
+        return sgp
+
+    def sgl_daily(self):
+        sgl_num_daily = self.sgl_num_num_daily / self.sgl_num_denom_daily if self.sgl_num_denom_daily != 0 else -1
+        sgl_denom_daily = self.sgl_denom_num_daily / self.sgl_denom_denom_daily if self.sgl_denom_denom_daily != 0 else 0
+        sgl = sgl_num_daily / sgl_denom_daily if sgl_num_daily != -1 and sgl_denom_daily != 0 else -1
+        return sgl
+
+    def asp_daily(self):
+        criminals = [bad for good, bad in self.criminal_suppliers.items()]
+        asp = (len(criminals) * self.get_end_tick()) / self.num_changes_daily if self.num_changes_daily != 0 else -1
+        return asp
+
+    def utility_daily(self):
+        utility = (self.sum_good_consumer_ratings_daily /
+                   self.num_good_consumer_rated_purchases_daily if self.num_good_consumer_rated_purchases_daily > 0 else -1)
+        return utility
+
+    def bsl_window(self):
+        denom_sum = self.window_sum(self.bsl_denom_window)
+        bsl = self.window_sum(self.bsl_num_window) /denom_sum  if denom_sum != 0 else -1
+        return bsl
+
+    def sgp2_window(self):
+        denom_sum = self.window_sum(self.sgp_denom_window)
+        sgp = self.window_sum(self.sgp2_num_window) / denom_sum if denom_sum != 0 else -1
+        return sgp
+
+    def sgp_window(self):
+        denom_sum = self.window_sum(self.sgp_denom_window)
+        sgp = self.window_sum(self.bsl_num_window )/ denom_sum if denom_sum != 0 else -1
+        return sgp
+
+    def sgl_window(self):
+        num_denom_sum = self.window_sum(self.sgl_num_denom_window)
+        denom_denom_sum = self.window_sum(self.sgl_denom_denom_window)
+        sgl_num = self.window_sum(self.sgl_num_num_window) / num_denom_sum if num_denom_sum != 0 else -1
+        sgl_denom = self.window_sum(self.sgl_denom_num_window) / denom_denom_sum if denom_denom_sum != 0 else 0
+        sgl = sgl_num / sgl_denom if sgl_num != -1 and sgl_denom != 0 else -1
+        return sgl
+
+    def asp_window(self):
+        denom_sum = self.window_sum(self.num_changes_window)
+        criminals = [bad for good, bad in self.criminal_suppliers.items()]
+        asp = (len(criminals) * self.get_end_tick()) / denom_sum if denom_sum != 0 else -1
+        return asp
+
+    def utility_window(self):
+        denom_sum = self.window_sum(self.num_good_consumer_rated_purchases_window)
+        utility = (self.window_sum(self.sum_good_consumer_ratings_window )/denom_sum if denom_sum > 0 else -1)
+        return utility
 
     def bsl(self):
         bsl = self.bsl_num / self.bsl_denom if self.bsl_denom != 0 else -1
         return bsl
+
+    def sgp2(self):
+        sgp = self.sgp2_num / self.sgp_denom if self.sgp_denom != 0 else -1
+        return sgp
 
     def sgp(self):
         sgp = self.bsl_num / self.sgp_denom if self.sgp_denom != 0 else -1
@@ -571,8 +743,24 @@ class ReputationSim(Model):
         return inequity
 
     def print_stats_product(self):
+
+        bsl_daily = self.bsl_daily()
+        sgp_daily = self.sgp_daily()
+        sgp2_daily = self.sgp2_daily()
+        sgl_daily = self.sgl_daily()
+        asp_daily = self.asp_daily()
+        utility_daily = self.utility_daily()
+
+        bsl_window = self.bsl_window()
+        sgp_window = self.sgp_window()
+        sgp2_window = self.sgp2_window()
+        sgl_window = self.sgl_window()
+        asp_window = self.asp_window()
+        utility_window = self.utility_window()
+
         bsl = self.bsl()
         sgp = self.sgp()
+        sgp2 = self.sgp2()
         sgl = self.sgl()
         asp = self.asp()
         omut = self.omut()
@@ -583,13 +771,18 @@ class ReputationSim(Model):
         utility = self.utility()
         inequity = self.inequity()
 
-        if self.daynum % 30 == 0:
-            print("""\n time:{11}, bsl:{0:.4f}, sgp:{1:.4f}, sgl:{2:.4f}, asp:{3:.4f}, omut:{4:.4f}, market volume:{5:.4f}, maxproduct:{6:.4f}, lts:{7:.4f}, pfs:{8:.4f}, utility:{9:.4}, inequity:{10:.4f}\n""".format(
-            bsl,sgp,sgl,asp,omut,market_volume,maxproduct,lts,pfs,utility,inequity,self.daynum))
-        if self.error_log:
-            self.error_log.write("""\n time:{11}, bsl:{0:.4f}, sgp:{1:.4f}, sgl:{2:.4f}, asp:{3:.4f}, omut:{4:.4f}, market volume:{5:.4f}, maxproduct:{6:.4f}, lts:{7:.4f}, pfs:{8:.4f}, utility:{9:.4}, inequity:{10:.4f}\n""".format(
-            bsl,sgp,sgl,asp,omut,market_volume,maxproduct,lts,pfs,utility,inequity,self.daynum))
-
+        if self.daynum % 30 == 0 and self.daynum >= self.parameters["statistics_initialization"]:
+            print("""\n time:{11}, bsl:{0:.4f}, sgp:{1:.4f},  sgp2:{12:.4f}, sgl:{2:.4f}, asp:{3:.4f}, utility:{9:.4}, bsl_daily:{13:.4f}, sgp_daily:{14:.4f},  sgp2_daily:{15:.4f}, sgl_daily:{16:.4f}, asp_daily:{17:.4f}, utility_daily:{18:.4}, bsl_window:{19:.4f}, sgp_window:{20:.4f},  sgp2_window:{21:.4f}, sgl_window:{22:.4f}, asp_window:{23:.4f}, utility_window:{24:.4}, omut:{4:.4f}, market volume:{5:.4f}, maxproduct:{6:.4f}, lts:{7:.4f}, pfs:{8:.4f}, inequity:{10:.4f}\n""".format(
+                bsl, sgp, sgl, asp, omut, market_volume, maxproduct, lts, pfs, utility, inequity, self.daynum, sgp2,
+                bsl_daily, sgp_daily, sgp2_daily, sgl_daily, asp_daily, utility_daily,
+                bsl_window, sgp_window, sgp2_window, sgl_window, asp_window, utility_window
+            ))
+        if self.error_log and self.daynum >= self.parameters["statistics_initialization"]:
+            self.error_log.write("""\n time:{11}, bsl:{0:.4f}, sgp:{1:.4f},  sgp2:{12:.4f}, sgl:{2:.4f}, asp:{3:.4f}, utility:{9:.4}, bsl_daily:{13:.4f}, sgp_daily:{14:.4f},  sgp2_daily:{15:.4f}, sgl_daily:{16:.4f}, asp_daily:{17:.4f}, utility_daily:{18:.4}, bsl_window:{19:.4f}, sgp_window:{20:.4f},  sgp2_window:{21:.4f}, sgl_window:{22:.4f}, asp_window:{23:.4f}, utility_window:{24:.4}, omut:{4:.4f}, market volume:{5:.4f}, maxproduct:{6:.4f}, lts:{7:.4f}, pfs:{8:.4f}, inequity:{10:.4f}\n""".format(
+                bsl, sgp, sgl, asp, omut, market_volume, maxproduct, lts, pfs, utility, inequity, self.daynum, sgp2,
+                bsl_daily, sgp_daily, sgp2_daily, sgl_daily, asp_daily, utility_daily,
+                bsl_window, sgp_window, sgp2_window, sgl_window, asp_window, utility_window
+            ))
 
     def write_output_stats_line(self):
         line = []
@@ -624,10 +817,38 @@ class ReputationSim(Model):
                 v = self.bsl()
             elif test == "sgp":
                 v = self.sgp()
+            elif test == "sgp2":
+                v = self.sgp2()
             elif test == "sgl":
                 v = self.sgl()
             elif test == "asp":
                 v = self.asp()
+            elif test == "utility":
+                v = self.utility()
+            elif test == "bsl_daily":
+                v = self.bsl_daily()
+            elif test == "sgp_daily":
+                v = self.sgp_daily()
+            elif test == "sgp2_daily":
+                v = self.sgp2_daily()
+            elif test == "sgl_daily":
+                v = self.sgl_daily()
+            elif test == "asp_daily":
+                v = self.asp_daily()
+            elif test == "utility_daily":
+                v = self.utility_daily()
+            elif test == "bsl_window":
+                v = self.bsl_window()
+            elif test == "sgp_window":
+                v = self.sgp_window()
+            elif test == "sgp2_window":
+                v = self.sgp2_window()
+            elif test == "sgl_window":
+                v = self.sgl_window()
+            elif test == "asp_window":
+                v = self.asp_window()
+            elif test == "utility_window":
+                v = self.utility_window()
             elif test == "loss_to_scam":
                 v = self.loss_to_scam()
             elif test == "profit_from_scam":
@@ -636,8 +857,6 @@ class ReputationSim(Model):
                 v = self.market_volume()
             elif test == "inequity":
                 v = self.inequity()
-            elif test == "utility":
-                v = self.utility()
             line.append(v)
         line.append("\n")
         linestr = "\t".join(map (str, line))
@@ -1031,27 +1250,28 @@ class ReputationSim(Model):
 
     def save_info_for_market_volume_report(self, consumer, supplierstr, payment):
             # if increment num transactions and add cum price to the correct agent category of seller
-            supplier = self.m[supplierstr]
-            if self.agents[supplier].good and consumer.good:
-                self.good2good_agent_completed_transactions += 1
-                self.good2good_agent_cumul_completed_transactions += 1
-                self.good2good_agent_total_price += payment
-                self.good2good_agent_cumul_total_price += payment
-            elif not self.agents[supplier].good and consumer.good:
-                self.good2bad_agent_completed_transactions += 1
-                self.good2bad_agent_cumul_completed_transactions += 1
-                self.good2bad_agent_total_price += payment
-                self.good2bad_agent_cumul_total_price += payment
-            elif not self.agents[supplier].good and not consumer.good:
-                self.bad2bad_agent_completed_transactions += 1
-                self.bad2bad_agent_cumul_completed_transactions += 1
-                self.bad2bad_agent_total_price += payment
-                self.bad2bad_agent_cumul_total_price += payment
-            else:  #shouldnt happen
-                self.bad2good_agent_completed_transactions += 1
-                self.bad2good_agent_cumul_completed_transactions += 1
-                self.bad2good_agent_total_price += payment
-                self.bad2good_agent_cumul_total_price += payment
+            if self.daynum >= self.parameters["statistics_initialization"]:
+                supplier = self.m[supplierstr]
+                if self.agents[supplier].good and consumer.good:
+                    self.good2good_agent_completed_transactions += 1
+                    self.good2good_agent_cumul_completed_transactions += 1
+                    self.good2good_agent_total_price += payment
+                    self.good2good_agent_cumul_total_price += payment
+                elif not self.agents[supplier].good and consumer.good:
+                    self.good2bad_agent_completed_transactions += 1
+                    self.good2bad_agent_cumul_completed_transactions += 1
+                    self.good2bad_agent_total_price += payment
+                    self.good2bad_agent_cumul_total_price += payment
+                elif not self.agents[supplier].good and not consumer.good:
+                    self.bad2bad_agent_completed_transactions += 1
+                    self.bad2bad_agent_cumul_completed_transactions += 1
+                    self.bad2bad_agent_total_price += payment
+                    self.bad2bad_agent_cumul_total_price += payment
+                else:  #shouldnt happen
+                    self.bad2good_agent_completed_transactions += 1
+                    self.bad2good_agent_cumul_completed_transactions += 1
+                    self.bad2good_agent_total_price += payment
+                    self.bad2good_agent_cumul_total_price += payment
 
 
     def print_agent_goodness (self, userlist = [-1]):
@@ -1256,7 +1476,7 @@ class ReputationSim(Model):
 
     def get_ranks(self, prev_date):
 
-        if self.parameters['rep_system'] == "aignets" and self.daynum % self.parameters['ranks_update_period'] == 0:
+        if self.parameters['rep_system'] == "aigents" and self.daynum % self.parameters['ranks_update_period'] == 0:
                 self.reputation_system.update_ranks(prev_date)
 
         elif self.parameters['rep_system']=='anomaly' and (self.daynum - 2) % self.parameters["anomaly_net_creation_period"] == 0:
@@ -1299,14 +1519,14 @@ class ReputationSim(Model):
 #           if any(agent.anomaly_detection_data):
                 X.extend(agent.anomaly_detection_data)
 
-        model = BayesianNetwork.from_samples(X) if len(X)> 0 else None
+        model = BayesianNetwork.from_samples(X,algorithm='chow-liu') if len(X)> 0 else None
         return model
 
     def create_predictiveness_net(self):
         X = []
         for agent in self.schedule.agents:
             X.extend(agent.predictiveness_data)
-        model = BayesianNetwork.from_samples(X) if len(X)> 0 else None
+        model = BayesianNetwork.from_samples(X, algorithm='chow-liu') if len(X)> 0 else None
         return model
 
     def step(self):
@@ -1321,6 +1541,7 @@ class ReputationSim(Model):
         self.schedule.step()
 
         self.print_stats_product()
+        self.daily_stats_reset()
         self.print_market_volume_report_line()
         #self.market_volume_report.flush()
         if self.error_log:

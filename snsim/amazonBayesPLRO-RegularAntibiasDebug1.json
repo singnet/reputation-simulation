@@ -1,0 +1,2369 @@
+{
+  "macro_views": {
+    "antons_view": {
+      "adapter": "antons_view",
+      "parameters": {
+        "CRg": 9,
+        "CRb": 9,
+        "NTg": 1,
+        "NTb": 1,
+        "NIg": 1,
+        "NIb": 1,
+        "NA": 1000,
+        "D": 361,
+        "SP": 10,
+        "SIP": 0,
+        "PLRg": 60,
+        "PLRb": 100,
+        "PR": 9,
+        "NP": 50,
+        "Pmin": 1,
+        "Pmax": 50,
+        "GF": 0.2
+      },
+      "supplement": {
+        "overwrite_criminal_agent_ring_size": "market_research",
+        "purch": 100,
+        "profit_margin": 10,
+        "beta": 0.442,
+        "alpha": 0.596,
+        "amounts_stdev": 0.01,
+        "amounts_min": 0,
+        "amounts_max": 1000,
+        "cobb_douglas_stdev": 0.01,
+        "need_cycle_stdev": 0.01,
+        "need_cycle_min": 0,
+        "need_cycle_max": 1000,
+        "price_stdev": 3.0,
+        "zipf_parameter": 0.5
+      }
+    }
+  },
+  "tests": {
+    "default": {
+      "OMUT": {
+        "lower": 0,
+        "upper": 1
+      },
+      "maxproduct": {
+        "lower": 0,
+        "upper": 1
+      },
+      "bsl": {
+        "lower": 0,
+        "upper": 1
+      },
+      "sgp": {
+        "lower": 0,
+        "upper": 1
+      },
+      "sgp2": {
+        "lower": 0,
+        "upper": 1
+      },
+      "sgl": {
+        "lower": 0,
+        "upper": 1
+      },
+      "asp": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility": {
+        "lower": 0,
+        "upper": 1
+      },
+      "bsl_daily": {
+        "lower": 0,
+        "upper": 1
+      },
+      "sgp_daily": {
+        "lower": 0,
+        "upper": 1
+      },
+      "sgp2_daily": {
+        "lower": 0,
+        "upper": 1
+      },
+      "sgl_daily": {
+        "lower": 0,
+        "upper": 1
+      },
+      "asp_daily": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility_daily": {
+        "lower": 0,
+        "upper": 1
+      },
+      "bsl_window": {
+        "lower": 0,
+        "upper": 1
+      },
+      "sgp_window": {
+        "lower": 0,
+        "upper": 1
+      },
+      "sgp2_window": {
+        "lower": 0,
+        "upper": 1
+      },
+      "sgl_window": {
+        "lower": 0,
+        "upper": 1
+      },
+      "asp_window": {
+        "lower": 0,
+        "upper": 1
+      },
+      "utility_window": {
+        "lower": 0,
+        "upper": 1
+      },
+      "profit_from_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "loss_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "market_volume": {
+        "lower": 30,
+        "upper": 40
+      },
+      "inequity": {
+        "lower": 0,
+        "upper": 1
+      }
+    }
+  },
+  "output_columns": [
+    {
+      "parameters": {
+        "reputation_parameters": [
+          "default",
+          "conservatism",
+          "fullnorm",
+          "weighting",
+          "logratings",
+          "decayed",
+          "liquid",
+          "logranks",
+          "downrating",
+          "update_period",
+          "aggregation",
+          "denomination",
+          "unrated",
+          "ratings",
+          "spendings",
+          "rating_bias",
+          "predictiveness",
+          "parents"
+        ]
+      }
+    },
+    {
+      "parameters": [
+        "output_path",
+        "PLRo_overall",
+        "seed",
+        "observer_mode",
+        "reputation_system_threshold"
+      ]
+    },
+    {
+      "macro_views": {
+        "antons_view": {
+          "parameters": [
+            "CRg",
+            "CRb",
+            "NTg",
+            "NTb",
+            "NIg",
+            "NIb",
+            "NA",
+            "D",
+            "SP",
+            "SIP",
+            "PLRg",
+            "PLRb",
+            "PR",
+            "NP",
+            "Pmin",
+            "Pmax",
+            "GF"
+          ]
+        }
+      }
+    }
+  ],
+  "batch": {
+    "on": true,
+    "parameter_combinations": {
+      "seed": {
+        "r_seed10": [
+          {
+            "parameters": {
+              "seed": 10
+            }
+          }
+        ],
+        "r_seed20": [
+          {
+            "parameters": {
+              "seed": 20
+            }
+          }
+        ],
+        "r_seed30": [
+          {
+            "parameters": {
+              "seed": 30
+            }
+          }
+        ],
+        "r_seed40": [
+          {
+            "parameters": {
+              "seed": 40
+            }
+          }
+        ],
+        "r_seed50": [
+          {
+            "parameters": {
+              "seed": 50
+            }
+          }
+        ],
+        "r_seed60": [
+          {
+            "parameters": {
+              "seed": 60
+            }
+          }
+        ],
+        "r_seed70": [
+          {
+            "parameters": {
+              "seed": 70
+            }
+          }
+        ],
+        "r_seed80": [
+          {
+            "parameters": {
+              "seed": 80
+            }
+          }
+        ],
+        "r_seed90": [
+          {
+            "parameters": {
+              "seed": 90
+            }
+          }
+        ],
+        "r_seed100": [
+          {
+            "parameters": {
+              "seed": 100
+            }
+          }
+        ]
+      },
+      "PLRo": {
+        "PLRo100": [
+          {
+            "parameters": {
+              "PLRo_overall": "PLRo_overall_100"
+            }
+          }
+        ],
+        "PLRo0": [
+          {
+            "parameters": {
+              "PLRo_overall": "PLRo_overall_0"
+            }
+          }
+        ],
+        "PLRo2": [
+          {
+            "parameters": {
+              "PLRo_overall": "PLRo_overall_2"
+            }
+          }
+        ],
+        "PLRo5": [
+          {
+            "parameters": {
+              "PLRo_overall": "PLRo_overall_5"
+            }
+          }
+        ],
+        "PLRo10": [
+          {
+            "parameters": {
+              "PLRo_overall": "PLRo_overall_10"
+            }
+          }
+        ],
+        "PLRo15": [
+          {
+            "parameters": {
+              "PLRo_overall": "PLRo_overall_15"
+            }
+          }
+        ],
+        "PLRo30": [
+          {
+            "parameters": {
+              "PLRo_overall": "PLRo_overall_30"
+            }
+          }
+        ],
+        "PLRo70": [
+          {
+            "parameters": {
+              "PLRo_overall": "PLRo_overall_70"
+            }
+          }
+        ]
+      },
+      "model": {
+        "bias": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "rating_bias": true
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "weighting": true
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "denomination": true
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "unrated": false
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "ratings": 1.0
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "spendings": 0.0
+              }
+            }
+          }
+        ],
+        "regular": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "weighting": false
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "unrated": false
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "ratings": 1.0
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "spendings": 0.0
+              }
+            }
+          }
+        ]
+      },
+      "leaving_and_entering": {
+        "noLE": [
+          {
+            "parameters": {
+              "supplier_chance_of_leaving_and_entering": 0.0
+            }
+          },
+          {
+            "parameters": {
+              "consumer_chance_of_leaving_and_entering": 0.0
+            }
+          }
+        ],
+        "LE": [
+          {
+            "parameters": {
+              "supplier_chance_of_leaving_and_entering": 0.01111111111
+            }
+          },
+          {
+            "parameters": {
+              "consumer_chance_of_leaving_and_entering": 0.01111111111
+            }
+          }
+        ]
+      },
+      "overlap": {
+        "NoOverlap": [
+          {
+            "macro_views": {
+              "antons_view": {
+                "parameters": {
+                  "CRg": 9
+                }
+              }
+            }
+          },
+          {
+            "macro_views": {
+              "antons_view": {
+                "parameters": {
+                  "CRb": 9
+                }
+              }
+            }
+          },
+          {
+            "macro_views": {
+              "antons_view": {
+                "parameters": {
+                  "NTb": 2
+                }
+              }
+            }
+          },
+          {
+            "parameters": {
+              "goodness": [
+                0.95,
+                0.01,
+                0.01,
+                1
+              ]
+            }
+          },
+          {
+            "parameters": {
+              "criminal_goodness": [
+                0.05,
+                0.01,
+                0.01,
+                1
+              ]
+            }
+          },
+          {
+            "parameters": {
+              "criminal_category_list": [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10"
+              ]
+            }
+          },
+          {
+            "bayesian_networks": {
+              "supplier_switch": {
+                "discrete_distributions": {
+                  "supplier_exogenousReputation": {
+                    "supplier_exogenousReputation": 0.0
+                  }
+                }
+              }
+            }
+          },
+          {
+            "bayesian_networks": {
+              "supplier_switch": {
+                "discrete_distributions": {
+                  "supplier_exogenousReputation": {
+                    "supplier_exogenousReputationNot": 1.0
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "overlap": [
+          {
+            "macro_views": {
+              "antons_view": {
+                "parameters": {
+                  "CRg": 999999999999999999
+                }
+              }
+            }
+          },
+          {
+            "macro_views": {
+              "antons_view": {
+                "parameters": {
+                  "CRb": 1.5
+                }
+              }
+            }
+          },
+          {
+            "macro_views": {
+              "antons_view": {
+                "parameters": {
+                  "NTb": 2
+                }
+              }
+            }
+          },
+          {
+            "parameters": {
+              "goodness": [
+                0.65,
+                0.2,
+                0.01,
+                1
+              ]
+            }
+          },
+          {
+            "parameters": {
+              "criminal_goodness": [
+                0.65,
+                0.2,
+                0.01,
+                1
+              ]
+            }
+          },
+          {
+            "parameters": {
+              "criminal_category_list": [
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20",
+                "21",
+                "22",
+                "23",
+                "24",
+                "25",
+                "26",
+                "27",
+                "28",
+                "29",
+                "30",
+                "31",
+                "32",
+                "33",
+                "34",
+                "35",
+                "36",
+                "37",
+                "38",
+                "39",
+                "40",
+                "41",
+                "42",
+                "43",
+                "44",
+                "45",
+                "46",
+                "47",
+                "48",
+                "49"
+              ]
+            }
+          },
+          {
+            "bayesian_networks": {
+              "supplier_switch": {
+                "discrete_distributions": {
+                  "supplier_exogenousReputation": {
+                    "supplier_exogenousReputation": 0.9
+                  }
+                }
+              }
+            }
+          },
+          {
+            "bayesian_networks": {
+              "supplier_switch": {
+                "discrete_distributions": {
+                  "supplier_exogenousReputation": {
+                    "supplier_exogenousReputationNot": 0.1
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "decayed": {
+        "decayed1": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "decayed": 0.1
+              }
+            }
+          }
+        ],
+        "decayed9": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "decayed": 0.9
+              }
+            }
+          }
+        ],
+        "decayed5": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "decayed": 0.5
+              }
+            }
+          }
+        ]
+      },
+      "default": {
+        "default5": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "default": 0.5
+              }
+            }
+          }
+        ],
+        "default1": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "default": 0.1
+              }
+            }
+          }
+        ],
+        "default9": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "default": 0.9
+              }
+            }
+          }
+        ]
+      },
+      "conservatism": {
+        "conservatism5": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "conservatism": 0.5
+              }
+            }
+          }
+        ],
+        "conservatism1": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "conservatism": 0.1
+              }
+            }
+          }
+        ],
+        "conservatism9": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "conservatism": 0.9
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "reputation_parameters": {
+      "precision": 0.01,
+      "default": 0.5,
+      "conservatism": 0.5,
+      "fullnorm": true,
+      "weighting": true,
+      "logratings": false,
+      "decayed": 0.5,
+      "liquid": true,
+      "logranks": true,
+      "downrating": false,
+      "update_period": 1,
+      "aggregation": false,
+      "denomination": true,
+      "unrated": false,
+      "ratings": 1.0,
+      "spendings": 0.0,
+      "rating_bias": false,
+      "predictiveness": 0.0,
+      "parents": 0.0
+    },
+    "macro_view": "antons_view",
+    "use_java": false,
+    "run_automatic_tests": false,
+    "statistics_initialization": 0,
+    "port": 1181,
+    "output_path": "amazonBayesPLRO-RegularAntibiasDebug15/",
+    "seed": 9573,
+    "observer_mode": false,
+    "randomize_initial_needs": true,
+    "ranks_update_period": 1,
+    "error_log": true,
+    "deterministic_mode": true,
+    "supplier_chance_of_leaving_and_entering": 0.01111111111,
+    "consumer_chance_of_leaving_and_entering": 0.01111111111,
+    "chance_lose_external_reputation_each_scam": 0.001,
+    "num_users": 10000,
+    "initial_date": "01.01.2018 11:05:02",
+    "final_date": "30.06.2018 11:05:02",
+    "days_per_tick": 1.0,
+    "network": "singularity",
+    "types_and_units": {
+      "payment": "AGI",
+      "rating": ""
+    },
+    "suppliers_are_consumers": false,
+    "scam_parameters": {
+      "scam_period": [
+        10,
+        2,
+        2,
+        100
+      ],
+      "scam_inactive_period": [
+        5,
+        0.001,
+        0.0,
+        100
+      ]
+    },
+    "exclusive_criminal_ring": false,
+    "criminal_agent_ring_size": [
+      50,
+      2,
+      2,
+      100
+    ],
+    "open_to_new_experiences": [
+      0.85,
+      0.5
+    ],
+    "fire_supplier_threshold": [
+      0.3,
+      0.1
+    ],
+    "reputation_system_threshold": [
+      60,
+      1,
+      1,
+      1000
+    ],
+    "average_reputation_system_threshold": false,
+    "choice_method": "roulette_wheel",
+    "forget_discount": [
+      0.99,
+      0.02
+    ],
+    "param_str": "r_sp182_",
+    "prices": {
+      "milk": [
+        1,
+        0.2,
+        1,
+        100
+      ],
+      "honey": [
+        2,
+        0.3,
+        1,
+        100
+      ]
+    },
+    "criminal_prices": {
+      "milk": [
+        1,
+        0.2,
+        1,
+        100
+      ],
+      "honey": [
+        2,
+        0.3,
+        1,
+        100
+      ]
+    },
+    "amounts": {
+      "milk": [
+        20.0,
+        1.0,
+        1,
+        1000
+      ],
+      "honey": [
+        20.0,
+        1.0,
+        1,
+        1000
+      ]
+    },
+    "criminal_amounts": {
+      "milk": [
+        1.0,
+        0.01,
+        1,
+        1000
+      ],
+      "honey": [
+        1.0,
+        0.01,
+        1,
+        1000
+      ]
+    },
+    "chance_of_supplying": {
+      "milk": 0.05,
+      "honey": 0.05
+    },
+    "criminal_chance_of_supplying": {
+      "milk": 0.06,
+      "honey": 0.04
+    },
+    "cobb_douglas_constant": 1.5,
+    "cobb_douglas_utilities": {
+      "milk": [
+        0.05,
+        0.01
+      ],
+      "honey": [
+        0.1,
+        0.3
+      ]
+    },
+    "need_cycle": {
+      "milk": [
+        2,
+        1,
+        0,
+        20
+      ],
+      "honey": [
+        1,
+        2,
+        0,
+        30
+      ]
+    },
+    "criminal_need_cycle": {
+      "milk": [
+        0,
+        0.2
+      ],
+      "honey": [
+        0,
+        0.2
+      ]
+    },
+    "random_change_suppliers": 1.0,
+    "include_ratings": true,
+    "chance_of_criminal": 0.05,
+    "goodness": [
+      0.95,
+      0.01,
+      0.01,
+      1
+    ],
+    "criminal_goodness": [
+      0.05,
+      0.01,
+      0.01,
+      1
+    ],
+    "transactions_per_day": [
+      10,
+      0.0001,
+      0,
+      1000
+    ],
+    "criminal_transactions_per_day": [
+      100,
+      0.0001,
+      0,
+      1000
+    ],
+    "ratings_goodness_thresholds": {
+      "0.0": 0.15,
+      "0.25": 0.35,
+      "0.5": 0.65,
+      "0.75": 0.85,
+      "1.0": 1.0
+    },
+    "rating_perception": [
+      0,
+      0.01,
+      -1,
+      1
+    ],
+    "chance_of_rating_good2good": 0.6,
+    "chance_of_rating_good2bad": 0.6,
+    "criminal_chance_of_rating": 1.0,
+    "non_rating_val": "",
+    "min_scam_purchases": -200,
+    "max_scam_purchases": 200,
+    "change_num_scams_incr": 50,
+    "product_mode": true,
+    "scam_goods_satisfy_needs": true,
+    "quality_deviation_from_supplier": [
+      0.0,
+      0.1,
+      -0.3,
+      0.3
+    ],
+    "num_products_supplied": [
+      50,
+      8,
+      1,
+      20
+    ],
+    "bad_consumers_change_names": false,
+    "one_review_per_product": true,
+    "criminal_category_list": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "17",
+      "18",
+      "19",
+      "20",
+      "21",
+      "22",
+      "23",
+      "24",
+      "25",
+      "26",
+      "27",
+      "28",
+      "29",
+      "30",
+      "31",
+      "32",
+      "33",
+      "34",
+      "35",
+      "36",
+      "37",
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43",
+      "44",
+      "45",
+      "46",
+      "47",
+      "48",
+      "49"
+    ],
+    "change_product_names_when_change_supplers_name": true,
+    "criminal_suppliers_change_names": true,
+    "criminal_suppliers_purchase_reviewers": true,
+    "criminal_suppliers_replace_products": true,
+    "conformity_threshold": 0.8,
+    "predictiveness_threshold": 0.8,
+    "PLRo_overall": "PLRo_overall_30",
+    "num_stars": {
+      "0.0": "product_quality_onestars",
+      "0.25": "product_quality_twostars",
+      "0.5": "product_quality_threestars",
+      "0.75": "product_quality_fourstars",
+      "1.0": "product_quality_fivestars"
+    },
+    "ratings_bayesian_map": {
+      "0.0": 1,
+      "0.25": 2,
+      "0.5": 3,
+      "0.75": 4,
+      "1.0": 5
+    },
+    "top_n_percent": 10,
+    "bottom_n_percent": 50,
+    "profit_equality_tolerance": 10,
+    "days_until_prediction": 15,
+    "anomaly_net_creation_period": 1,
+    "predictiveness_net_creation_period": 1,
+    "rep_system": "aigents",
+    "rep_system_booster": "predictiveness-not",
+    "statistics_window_size": 10
+  },
+  "bayesian_networks": {
+    "PLRo": {
+      "discrete_distributions": {
+        "product_quality": {
+          "product_quality_onestars": 0.05,
+          "product_quality_twostars": 0.2,
+          "product_quality_threestars": 0.5,
+          "product_quality_fourstars": 0.2,
+          "product_quality_fivestars": 0.05
+        },
+        "PLRo_overall": {
+          "PLRo_overall_0": 0.2,
+          "PLRo_overall_2": 0.2,
+          "PLRo_overall_5": 0.1,
+          "PLRo_overall_10": 0.1,
+          "PLRo_overall_15": 0.1,
+          "PLRo_overall_30": 0.1,
+          "PLRo_overall_70": 0.1,
+          "PLRo_overall_100": 0.1
+        }
+      },
+      "conditional_probability": {
+        "PLRo": {
+          "RVs": [
+            "PLRo_overall",
+            "product_quality"
+          ],
+          "CPT": [
+            [
+              "PLRo_overall_0",
+              "product_quality_onestars",
+              "PLRo",
+              0.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_twostars",
+              "PLRo",
+              0.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_threestars",
+              "PLRo",
+              0.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_fourstars",
+              "PLRo",
+              0.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_fivestars",
+              "PLRo",
+              0.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_onestars",
+              "PLRoNot",
+              1.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_twostars",
+              "PLRoNot",
+              1.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_threestars",
+              "PLRoNot",
+              1.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_fourstars",
+              "PLRoNot",
+              1.0
+            ],
+            [
+              "PLRo_overall_0",
+              "product_quality_fivestars",
+              "PLRoNot",
+              1.0
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_onestars",
+              "PLRo",
+              0.1
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_twostars",
+              "PLRo",
+              0.02
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_threestars",
+              "PLRo",
+              0.005
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_fourstars",
+              "PLRo",
+              0.02
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_fivestars",
+              "PLRo",
+              0.1
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_onestars",
+              "PLRoNot",
+              0.9
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_twostars",
+              "PLRoNot",
+              0.98
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_threestars",
+              "PLRoNot",
+              0.995
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_fourstars",
+              "PLRoNot",
+              0.98
+            ],
+            [
+              "PLRo_overall_2",
+              "product_quality_fivestars",
+              "PLRoNot",
+              0.9
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_onestars",
+              "PLRo",
+              0.25
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_twostars",
+              "PLRo",
+              0.06
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_threestars",
+              "PLRo",
+              0.005
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_fourstars",
+              "PLRo",
+              0.06
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_fivestars",
+              "PLRo",
+              0.25
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_onestars",
+              "PLRoNot",
+              0.75
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_twostars",
+              "PLRoNot",
+              0.94
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_threestars",
+              "PLRoNot",
+              0.995
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_fourstars",
+              "PLRoNot",
+              0.94
+            ],
+            [
+              "PLRo_overall_5",
+              "product_quality_fivestars",
+              "PLRoNot",
+              0.75
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_onestars",
+              "PLRo",
+              0.2
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_twostars",
+              "PLRo",
+              0.1
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_threestars",
+              "PLRo",
+              0.08
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_fourstars",
+              "PLRo",
+              0.1
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_fivestars",
+              "PLRo",
+              0.2
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_onestars",
+              "PLRoNot",
+              0.8
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_twostars",
+              "PLRoNot",
+              0.9
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_threestars",
+              "PLRoNot",
+              0.92
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_fourstars",
+              "PLRoNot",
+              0.9
+            ],
+            [
+              "PLRo_overall_10",
+              "product_quality_fivestars",
+              "PLRoNot",
+              0.8
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_onestars",
+              "PLRo",
+              0.3
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_twostars",
+              "PLRo",
+              0.15
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_threestars",
+              "PLRo",
+              0.12
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_fourstars",
+              "PLRo",
+              0.15
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_fivestars",
+              "PLRo",
+              0.3
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_onestars",
+              "PLRoNot",
+              0.7
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_twostars",
+              "PLRoNot",
+              0.85
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_threestars",
+              "PLRoNot",
+              0.88
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_fourstars",
+              "PLRoNot",
+              0.85
+            ],
+            [
+              "PLRo_overall_15",
+              "product_quality_fivestars",
+              "PLRoNot",
+              0.7
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_onestars",
+              "PLRo",
+              0.6
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_twostars",
+              "PLRo",
+              0.3
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_threestars",
+              "PLRo",
+              0.23
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_fourstars",
+              "PLRo",
+              0.3
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_fivestars",
+              "PLRo",
+              0.6
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_onestars",
+              "PLRoNot",
+              0.4
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_twostars",
+              "PLRoNot",
+              0.7
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_threestars",
+              "PLRoNot",
+              0.77
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_fourstars",
+              "PLRoNot",
+              0.7
+            ],
+            [
+              "PLRo_overall_30",
+              "product_quality_fivestars",
+              "PLRoNot",
+              0.4
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_onestars",
+              "PLRo",
+              0.95
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_twostars",
+              "PLRo",
+              0.8
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_threestars",
+              "PLRo",
+              0.55
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_fourstars",
+              "PLRo",
+              0.8
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_fivestars",
+              "PLRo",
+              0.95
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_onestars",
+              "PLRoNot",
+              0.05
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_twostars",
+              "PLRoNot",
+              0.20
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_threestars",
+              "PLRoNot",
+              0.45
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_fourstars",
+              "PLRoNot",
+              0.20
+            ],
+            [
+              "PLRo_overall_70",
+              "product_quality_fivestars",
+              "PLRoNot",
+              0.05
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_onestars",
+              "PLRo",
+              1.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_twostars",
+              "PLRo",
+              1.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_threestars",
+              "PLRo",
+              1.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_fourstars",
+              "PLRo",
+              1.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_fivestars",
+              "PLRo",
+              1.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_onestars",
+              "PLRoNot",
+              0.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_twostars",
+              "PLRoNot",
+              0.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_threestars",
+              "PLRoNot",
+              0.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_fourstars",
+              "PLRoNot",
+              0.0
+            ],
+            [
+              "PLRo_overall_100",
+              "product_quality_fivestars",
+              "PLRoNot",
+              0.0
+            ]
+          ]
+        }
+      }
+    },
+    "supplier_switch": {
+      "discrete_distributions": {
+        "supplier_profit": {
+          "supplier_profit": 0.8,
+          "supplier_profitNot": 0.2
+        },
+        "supplier_min_score": {
+          "supplier_min_score": 0.5,
+          "supplier_min_scoreNot": 0.5
+        },
+        "supplier_exogenousReputation": {
+          "supplier_exogenousReputation": 0.0,
+          "supplier_exogenousReputationNot": 1.0
+        }
+      },
+      "conditional_probability": {
+        "supplier_switch": {
+          "RVs": [
+            "supplier_exogenousReputation",
+            "supplier_min_score",
+            "supplier_profit"
+          ],
+          "CPT": [
+            [
+              "supplier_exogenousReputation",
+              "supplier_min_score",
+              "supplier_profit",
+              "supplier_switch",
+              0.0001
+            ],
+            [
+              "supplier_exogenousReputation",
+              "supplier_min_scoreNot",
+              "supplier_profit",
+              "supplier_switch",
+              0.0005
+            ],
+            [
+              "supplier_exogenousReputation",
+              "supplier_min_score",
+              "supplier_profitNot",
+              "supplier_switch",
+              0.0015
+            ],
+            [
+              "supplier_exogenousReputation",
+              "supplier_min_scoreNot",
+              "supplier_profitNot",
+              "supplier_switch",
+              0.0025
+            ],
+            [
+              "supplier_exogenousReputation",
+              "supplier_min_score",
+              "supplier_profit",
+              "supplier_switchNot",
+              0.9999
+            ],
+            [
+              "supplier_exogenousReputation",
+              "supplier_min_scoreNot",
+              "supplier_profit",
+              "supplier_switchNot",
+              0.9995
+            ],
+            [
+              "supplier_exogenousReputation",
+              "supplier_min_score",
+              "supplier_profitNot",
+              "supplier_switchNot",
+              0.9985
+            ],
+            [
+              "supplier_exogenousReputation",
+              "supplier_min_scoreNot",
+              "supplier_profitNot",
+              "supplier_switchNot",
+              0.9975
+            ],
+            [
+              "supplier_exogenousReputationNot",
+              "supplier_min_score",
+              "supplier_profit",
+              "supplier_switch",
+              0.001
+            ],
+            [
+              "supplier_exogenousReputationNot",
+              "supplier_min_scoreNot",
+              "supplier_profit",
+              "supplier_switch",
+              0.005
+            ],
+            [
+              "supplier_exogenousReputationNot",
+              "supplier_min_score",
+              "supplier_profitNot",
+              "supplier_switch",
+              0.015
+            ],
+            [
+              "supplier_exogenousReputationNot",
+              "supplier_min_scoreNot",
+              "supplier_profitNot",
+              "supplier_switch",
+              0.025
+            ],
+            [
+              "supplier_exogenousReputationNot",
+              "supplier_min_score",
+              "supplier_profit",
+              "supplier_switchNot",
+              0.999
+            ],
+            [
+              "supplier_exogenousReputationNot",
+              "supplier_min_scoreNot",
+              "supplier_profit",
+              "supplier_switchNot",
+              0.995
+            ],
+            [
+              "supplier_exogenousReputationNot",
+              "supplier_min_score",
+              "supplier_profitNot",
+              "supplier_switchNot",
+              0.985
+            ],
+            [
+              "supplier_exogenousReputationNot",
+              "supplier_min_scoreNot",
+              "supplier_profitNot",
+              "supplier_switchNot",
+              0.975
+            ]
+          ]
+        }
+      }
+    },
+    "product_switch": {
+      "discrete_distributions": {
+        "product_profit_current": {
+          "product_profit_current": 0.8,
+          "product_profit_currentNot": 0.2
+        },
+        "product_min_score": {
+          "product_min_score": 0.5,
+          "product_min_scoreNot": 0.5
+        }
+      },
+      "conditional_probability": {
+        "product_switch": {
+          "RVs": [
+            "product_min_score",
+            "product_profit_current"
+          ],
+          "CPT": [
+            [
+              "product_min_score",
+              "product_profit_current",
+              "product_switch",
+              0.001
+            ],
+            [
+              "product_min_scoreNot",
+              "product_profit_current",
+              "product_switch",
+              0.005
+            ],
+            [
+              "product_min_score",
+              "product_profit_currentNot",
+              "product_switch",
+              0.015
+            ],
+            [
+              "product_min_scoreNot",
+              "product_profit_currentNot",
+              "product_switch",
+              0.025
+            ],
+            [
+              "product_min_score",
+              "product_profit_current",
+              "product_switchNot",
+              0.999
+            ],
+            [
+              "product_min_scoreNot",
+              "product_profit_current",
+              "product_switchNot",
+              0.995
+            ],
+            [
+              "product_min_score",
+              "product_profit_currentNot",
+              "product_switchNot",
+              0.985
+            ],
+            [
+              "product_min_scoreNot",
+              "product_profit_currentNot",
+              "product_switchNot",
+              0.975
+            ]
+          ]
+        }
+      }
+    },
+    "supplier_exogenousReputation": {
+      "discrete_distributions": {
+        "supplier_exogenousReputation": {
+          "supplier_exogenousReputation": 0.1,
+          "supplier_exogenousReputationNot": 0.9
+        }
+      },
+      "conditional_probability": {}
+    },
+    "num_bought_scams_initial": {
+      "discrete_distributions": {
+        "product_reputation": {
+          "product_reputation_belowAverage": 0.4,
+          "product_reputation_medium": 0.5,
+          "product_reputation_topTen": 0.1
+        },
+        "supplier_exogenousReputation": {
+          "supplier_exogenousReputation": 0.1,
+          "supplier_exogenousReputationNot": 0.9
+        },
+        "product_profit_current": {
+          "product_profit_current": 0.5,
+          "product_profit_currentNot": 0.5
+        }
+      },
+      "conditional_probability": {
+        "product_initialScam": {
+          "RVs": [
+            "product_reputation",
+            "supplier_exogenousReputation",
+            "product_profit_current"
+          ],
+          "CPT": [
+            [
+              "product_reputation_belowAverage",
+              "supplier_exogenousReputation",
+              "product_profit_current",
+              "product_initialScam_higher",
+              0.0
+            ],
+            [
+              "product_reputation_topTen",
+              "supplier_exogenousReputationNot",
+              "product_profit_current",
+              "product_initialScam_higher",
+              0.0
+            ],
+            [
+              "product_reputation_belowAverage",
+              "supplier_exogenousReputationNot",
+              "product_profit_current",
+              "product_initialScam_higher",
+              0.01
+            ],
+            [
+              "product_reputation_topTen",
+              "supplier_exogenousReputation",
+              "product_profit_current",
+              "product_initialScam_higher",
+              0.0
+            ],
+            [
+              "product_reputation_belowAverage",
+              "supplier_exogenousReputation",
+              "product_profit_currentNot",
+              "product_initialScam_higher",
+              0.01
+            ],
+            [
+              "product_reputation_topTen",
+              "supplier_exogenousReputationNot",
+              "product_profit_currentNot",
+              "product_initialScam_higher",
+              0.05
+            ],
+            [
+              "product_reputation_belowAverage",
+              "supplier_exogenousReputationNot",
+              "product_profit_currentNot",
+              "product_initialScam_higher",
+              0.05
+            ],
+            [
+              "product_reputation_topTen",
+              "supplier_exogenousReputation",
+              "product_profit_currentNot",
+              "product_initialScam_higher",
+              0.01
+            ],
+            [
+              "product_reputation_belowAverage",
+              "supplier_exogenousReputation",
+              "product_profit_current",
+              "product_initialScam_lower",
+              0.0
+            ],
+            [
+              "product_reputation_topTen",
+              "supplier_exogenousReputationNot",
+              "product_profit_current",
+              "product_initialScam_lower",
+              0.0
+            ],
+            [
+              "product_reputation_belowAverage",
+              "supplier_exogenousReputationNot",
+              "product_profit_current",
+              "product_initialScam_lower",
+              0.01
+            ],
+            [
+              "product_reputation_topTen",
+              "supplier_exogenousReputation",
+              "product_profit_current",
+              "product_initialScam_lower",
+              0.0
+            ],
+            [
+              "product_reputation_belowAverage",
+              "supplier_exogenousReputation",
+              "product_profit_currentNot",
+              "product_initialScam_lower",
+              0.0
+            ],
+            [
+              "product_reputation_topTen",
+              "supplier_exogenousReputationNot",
+              "product_profit_currentNot",
+              "product_initialScam_lower",
+              0.05
+            ],
+            [
+              "product_reputation_belowAverage",
+              "supplier_exogenousReputationNot",
+              "product_profit_currentNot",
+              "product_initialScam_lower",
+              0.05
+            ],
+            [
+              "product_reputation_topTen",
+              "supplier_exogenousReputation",
+              "product_profit_currentNot",
+              "product_initialScam_lower",
+              0.01
+            ],
+            [
+              "product_reputation_belowAverage",
+              "supplier_exogenousReputation",
+              "product_profit_current",
+              "product_initialScam_even",
+              1.0
+            ],
+            [
+              "product_reputation_topTen",
+              "supplier_exogenousReputationNot",
+              "product_profit_current",
+              "product_initialScam_even",
+              1.0
+            ],
+            [
+              "product_reputation_belowAverage",
+              "supplier_exogenousReputationNot",
+              "product_profit_current",
+              "product_initialScam_even",
+              0.98
+            ],
+            [
+              "product_reputation_topTen",
+              "supplier_exogenousReputation",
+              "product_profit_current",
+              "product_initialScam_even",
+              1.0
+            ],
+            [
+              "product_reputation_belowAverage",
+              "supplier_exogenousReputation",
+              "product_profit_currentNot",
+              "product_initialScam_even",
+              0.99
+            ],
+            [
+              "product_reputation_topTen",
+              "supplier_exogenousReputationNot",
+              "product_profit_currentNot",
+              "product_initialScam_even",
+              0.9
+            ],
+            [
+              "product_reputation_belowAverage",
+              "supplier_exogenousReputationNot",
+              "product_profit_currentNot",
+              "product_initialScam_even",
+              0.9
+            ],
+            [
+              "product_reputation_topTen",
+              "supplier_exogenousReputation",
+              "product_profit_currentNot",
+              "product_initialScam_even",
+              0.98
+            ],
+            [
+              "product_reputation_medium",
+              "supplier_exogenousReputation",
+              "product_profit_current",
+              "product_initialScam_higher",
+              0.0
+            ],
+            [
+              "product_reputation_medium",
+              "supplier_exogenousReputationNot",
+              "product_profit_current",
+              "product_initialScam_higher",
+              0.01
+            ],
+            [
+              "product_reputation_medium",
+              "supplier_exogenousReputation",
+              "product_profit_currentNot",
+              "product_initialScam_higher",
+              0.01
+            ],
+            [
+              "product_reputation_medium",
+              "supplier_exogenousReputationNot",
+              "product_profit_currentNot",
+              "product_initialScam_higher",
+              0.05
+            ],
+            [
+              "product_reputation_medium",
+              "supplier_exogenousReputation",
+              "product_profit_current",
+              "product_initialScam_lower",
+              0.0
+            ],
+            [
+              "product_reputation_medium",
+              "supplier_exogenousReputationNot",
+              "product_profit_current",
+              "product_initialScam_lower",
+              0.01
+            ],
+            [
+              "product_reputation_medium",
+              "supplier_exogenousReputation",
+              "product_profit_currentNot",
+              "product_initialScam_lower",
+              0.0
+            ],
+            [
+              "product_reputation_medium",
+              "supplier_exogenousReputationNot",
+              "product_profit_currentNot",
+              "product_initialScam_lower",
+              0.05
+            ],
+            [
+              "product_reputation_medium",
+              "supplier_exogenousReputation",
+              "product_profit_current",
+              "product_initialScam_even",
+              1.0
+            ],
+            [
+              "product_reputation_medium",
+              "supplier_exogenousReputationNot",
+              "product_profit_current",
+              "product_initialScam_even",
+              0.98
+            ],
+            [
+              "product_reputation_medium",
+              "supplier_exogenousReputation",
+              "product_profit_currentNot",
+              "product_initialScam_even",
+              0.99
+            ],
+            [
+              "product_reputation_medium",
+              "supplier_exogenousReputationNot",
+              "product_profit_currentNot",
+              "product_initialScam_even",
+              0.9
+            ]
+          ]
+        }
+      }
+    },
+    "num_bought_scams": {
+      "discrete_distributions": {
+        "product_Dprofit": {
+          "product_DprofitLoss": 0.1,
+          "product_DprofitGain": 0.1,
+          "product_DprofitEven": 0.8
+        },
+        "product_profit_current": {
+          "product_profit_current": 0.5,
+          "product_profit_currentNot": 0.5
+        },
+        "supplier_lastScam": {
+          "supplier_lastScam_higher": 0.5,
+          "supplier_lastScam_lower": 0.5
+        },
+        "supplier_lastLastScam": {
+          "supplier_lastLastScam_higher": 0.5,
+          "supplier_lastLastScam_lower": 0.5
+        }
+      },
+      "conditional_probability": {
+        "product_profit": {
+          "RVs": [
+            "product_Dprofit",
+            "product_profit_current"
+          ],
+          "CPT": [
+            [
+              "product_DprofitLoss",
+              "product_profit_current",
+              "product_profit",
+              0.0
+            ],
+            [
+              "product_DprofitGain",
+              "product_profit_current",
+              "product_profit",
+              1.0
+            ],
+            [
+              "product_DprofitEven",
+              "product_profit_current",
+              "product_profit",
+              1.00
+            ],
+            [
+              "product_DprofitLoss",
+              "product_profit_currentNot",
+              "product_profit",
+              0.0
+            ],
+            [
+              "product_DprofitGain",
+              "product_profit_currentNot",
+              "product_profit",
+              1.0
+            ],
+            [
+              "product_DprofitEven",
+              "product_profit_currentNot",
+              "product_profit",
+              0.00
+            ],
+            [
+              "product_DprofitLoss",
+              "product_profit_current",
+              "product_profitNot",
+              1.0
+            ],
+            [
+              "product_DprofitGain",
+              "product_profit_current",
+              "product_profitNot",
+              0.0
+            ],
+            [
+              "product_DprofitEven",
+              "product_profit_current",
+              "product_profitNot",
+              0.00
+            ],
+            [
+              "product_DprofitLoss",
+              "product_profit_currentNot",
+              "product_profitNot",
+              1.0
+            ],
+            [
+              "product_DprofitGain",
+              "product_profit_currentNot",
+              "product_profitNot",
+              0.0
+            ],
+            [
+              "product_DprofitEven",
+              "product_profit_currentNot",
+              "product_profitNot",
+              1.00
+            ]
+          ]
+        },
+        "product_scam": {
+          "RVs": [
+            "supplier_lastScam",
+            "supplier_lastLastScam",
+            "product_profit"
+          ],
+          "CPT": [
+            [
+              "supplier_lastScam_lower",
+              "supplier_lastLastScam_higher",
+              "product_profit",
+              "product_scam_higher",
+              0.05
+            ],
+            [
+              "supplier_lastScam_higher",
+              "supplier_lastLastScam_lower",
+              "product_profit",
+              "product_scam_higher",
+              0.01
+            ],
+            [
+              "supplier_lastScam_lower",
+              "supplier_lastLastScam_lower",
+              "product_profit",
+              "product_scam_higher",
+              0.0
+            ],
+            [
+              "supplier_lastScam_higher",
+              "supplier_lastLastScam_higher",
+              "product_profit",
+              "product_scam_higher",
+              0.01
+            ],
+            [
+              "supplier_lastScam_lower",
+              "supplier_lastLastScam_higher",
+              "product_profitNot",
+              "product_scam_higher",
+              0.05
+            ],
+            [
+              "supplier_lastScam_higher",
+              "supplier_lastLastScam_lower",
+              "product_profitNot",
+              "product_scam_higher",
+              0.01
+            ],
+            [
+              "supplier_lastScam_lower",
+              "supplier_lastLastScam_lower",
+              "product_profitNot",
+              "product_scam_higher",
+              0.1
+            ],
+            [
+              "supplier_lastScam_higher",
+              "supplier_lastLastScam_higher",
+              "product_profitNot",
+              "product_scam_higher",
+              0.01
+            ],
+            [
+              "supplier_lastScam_lower",
+              "supplier_lastLastScam_higher",
+              "product_profit",
+              "product_scam_lower",
+              0.01
+            ],
+            [
+              "supplier_lastScam_higher",
+              "supplier_lastLastScam_lower",
+              "product_profit",
+              "product_scam_lower",
+              0.05
+            ],
+            [
+              "supplier_lastScam_lower",
+              "supplier_lastLastScam_lower",
+              "product_profit",
+              "product_scam_lower",
+              0.1
+            ],
+            [
+              "supplier_lastScam_higher",
+              "supplier_lastLastScam_higher",
+              "product_profit",
+              "product_scam_lower",
+              0.0
+            ],
+            [
+              "supplier_lastScam_lower",
+              "supplier_lastLastScam_higher",
+              "product_profitNot",
+              "product_scam_lower",
+              0.01
+            ],
+            [
+              "supplier_lastScam_higher",
+              "supplier_lastLastScam_lower",
+              "product_profitNot",
+              "product_scam_lower",
+              0.05
+            ],
+            [
+              "supplier_lastScam_lower",
+              "supplier_lastLastScam_lower",
+              "product_profitNot",
+              "product_scam_lower",
+              0.01
+            ],
+            [
+              "supplier_lastScam_higher",
+              "supplier_lastLastScam_higher",
+              "product_profitNot",
+              "product_scam_lower",
+              0.1
+            ],
+            [
+              "supplier_lastScam_lower",
+              "supplier_lastLastScam_higher",
+              "product_profit",
+              "product_scam_even",
+              0.94
+            ],
+            [
+              "supplier_lastScam_higher",
+              "supplier_lastLastScam_lower",
+              "product_profit",
+              "product_scam_even",
+              0.94
+            ],
+            [
+              "supplier_lastScam_lower",
+              "supplier_lastLastScam_lower",
+              "product_profit",
+              "product_scam_even",
+              0.90
+            ],
+            [
+              "supplier_lastScam_higher",
+              "supplier_lastLastScam_higher",
+              "product_profit",
+              "product_scam_even",
+              0.90
+            ],
+            [
+              "supplier_lastScam_lower",
+              "supplier_lastLastScam_higher",
+              "product_profitNot",
+              "product_scam_even",
+              0.94
+            ],
+            [
+              "supplier_lastScam_higher",
+              "supplier_lastLastScam_lower",
+              "product_profitNot",
+              "product_scam_even",
+              0.94
+            ],
+            [
+              "supplier_lastScam_lower",
+              "supplier_lastLastScam_lower",
+              "product_profitNot",
+              "product_scam_even",
+              0.89
+            ],
+            [
+              "supplier_lastScam_higher",
+              "supplier_lastLastScam_higher",
+              "product_profitNot",
+              "product_scam_even",
+              0.89
+            ]
+          ]
+        }
+      }
+    }
+  }
+}
+
+

@@ -22,7 +22,7 @@ class Adapters():
     def antons_view(self):
 
         na= self.config['macro_views']['antons_view']['parameters']['NA']
-        gr= self.config['macro_views']['antons_view']['parameters']['GR']
+        #grs= self.config['macro_views']['antons_view']['parameters']['GRs']
         crg= self.config['macro_views']['antons_view']['parameters']['CRg']
         crb= self.config['macro_views']['antons_view']['parameters']['CRb']
         ntg= self.config['macro_views']['antons_view']['parameters']['NTg']
@@ -42,19 +42,32 @@ class Adapters():
         gf = self.config['macro_views']['antons_view']['parameters']['GF']
 
         self.config ['parameters']['num_users'] = na
-        num_bad_agents = na //(gr+1)
-        num_good_agents = gr*num_bad_agents
+        # num_bad_agents = na //(gr+1)
+        # num_good_agents = gr*num_bad_agents
+        #
+        #
+        # num_good_consumers = (num_good_agents*crg) // (crg + 1)
+        # num_good_suppliers = num_good_consumers // crg
+        # num_bad_consumers = (num_bad_agents*crb) // (crb + 1)
+        # num_bad_suppliers = num_bad_consumers // crb
+        #
+        # num_consumers = num_good_consumers + num_bad_consumers
+        # num_bad_consumers = gf * num_consumers
+        # num_good_consumers = num_consumers - num_bad_consumers
+        # num_bad_agents = num_bad_consumers + num_bad_suppliers
 
+        # all the above doesnt really work.  GR is no longer needed, now that we have GF.
 
-        num_good_consumers = (num_good_agents*crg) // (crg + 1)
-        num_good_suppliers = num_good_consumers // crg
-        num_bad_consumers = (num_bad_agents*crb) // (crb + 1)
-        num_bad_suppliers = num_bad_consumers // crb
-
-        num_consumers = num_good_consumers + num_bad_consumers
-        num_bad_consumers = gf * num_consumers
-        num_good_consumers = num_consumers - num_bad_consumers
+        num_bad_consumers = int(round((gf*na*crg)/(1.0+crg-gf+((gf*crg)/crb))))
+        num_bad_suppliers = int(round(num_bad_consumers/crb))
         num_bad_agents = num_bad_consumers + num_bad_suppliers
+        num_good_agents = int(round(na - num_bad_agents))
+        num_consumers = int(round(num_bad_consumers/gf))
+        num_good_consumers = num_consumers -num_bad_consumers
+        num_good_suppliers = num_good_agents - num_good_consumers
+        num_suppliers = num_bad_suppliers + num_good_suppliers
+
+
 
         self.config['parameters']['chance_of_criminal']=num_bad_agents /na
         date_time = self.config['parameters']['initial_date']
@@ -111,8 +124,14 @@ class Adapters():
         new_need_cycle = {p:[1/(sample[i]*ntg),stdev, min, max] for i,p in enumerate(product_list)}
         self.config['parameters']['need_cycle'] = new_need_cycle
 
-        new_criminal_need_cycle = {p:[1/(sample[i]*ntb),stdev, min, max] for i,p in enumerate(product_list) if (
-                p in self.config['parameters']['criminal_category_list'] )}
+        sub_product_list = [p for p in product_list if (
+                p in self.config['parameters']['criminal_category_list'] )]
+        sub_sample = [ sample[int(p)] for p in sub_product_list]
+        sub_sample_sum = sum(sub_sample)
+        normalized_sample = [s/sub_sample_sum for s in sub_sample]
+        norm_tuples = zip(sub_product_list,normalized_sample )
+
+        new_criminal_need_cycle = {p:[1/(s*ntb),stdev, min, max] for p,s in norm_tuples}
         self.config['parameters']['criminal_need_cycle'] = new_criminal_need_cycle
 
         stdev = self.config['macro_views']['antons_view']['supplement']['price_stdev']

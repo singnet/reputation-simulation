@@ -197,7 +197,7 @@ class ReputationAgent(Agent):
                                                     self.model.quality_deviation_from_supplier_distribution.rvs())
             self.products[category][pid]["production_cost"] = (self.products[category][pid]["price"] *
                                                                    self.products[category][pid]["quality"])/2
-            self.products[category][pid]["black_market"] = not self.good
+            self.products[category][pid]["black_market"] = False
             self.products[category][pid]["last_last_sold"]= 0
             self.products[category][pid]["last_last_income"]= 0
             self.products[category][pid]["last_last_cost"]= 0
@@ -213,10 +213,12 @@ class ReputationAgent(Agent):
 
     def initialize_products(self):
         self.products = {}
+        num_supplying = len(self.supplying)
         # create products for every category I am selling
         # attrs:  price, production_cost, quality, black_market, last_sold, last_cost, avg_sold, avg_cost
         for category, _ in self.supplying.items():
-            num_products = int(round(self.model.num_products_supplied_distribution.rvs()))
+            num_products = int(round(self.model.num_products_supplied_distribution.rvs()
+                                          /num_supplying))
             self.products[category] = {}
             for _ in range(num_products):
                 pid = self.model.next_product_id()
@@ -228,7 +230,7 @@ class ReputationAgent(Agent):
                 self.products[category][pid]["quality"]= 1 if quality > 1 else 0 if quality < 0 else quality
                 self.products[category][pid]["production_cost"] = (self.products[category][pid]["price"] *
                                                                        self.products[category][pid]["quality"])/2
-                self.products[category][pid]["black_market"] = not self.good
+                self.products[category][pid]["black_market"] = False
                 self.products[category][pid]["last_last_sold"]= 0
                 self.products[category][pid]["last_last_income"]= 0
                 self.products[category][pid]["last_last_cost"]= 0
@@ -289,7 +291,7 @@ class ReputationAgent(Agent):
                 if category not in current_ratings:
                     current_ratings[category] = {}
                 for good_string, _ in good_string_dict.items():
-                    if good_string in self.model.orig_ranks:
+                    if self.model.orig_ranks and good_string in self.model.orig_ranks:
                         current_rank = self.model.orig_ranks[good_string]
                         #current_rank_str = str(current_rank)
                         bayesian_number = self.map_rank_to_bayesian_number(current_rank)
@@ -375,14 +377,16 @@ class ReputationAgent(Agent):
         self.anomaly_detection_data.append(new_row)
 
     def reset_shopping_stats(self):
-        self.add_predictive_row()
+        if self.p["rep_system_booster"] == "predictiveness":
+            self.add_predictive_row()
         if len(self.shopping_history) > 1:
             self.t0 = self.shopping_history.pop(0)
             self.t1 = copy.deepcopy(self.shopping_history[0])
             #print("agent ${0} t0:${1} t1:${2}".format(self.unique_id, self.t0, self.t1))
-            self.add_anomaly_row(self.t0,self.t1)
+            if self.p["rep_system"] == "anomaly":
+                self.add_anomaly_row(self.t0,self.t1)
             ratings = self.shopping_rating
-            if len(ratings)> 0:
+            if self.p["rep_system_booster"] == "predictiveness" and len(ratings)> 0:
                 self.add_pending_predictiveness_data(self.t0, self.t1, ratings)
         today= {good: False for good, chance in self.p["chance_of_supplying"].items()}
         self.shopping_history.append(today)
@@ -444,10 +448,11 @@ class ReputationAgent(Agent):
         available = []
         if good in self.hiring_product:
             for product,hiring  in self.hiring_product[good].items():
+                numprods = len(self.criminal_consumers_product[good][product])
                 if (hiring and
-                        len(self.criminal_consumers_product[good][product])
-                        < min(self.num_criminal_consumers_product[good][product],self.p['max_scam_purchases']) and
-                        not product in previously_bought):
+                        not product in previously_bought and
+                        numprods < self.p['max_scam_purchases'] and
+                        numprods < self.num_criminal_consumers_product[good][product]):
                     available.append(product)
         random_available = random.choice(available) if len(available)> 0 else None
         return random_available
@@ -458,8 +463,11 @@ class ReputationAgent(Agent):
         if self.p['product_mode']:
             if good in supplier_agent.hiring_product:
                 for product,hiring  in supplier_agent.hiring_product[good].items():
-                    if hiring and len(supplier_agent.criminal_consumers_product[good][product]
-                                      ) < min(supplier_agent.num_criminal_consumers_product[good][product],self.p['max_scam_purchases']):
+                    numproduct= len(supplier_agent.criminal_consumers_product[good][product])
+                    if (hiring and
+                        numproduct < self.p['max_scam_purchases'] and
+                        numproduct < supplier_agent.num_criminal_consumers_product[good][product]):
+
                         needs = True
                     else:
                         supplier_agent.hiring_product[good][product] = False
@@ -685,7 +693,15 @@ class ReputationAgent(Agent):
         new_id = str(new_root_id) + "-" + increment
         return new_id
 
+    def alias_with_increment(self, alias_int, id_str):
+        #given an integer alias , get the increment off of the name
+        #put it on the alias and return it.  its a possible past alias
+        #that shold be removed
 
+        root_id_match = self.model.id_pattern.search(id_str)
+        increment = root_id_match.group(2)
+        new_id = str(alias_int) + "-" + increment
+        return new_id
 
     def new_id(self):
         #use the original id value, as an agent may have changed ids
@@ -1138,11 +1154,12 @@ class ReputationAgent(Agent):
                 scam_periods_so_far = (self.model.daynum // self.scam_period) + 1
                 for i in range(scam_periods_so_far):
                     alias = (i * self.p['num_users']) + self.model.int_id(self.model.orig[supplier])
-                    if alias != supplier and alias in self.model.suppliers[good]:
-                        self.model.suppliers[good].remove(alias)
+                    alias_str = self.alias_with_increment(alias,supplier)
+                    if alias_str != supplier and alias_str in self.model.suppliers[good]:
+                        self.model.suppliers[good].remove(alias_str)
                         if not self.good:
-                            self.model.criminal_suppliers[good].remove(alias)
-                        self.model.finalize_rank(alias)
+                            self.model.criminal_suppliers[good].remove(alias_str)
+                        self.model.finalize_rank(alias_str)
                 self.model.average_rank_history.flush()
 
     def choose_partners(self):
@@ -1259,7 +1276,9 @@ class ReputationAgent(Agent):
                                     # if not open to a new experience just use last product they used for that good
                                     #self.suppliers[good].append(key)
                                 else:
-                                    print ("Product {0} is not in suppliers product list but is in product details")
+                                    product = self.choose_random_product(key, good)
+                                    self.set_supplier(key,good,product)
+                                    #print ("Product {0} is not in suppliers product list but is in product details".format(product))
             elif len(self.suppliers[good]) < 1:
 
                 under_threshold = set([key for key, ratings_tuple in
@@ -1376,7 +1395,8 @@ class ReputationAgent(Agent):
             self.model.add_good_consumer_rating(perception)
 
             quality = supplier_agent.products[good][product]["quality"]
-            self.model.add_organic_buy(price,quality)
+            black_market = supplier_agent.products[good][product]["black_market"]
+            self.model.add_organic_buy(price,quality,black_market)
             if self.p['product_mode']:
                 self.record_shopping(supplier_agent,supplier, good, product,rating)
                 supplier_agent.note_product_purchase(good, product, amount)
@@ -1471,6 +1491,8 @@ class ReputationAgent(Agent):
             if not self.supplier_inactive(supplier_id):
                 self.model.save_info_for_market_volume_report(self, self.model.orig[supplier], price)
                 supplier_agent.exogenous_reputation_effect()
+                supplier_agent.products[good][product]["black_market"] = True
+
                 if self.model.error_log:
                     self.model.error_log.write("supplier {0} purchased amount {1} category {2} product {3} scam review from consumer {4}\n".format(
                     supplier_id,amount,good,product,self.unique_id))
