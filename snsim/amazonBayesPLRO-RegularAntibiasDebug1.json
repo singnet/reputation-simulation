@@ -333,11 +333,16 @@
         ]
       },
       "model": {
-        "bias": [
+        "predictiveness": [
+          {
+            "parameters": {
+                "use_java": true
+            }
+          },
           {
             "parameters": {
               "reputation_parameters": {
-                "rating_bias": true
+                "predictiveness": 1.0
               }
             }
           },
@@ -351,7 +356,43 @@
           {
             "parameters": {
               "reputation_parameters": {
-                "denomination": true
+                "unrated": false
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "ratings": 1.0
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "spendings": 0.0
+              }
+            }
+          }
+        ],
+
+        "bias": [
+          {
+            "parameters": {
+                "use_java": true
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "rating_bias": true
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "weighting": true
               }
             }
           },
@@ -382,6 +423,147 @@
             "parameters": {
               "reputation_parameters": {
                 "weighting": false
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "unrated": false
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "ratings": 1.0
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "spendings": 0.0
+              }
+            }
+          }
+        ],
+        "weighted": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "weighting": true
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "unrated": false
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "ratings": 1.0
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "spendings": 0.0
+              }
+            }
+          }
+        ],
+        "SOM": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "weighting": true
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "unrated": false
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "ratings": 0.5
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "spendings": 0.5
+              }
+            }
+          }
+        ],
+        "TOM": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "weighting": true
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "unrated": true
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "spendings": 1.0
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "ratings": 0.0
+              }
+            }
+          }
+        ],
+        "r_parents": [
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "parents": 1.0
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "rating_bias": false
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "fullnorm": true
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "weighting": true
               }
             }
           },
@@ -450,15 +632,6 @@
               "antons_view": {
                 "parameters": {
                   "CRb": 9
-                }
-              }
-            }
-          },
-          {
-            "macro_views": {
-              "antons_view": {
-                "parameters": {
-                  "NTb": 2
                 }
               }
             }
@@ -537,15 +710,6 @@
               "antons_view": {
                 "parameters": {
                   "CRb": 1.5
-                }
-              }
-            }
-          },
-          {
-            "macro_views": {
-              "antons_view": {
-                "parameters": {
-                  "NTb": 2
                 }
               }
             }
