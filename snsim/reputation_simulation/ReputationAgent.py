@@ -718,6 +718,13 @@ class ReputationAgent(Agent):
         # and another agent with his supplying and
         # criminality requirements takes its place.
 
+
+        for good, price in self.supplying.items():
+            if self.unique_id in self.model.suppliers[good]:
+                self.model.suppliers[good].remove(self.unique_id)
+                if not self.good and self.unique_id in self.model.criminal_suppliers[good]:
+                    self.model.criminal_suppliers[good].remove(self.unique_id)
+
         self.model.finalize_rank(self.unique_id)
         self.model.average_rank_history.flush()
         new_id = self.new_id()
@@ -1157,9 +1164,13 @@ class ReputationAgent(Agent):
                     alias_str = self.alias_with_increment(alias,supplier)
                     if alias_str != supplier and alias_str in self.model.suppliers[good]:
                         self.model.suppliers[good].remove(alias_str)
-                        if not self.good:
+                        if not self.good and alias_str in self.model.criminal_suppliers[good]:
                             self.model.criminal_suppliers[good].remove(alias_str)
-                        self.model.finalize_rank(alias_str)
+
+            for i in range(scam_periods_so_far):
+                alias = (i * self.p['num_users']) + self.model.int_id(self.model.orig[supplier])
+                alias_str = self.alias_with_increment(alias, supplier)
+                self.model.finalize_rank(alias_str)
                 self.model.average_rank_history.flush()
 
     def choose_partners(self):

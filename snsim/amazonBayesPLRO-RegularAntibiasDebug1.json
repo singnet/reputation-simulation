@@ -336,6 +336,11 @@
         "predictiveness": [
           {
             "parameters": {
+                "port": 1181
+            }
+          },
+          {
+            "parameters": {
                 "use_java": true
             }
           },
@@ -377,6 +382,11 @@
         ],
 
         "bias": [
+          {
+            "parameters": {
+                "port": 1187
+            }
+          },
           {
             "parameters": {
                 "use_java": true
@@ -930,7 +940,7 @@
     "run_automatic_tests": false,
     "statistics_initialization": 0,
     "port": 1181,
-    "output_path": "amazonBayesPLRO-RegularAntibiasDebug15/",
+    "output_path": "amazonBayesParamSearch50/",
     "seed": 9573,
     "observer_mode": false,
     "randomize_initial_needs": true,
