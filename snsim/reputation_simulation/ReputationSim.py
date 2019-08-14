@@ -745,31 +745,79 @@ class ReputationSim(Model):
     def print_stats_product(self):
 
         bsl_daily = self.bsl_daily()
+        if bsl_daily is None or not isinstance(bsl_daily, float):
+            bsl_daily = -1.00
         sgp_daily = self.sgp_daily()
+        if sgp_daily is None or not isinstance(sgp_daily, float):
+            sgp_daily = -1.00
         sgp2_daily = self.sgp2_daily()
+        if sgp2_daily is None or not isinstance(sgp2_daily, float):
+            sgp2_daily = -1.00
         sgl_daily = self.sgl_daily()
+        if sgl_daily is None or not isinstance(sgl_daily, float):
+            sgl_daily = -1.00
         asp_daily = self.asp_daily()
+        if asp_daily is None or not isinstance(asp_daily, float):
+            asp_daily = -1.00
         utility_daily = self.utility_daily()
+        if utility_daily is None or not isinstance(utility_daily, float):
+            utility_daily = -1.00
 
         bsl_window = self.bsl_window()
+        if bsl_window is None or not isinstance(bsl_window, float):
+            bsl_window = -1.00
         sgp_window = self.sgp_window()
+        if sgp_window is None or not isinstance(sgp_window, float):
+            sgp_window = -1.00
         sgp2_window = self.sgp2_window()
+        if sgp2_window is None or not isinstance(sgp2_window, float):
+            sgp2_window = -1.00
         sgl_window = self.sgl_window()
+        if sgl_window is None or not isinstance(sgl_window, float):
+            sgl_window = -1.00
         asp_window = self.asp_window()
+        if asp_window is None or not isinstance(asp_window, float):
+            asp_window = -1.00
         utility_window = self.utility_window()
+        if utility_window is None or not isinstance(utility_window, float):
+            utility_window = -1.00
 
         bsl = self.bsl()
+        if bsl is None or not isinstance(bsl, float):
+            bsl = -1.00
         sgp = self.sgp()
+        if sgp is None or not isinstance(sgp, float):
+            sgp = -1.00
         sgp2 = self.sgp2()
+        if sgp2 is None or not isinstance(sgp2, float):
+            sgp2 = -1.00
         sgl = self.sgl()
+        if sgl is None or not isinstance(sgl, float):
+            sgl = -1.00
         asp = self.asp()
+        if asp is None or not isinstance(asp, float):
+            asp = -1.00
         omut = self.omut()
+        if omut is None or not isinstance(omut, float):
+            omut = -1.00
         market_volume = self.market_volume()
+        if market_volume is None or not isinstance(market_volume, float):
+            market_volume = -1.00
         maxproduct = self.maxproduct()
+        if maxproduct is None or not isinstance(maxproduct, float):
+            maxproduct = -1.00
         lts = self.loss_to_scam()
+        if lts is None or not isinstance(lts, float):
+            lts = -1.00
         pfs = self.profit_from_scam()
+        if pfs is None or not isinstance(pfs, float):
+            pfs = -1.00
         utility = self.utility()
+        if utility is None or not isinstance(utility, float):
+            utility = -1.00
         inequity = self.inequity()
+        if inequity is None or not isinstance(inequity, float):
+            inequity = -1.00
 
         if self.daynum % 30 == 0 and self.daynum >= self.parameters["statistics_initialization"]:
             print("""\n time:{11}, bsl:{0:.4f}, sgp:{1:.4f},  sgp2:{12:.4f}, sgl:{2:.4f}, asp:{3:.4f}, utility:{9:.4}, bsl_daily:{13:.4f}, sgp_daily:{14:.4f},  sgp2_daily:{15:.4f}, sgl_daily:{16:.4f}, asp_daily:{17:.4f}, utility_daily:{18:.4}, bsl_window:{19:.4f}, sgp_window:{20:.4f},  sgp2_window:{21:.4f}, sgl_window:{22:.4f}, asp_window:{23:.4f}, utility_window:{24:.4}, omut:{4:.4f}, market volume:{5:.4f}, maxproduct:{6:.4f}, lts:{7:.4f}, pfs:{8:.4f}, inequity:{10:.4f}\n""".format(
@@ -1844,7 +1892,7 @@ class Runner():
                     self.set_param(myconfigfile, setting)
                 my_param_str = param_str + name + "_"
                 # for sttarting in the middle of a batch run
-                #if not (
+                if not (
                         #my_param_str == 'r_20_1_'  or
                         #my_param_str == 'r_20_0.5_' or
                         #my_param_str == 'r_20_0.1_' or
@@ -1858,10 +1906,11 @@ class Runner():
                         #my_param_str == 'r_weighted_' or
                        # my_param_str == 'r_SOM_' or
                         #my_param_str == 'r_TOM_'
-                #):
+                    my_param_str.endswith("_noLE_NoOverlap_")
+                ):
                 #if not my_param_str.startswith("r"):
 
-                self.call(mycombolist, myconfigfile, rs, my_param_str)
+                    self.call(mycombolist, myconfigfile, rs, my_param_str)
         else:
             #new_seed = configfile['parameters']['seed'] + 1
             #set_param(configfile, {"seed": new_seed})
