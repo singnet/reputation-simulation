@@ -1,6 +1,6 @@
 ### Analysis instructions for running the reputation simulation
    (1) Modify json config file for your run
-  * "halfTenth.json" is an example of a config file
+  * "amazonBayes.json" is an example of a config file
   * Config files have four sections: macro_views, test, batch, and parameters. The parameters are the direct interface to the simulation, but the macro_views and batch section override what is the parameter section.  First the macro_views write over the parameters, then the batch write over them. The actual parameter set used for a run is written to its output folder.
     *  Marcroviews let the user use equations to parameterize the simulation in automated fashion:  parameters entered here are transalated with an adapter. 
     *  Test tells what unittests and ranges apply to this scenario. Both default and exception tests and bounds can be specified.
@@ -26,7 +26,7 @@
   * average rank history prints out the average ranks of agents during the time they are active in the simulation
   * results.tsv contains the results of tests
 		
- (4)   There are two ways to get metrics on the run,: one is by setting automate tests to true, in which case individual test results are in the folder under results.tsv.  After the fact, unittests can be run. 
+ (4)   Tests are automatically run.  There are two other ways to get metrics on the run,: one is by setting automate tests to true, in which case individual test results are in the folder under results.tsv.  After the fact, unittests can be run. 
   * The unittests are soft unittests for analysis purposes 
   * In the unittest case, make sure the config file mentioned in the Tests of the test folder contains the tests that you want run on each parameter combination and the directory of the simulation run to be tested.
     * Modify the test.json file to have the correct tests and correct directory, the rest of the file is ignored.  You can do this by copying the config file onto the file "test.json"
