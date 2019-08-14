@@ -26,6 +26,6 @@ $ pip install -e git+https://github.com/deborahduong/mesa.git#egg=mesa
 ## Usage
 
 ```sh
-$ python3 snsim/reputation_simulation/ReputationSim.py snsim/debugRn.json
+$ python3 snsim/reputation_simulation/ReputationSim.py snsim/amazonBayes.json
 ```
 
