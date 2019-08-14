@@ -333,6 +333,49 @@
         ]
       },
       "model": {
+        "norep": [
+          {
+            "parameters": {
+              "observer_mode": true
+            }
+          }
+        ],
+        "bayesianPredictiveness": [
+          {
+            "parameters": {
+              "rep_system": "aigents"
+            }
+          },
+          {
+            "parameters": {
+              "rep_system_booster": "predictiveness"
+            }
+          }
+        ],
+        "bayesianPredictivenessAnomaly": [
+          {
+            "parameters": {
+              "rep_system": "anomaly"
+            }
+          },
+          {
+            "parameters": {
+              "rep_system_booster": "predictiveness"
+            }
+          }
+        ],
+        "anomaly": [
+          {
+            "parameters": {
+              "rep_system": "anomaly"
+            }
+          },
+          {
+            "parameters": {
+              "rep_system_booster": "predictiveness-not"
+            }
+          }
+        ],
         "predictiveness": [
           {
             "parameters": {
@@ -980,7 +1023,7 @@
       "fullnorm": true,
       "weighting": true,
       "logratings": false,
-      "decayed": 0.5,
+      "decayed": 0.1,
       "liquid": true,
       "logranks": true,
       "downrating": false,
