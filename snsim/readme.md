@@ -25,8 +25,9 @@
   * rank history prints out the ranks of all agents in each row, with -1 meaning no ranking
   * average rank history prints out the average ranks of agents during the time they are active in the simulation
   * results.tsv contains the results of tests
+  * output_stats.tsv is a csv of all tests listed in the config file.  
 		
- (4)   Tests are automatically run.  There are two other ways to get metrics on the run,: one is by setting automate tests to true, in which case individual test results are in the folder under results.tsv.  After the fact, unittests can be run. 
+ (4)   Tests in the config file are automatically run and put in the output_stats.tsv.  The following information is deprecated:  There are two other ways to get metrics on the run,: one is by setting automate tests to true, in which case individual test results are in the folder under results.tsv.  After the fact, unittests can be run. 
   * The unittests are soft unittests for analysis purposes 
   * In the unittest case, make sure the config file mentioned in the Tests of the test folder contains the tests that you want run on each parameter combination and the directory of the simulation run to be tested.
     * Modify the test.json file to have the correct tests and correct directory, the rest of the file is ignored.  You can do this by copying the config file onto the file "test.json"
