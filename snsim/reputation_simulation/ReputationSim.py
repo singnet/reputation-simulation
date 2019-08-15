@@ -1906,7 +1906,9 @@ class Runner():
                         #my_param_str == 'r_weighted_' or
                        # my_param_str == 'r_SOM_' or
                         #my_param_str == 'r_TOM_'
-                    my_param_str.endswith("_noLE_NoOverlap_")
+                    my_param_str.endswith("_LE_overlap_") or
+                    my_param_str.endswith("_noLE_overlap_") or
+                    my_param_str.endswith("_LE_NoOverlap_")
                 ):
                 #if not my_param_str.startswith("r"):
 
