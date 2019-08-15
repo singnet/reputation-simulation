@@ -1892,7 +1892,7 @@ class Runner():
                     self.set_param(myconfigfile, setting)
                 my_param_str = param_str + name + "_"
                 # for sttarting in the middle of a batch run
-                if not (
+                #if not (
                         #my_param_str == 'r_20_1_'  or
                         #my_param_str == 'r_20_0.5_' or
                         #my_param_str == 'r_20_0.1_' or
@@ -1906,13 +1906,13 @@ class Runner():
                         #my_param_str == 'r_weighted_' or
                        # my_param_str == 'r_SOM_' or
                         #my_param_str == 'r_TOM_'
-                    my_param_str.endswith("_LE_overlap_") or
-                    my_param_str.endswith("_noLE_overlap_") or
-                    my_param_str.endswith("_LE_NoOverlap_")
-                ):
+                    #my_param_str.endswith("_LE_overlap_") or
+                    #my_param_str.endswith("_noLE_overlap_") or
+                    #my_param_str.endswith("_LE_NoOverlap_")
+                #):
                 #if not my_param_str.startswith("r"):
 
-                    self.call(mycombolist, myconfigfile, rs, my_param_str)
+                self.call(mycombolist, myconfigfile, rs, my_param_str)
         else:
             #new_seed = configfile['parameters']['seed'] + 1
             #set_param(configfile, {"seed": new_seed})
