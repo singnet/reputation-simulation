@@ -165,11 +165,17 @@ class ReputationAgent(Agent):
     def switch_product(self,category,product):
         #first check and see if it would make a difference in the personal name and dont change if it wouldnt,
         # but  once it makes a difference, test and decide
+        #fixme: test
+        #return False
         evidence = {}
         evidence['product_profit_current'] = 'product_profit_current' if self.product_profit_positive(category,product) else 'product_profit_currentNot'
         evidence['product_min_score'] = 'product_min_score' if self.product_min_score(category,product) else 'product_min_scoreNot'
         result = self.model.roll_bayes(evidence,"product_switch")
-        change = True if result == "product_switch" else False
+        change = False
+        if result == 'product_switch':
+            change = True
+            self.model.add_product_switch()
+
         return change
 
     def check_and_remove_products (self):
@@ -608,17 +614,21 @@ class ReputationAgent(Agent):
         return over
 
     def change_generations(self):
+        #fixme test
+        #return False
         #first check and see if it would make a difference in the personal name and dont change if it wouldnt,
         # but  once it makes a difference, test and decide
-        evidence = {}
-        evidence['supplier_profit'] = 'supplier_profit' if self.avg_profit_positive() else 'supplier_profitNot'
-        #evidence['supplier_min_score'] = 'supplier_min_score' if self.avg_score_over_threshold() else 'supplier_min_scoreNot'
-        evidence['supplier_min_score'] = 'supplier_min_score' if self.avg_score_above_mean() else 'supplier_min_scoreNot'
-        evidence['supplier_exogenousReputation'] = ('supplier_exogenousReputation'
-                if self.exogenous_reputation else 'supplier_exogenousReputationNot')
+        change = False
+        if not self.never_bought_scam:
+            evidence = {}
+            evidence['supplier_profit'] = 'supplier_profit' if self.avg_profit_positive() else 'supplier_profitNot'
+            #evidence['supplier_min_score'] = 'supplier_min_score' if self.avg_score_over_threshold() else 'supplier_min_scoreNot'
+            evidence['supplier_min_score'] = 'supplier_min_score' if self.avg_score_above_mean() else 'supplier_min_scoreNot'
+            evidence['supplier_exogenousReputation'] = ('supplier_exogenousReputation'
+                    if self.exogenous_reputation else 'supplier_exogenousReputationNot')
 
-        result = self.model.roll_bayes(evidence,"supplier_switch")
-        change = True if result == "supplier_switch" else False
+            result = self.model.roll_bayes(evidence,"supplier_switch")
+            change = True if result == "supplier_switch" else False
         return change
 
     def test_and_set_generation_increment(self):
@@ -1458,11 +1468,13 @@ class ReputationAgent(Agent):
         return supplier_agent.name_increment
 
     def exogenous_reputation_effect(self):
-        self.never_bought_scam = False
-        roll = random.uniform (0,1)
-        chance = self.p["chance_lose_external_reputation_each_scam"]
-        if roll < chance:
-            self.exogenous_reputation = False
+        if self.never_bought_scam:
+            self.never_bought_scam = False
+            roll = random.uniform (0,1)
+            chance = self.p["chance_lose_external_reputation_each_scam"]
+            if roll < chance:
+                self.exogenous_reputation = False
+                self.model.add_decision_to_scam()
 
     def make_criminal_purchases(self,good):
         if (not self.good) and good in self.criminal_suppliers and len(self.criminal_suppliers[good]) > 0:
@@ -1502,6 +1514,7 @@ class ReputationAgent(Agent):
             if not self.supplier_inactive(supplier_id):
                 self.model.save_info_for_market_volume_report(self, self.model.orig[supplier], price)
                 supplier_agent.exogenous_reputation_effect()
+                self.model.add_bought_review()
                 supplier_agent.products[good][product]["black_market"] = True
 
                 if self.model.error_log:

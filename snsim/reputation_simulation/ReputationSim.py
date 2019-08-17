@@ -58,6 +58,7 @@ class ReputationSim(Model):
        # print('First line of init in RepuationSim, study path is ${0}'.format(study_path))
         self.current_product_id = 0
         self.config = None
+        self.study_path = study_path
         if opened_config:
             self.config = study_path
         else:
@@ -213,18 +214,34 @@ class ReputationSim(Model):
                     sup_count = sup_count + num_sup_this_good
                     nsuppliers [good]= num_sup_this_good
 
-            self.agents = {}
+            agent_supplymap = {}
+            current_agent = 0
             for good, num_suppliers in nsuppliers.items():
                 for _ in range(num_suppliers):
-                    agent_str = str(agent_count) + "-0"
-                    a = globals()['ReputationAgent'](agent_str, self, criminal=True, supply_list=[good])
-                    self.schedule.add(a)
-                    self.agents[agent_count]=a
-                    self.criminal_suppliers[good].add(agent_str)
-                    self.original_suppliers.add(agent_str)
-                    self.orig[agent_str]= agent_str
-                    self.m[agent_str]= agent_count
-                    agent_count += 1
+                    if current_agent not in agent_supplymap:
+                        agent_supplymap[current_agent]= []
+                    agent_supplymap[current_agent].append(good)
+                    next = current_agent +1
+                    current_agent  = next if next < num_suppliers1 else 0
+
+            self.agents = {}
+            for agent_num,supply_list in agent_supplymap.items():
+            #for good, num_suppliers in nsuppliers.items():
+                #for _ in range(num_suppliers):
+                #agent_str = str(agent_count) + "-0"
+                #a = globals()['ReputationAgent'](agent_str, self, criminal=True, supply_list=[good])
+                agent_str = str(agent_num) + "-0"
+                a = globals()['ReputationAgent'](agent_str, self, criminal=True, supply_list=supply_list)
+                self.schedule.add(a)
+                self.agents[agent_num]=a
+                for supply_item in supply_list:
+                    self.criminal_suppliers[supply_item].add(agent_str)
+                self.original_suppliers.add(agent_str)
+                self.orig[agent_str]= agent_str
+                self.m[agent_str]= agent_num
+                agent_count += 1
+
+
 
             #criminal consumers
             self.num_criminal_consumers = num_criminals - num_suppliers1
@@ -242,7 +259,7 @@ class ReputationSim(Model):
             chance_of_supplier = 0
             for good, chance in self.parameters['chance_of_supplying'].items():
                 chance_of_supplier += chance
-
+            first_good_supplier_num = agent_count
             num_suppliers1 = int(round((self.parameters['num_users'] -num_criminals) * chance_of_supplier))
             sorted_suppliers = sorted(self.parameters['chance_of_supplying'].items(), key=lambda x: x[1], reverse=True)
 
@@ -257,15 +274,40 @@ class ReputationSim(Model):
                     sup_count = sup_count + num_sup_this_good
                     nsuppliers [good]= num_sup_this_good
 
+            agent_supplymap = {}
+            current_agent = first_good_supplier_num
             for good, num_suppliers in nsuppliers.items():
                 for _ in range(num_suppliers):
-                    agent_str = str(agent_count) + "-0"
-                    a = globals()['ReputationAgent'](agent_str, self, criminal=False, supply_list=[good])
-                    self.schedule.add(a)
-                    self.agents[agent_count]=a
-                    self.orig[agent_str]= agent_str
-                    self.m[agent_str]= agent_count
-                    agent_count += 1
+                    if current_agent not in agent_supplymap:
+                        agent_supplymap[current_agent] = []
+                    agent_supplymap[current_agent].append(good)
+                    next = current_agent + 1
+                    current_agent = next if next < (first_good_supplier_num + num_suppliers1) else first_good_supplier_num
+
+
+            for agent_num, supply_list in agent_supplymap.items():
+                # for good, num_suppliers in nsuppliers.items():
+                # for _ in range(num_suppliers):
+                # agent_str = str(agent_count) + "-0"
+                # a = globals()['ReputationAgent'](agent_str, self, criminal=True, supply_list=[good])
+                agent_str = str(agent_num) + "-0"
+                a = globals()['ReputationAgent'](agent_str, self, criminal=False, supply_list=supply_list)
+                self.schedule.add(a)
+                self.agents[agent_num] = a
+                self.original_suppliers.add(agent_str)
+                self.orig[agent_str] = agent_str
+                self.m[agent_str] = agent_num
+                agent_count += 1
+
+            # for good, num_suppliers in nsuppliers.items():
+            #     for _ in range(num_suppliers):
+            #         agent_str = str(agent_count) + "-0"
+            #         a = globals()['ReputationAgent'](agent_str, self, criminal=False, supply_list=[good])
+            #         self.schedule.add(a)
+            #         self.agents[agent_count]=a
+            #         self.orig[agent_str]= agent_str
+            #         self.m[agent_str]= agent_count
+            #         agent_count += 1
 
             #good consumers
             self.num_good_consumers = self.parameters['num_users'] - agent_count
@@ -443,7 +485,6 @@ class ReputationSim(Model):
         # sgp_denom = Σsponsoredbuys(Price * (1 + CR))
         # sgl_num = (Σsponsoredbuys(Price * (1 + CR) * OQ))
         # sgl_denom = (Σorganicbuys(Price * OQ))
-        # num_changes
         #
         self.bsl_num = 0
         self.sgp2_num = 0
@@ -453,7 +494,10 @@ class ReputationSim(Model):
         self.sgl_denom_num = 0
         self.sgl_num_denom = 0
         self.sgl_denom_denom = 0
-        self.num_changes = 0
+        self.num_name_changes = 0
+        self.num_decisions_to_scam = 0
+        self.num_bought_reviews = 0
+        self.num_products_switched = 0
         self.sum_good_consumer_ratings = 0
         self.num_good_consumer_rated_purchases = 0
 
@@ -465,7 +509,10 @@ class ReputationSim(Model):
         self.sgl_denom_num_daily = 0
         self.sgl_num_denom_daily = 0
         self.sgl_denom_denom_daily = 0
-        self.num_changes_daily = 0
+        self.num_name_changes_daily = 0
+        self.num_decisions_to_scam_daily = 0
+        self.num_bought_reviews_daily = 0
+        self.num_products_switched_daily = 0
         self.sum_good_consumer_ratings_daily = 0
         self.num_good_consumer_rated_purchases_daily = 0
 
@@ -477,7 +524,10 @@ class ReputationSim(Model):
         self.sgl_denom_num_window = []
         self.sgl_num_denom_window = []
         self.sgl_denom_denom_window = []
-        self.num_changes_window = []
+        self.num_name_changes_window = []
+        self.num_decisions_to_scam_window = []
+        self.num_bought_reviews_window  = []
+        self.num_products_switched_window = []
         self.sum_good_consumer_ratings_window = []
         self.num_good_consumer_rated_purchases_window = []
         
@@ -489,7 +539,10 @@ class ReputationSim(Model):
         self.change_window_day(self.sgl_denom_num_window )
         self.change_window_day(self.sgl_num_denom_window)
         self.change_window_day(self.sgl_denom_denom_window )
-        self.change_window_day(self.num_changes_window )
+        self.change_window_day(self.num_name_changes_window)
+        self.change_window_day(self.num_decisions_to_scam_window )
+        self.change_window_day(self.num_bought_reviews_window)
+        self.change_window_day(self.num_products_switched_window )
         self.change_window_day(self.sum_good_consumer_ratings_window )
         self.change_window_day(self.num_good_consumer_rated_purchases_window )
 
@@ -504,7 +557,10 @@ class ReputationSim(Model):
         self.sgl_denom_num_daily = 0
         self.sgl_num_denom_daily = 0
         self.sgl_denom_denom_daily = 0
-        self.num_changes_daily = 0
+        self.num_name_changes_daily = 0
+        self.num_decisions_to_scam_daily = 0
+        self.num_bought_reviews_daily = 0
+        self.num_products_switched_daily = 0
         self.sum_good_consumer_ratings_daily = 0
         self.num_good_consumer_rated_purchases_daily = 0
 
@@ -516,7 +572,10 @@ class ReputationSim(Model):
         self.change_window_day(self.sgl_denom_num_window )
         self.change_window_day(self.sgl_num_denom_window)
         self.change_window_day(self.sgl_denom_denom_window )
-        self.change_window_day(self.num_changes_window )
+        self.change_window_day(self.num_name_changes_window)
+        self.change_window_day(self.num_decisions_to_scam_window)
+        self.change_window_day(self.num_bought_reviews_window)
+        self.change_window_day(self.num_products_switched_window)
         self.change_window_day(self.sum_good_consumer_ratings_window )
         self.change_window_day(self.num_good_consumer_rated_purchases_window )
 
@@ -591,9 +650,27 @@ class ReputationSim(Model):
 
     def add_identity_change(self):
         if self.daynum >= self.parameters["statistics_initialization"]:
-            self.num_changes += 1
-            self.num_changes_daily += 1
-            self.window_add(self.num_changes_window, 1)
+            self.num_name_changes += 1
+            self.num_name_changes_daily += 1
+            self.window_add(self.num_name_changes_window, 1)
+
+    def add_decision_to_scam(self):
+        if self.daynum >= self.parameters["statistics_initialization"]:
+            self.num_decisions_to_scam += 1
+            self.num_decisions_to_scam_daily += 1
+            self.window_add(self.num_decisions_to_scam_window, 1)
+
+    def add_bought_review(self):
+        if self.daynum >= self.parameters["statistics_initialization"]:
+            self.num_bought_reviews += 1
+            self.num_bought_reviews_daily += 1
+            self.window_add(self.num_bought_reviews_window, 1)
+
+    def add_product_switch(self):
+        if self.daynum >= self.parameters["statistics_initialization"]:
+            self.num_products_switched += 1
+            self.num_products_switched_daily += 1
+            self.window_add(self.num_products_switched_window, 1)
 
     def bsl_daily(self):
         bsl = self.bsl_num_daily / self.bsl_denom_daily if self.bsl_denom_daily != 0 else -1
@@ -615,7 +692,7 @@ class ReputationSim(Model):
 
     def asp_daily(self):
         criminals = [bad for good, bad in self.criminal_suppliers.items()]
-        asp = (len(criminals) * self.get_end_tick()) / self.num_changes_daily if self.num_changes_daily != 0 else -1
+        asp = (len(criminals) * self.get_end_tick()) / self.num_name_changes_daily if self.num_name_changes_daily != 0 else -1
         return asp
 
     def utility_daily(self):
@@ -647,10 +724,11 @@ class ReputationSim(Model):
         return sgl
 
     def asp_window(self):
-        denom_sum = self.window_sum(self.num_changes_window)
+        denom_sum = self.window_sum(self.num_name_changes_window)
         criminals = [bad for good, bad in self.criminal_suppliers.items()]
         asp = (len(criminals) * self.get_end_tick()) / denom_sum if denom_sum != 0 else -1
         return asp
+
 
     def utility_window(self):
         denom_sum = self.window_sum(self.num_good_consumer_rated_purchases_window)
@@ -677,8 +755,10 @@ class ReputationSim(Model):
 
     def asp(self):
         criminals = [bad for good, bad in self.criminal_suppliers.items()]
-        asp = (len(criminals) * self.get_end_tick()) / self.num_changes if self.num_changes != 0 else -1
+        asp = (len(criminals) * self.get_end_tick()) / self.num_name_changes if self.num_name_changes != 0 else -1
         return asp
+
+
 
     def market_volume(self):
         market_volume = ( self.good2good_agent_cumul_total_price +
@@ -759,6 +839,19 @@ class ReputationSim(Model):
         asp_daily = self.asp_daily()
         if asp_daily is None or not isinstance(asp_daily, float):
             asp_daily = -1.00
+        num_name_changes_daily = self.num_name_changes_daily
+        #if num_name_changes_daily is None or not isinstance(num_name_changes_daily, float):
+        #    num_name_changes_daily = -1.00
+        num_decisions_to_scam_daily = self.num_decisions_to_scam_daily
+        #if num_decisions_to_scam_daily is None or not isinstance(num_decisions_to_scam_daily, float):
+        #    num_decisions_to_scam_daily = -1.00
+        num_bought_reviews_daily = self.num_bought_reviews_daily
+        #if num_bought_reviews_daily is None or not isinstance(num_bought_reviews_daily, float):
+        #    num_bought_reviews_daily = -1.00
+        num_products_switched_daily = self.num_products_switched_daily
+        #if num_products_switched_daily is None or not isinstance(num_products_switched_daily, float):
+        #    num_products_switched_daily = -1.00
+
         utility_daily = self.utility_daily()
         if utility_daily is None or not isinstance(utility_daily, float):
             utility_daily = -1.00
@@ -778,6 +871,19 @@ class ReputationSim(Model):
         asp_window = self.asp_window()
         if asp_window is None or not isinstance(asp_window, float):
             asp_window = -1.00
+        num_name_changes_window = self.window_sum(self.num_name_changes_window)
+        #if num_name_changes_window is None or not isinstance(num_name_changes_window, float):
+        #    num_name_changes_window = -1.00
+        num_decisions_to_scam_window = self.window_sum(self.num_decisions_to_scam_window)
+        #if num_decisions_to_scam_window is None or not isinstance(num_decisions_to_scam_window, float):
+        #    num_decisions_to_scam_window = -1.00
+        num_bought_reviews_window = self.window_sum(self.num_bought_reviews_window)
+        #if num_bought_reviews_window is None or not isinstance(num_bought_reviews_window, float):
+        #    num_bought_reviews_window = -1.00
+        num_products_switched_window = self.window_sum(self.num_products_switched_window)
+        #if num_products_switched_window is None or not isinstance(num_products_switched_window, float):
+        #    num_products_switched_window = -1.00
+
         utility_window = self.utility_window()
         if utility_window is None or not isinstance(utility_window, float):
             utility_window = -1.00
@@ -797,6 +903,18 @@ class ReputationSim(Model):
         asp = self.asp()
         if asp is None or not isinstance(asp, float):
             asp = -1.00
+        num_name_changes = self.num_name_changes
+        #if num_name_changes is None or not isinstance(num_name_changes, float):
+        #    num_name_changes = -1.00
+        num_decisions_to_scam = self.num_decisions_to_scam
+        #if num_decisions_to_scam is None or not isinstance(num_decisions_to_scam, float):
+        #    num_decisions_to_scam = -1.00
+        num_bought_reviews = self.num_bought_reviews
+        #if num_bought_reviews is None or not isinstance(num_bought_reviews, float):
+        #    num_bought_reviews = -1.00
+        num_products_switched = self.num_products_switched
+        #if num_products_switched is None or not isinstance(num_products_switched, float):
+        #    num_products_switched = -1.00
         omut = self.omut()
         if omut is None or not isinstance(omut, float):
             omut = -1.00
@@ -804,8 +922,8 @@ class ReputationSim(Model):
         if market_volume is None or not isinstance(market_volume, float):
             market_volume = -1.00
         maxproduct = self.maxproduct()
-        if maxproduct is None or not isinstance(maxproduct, float):
-            maxproduct = -1.00
+        #if maxproduct is None or not isinstance(maxproduct, float):
+        #    maxproduct = -1.00
         lts = self.loss_to_scam()
         if lts is None or not isinstance(lts, float):
             lts = -1.00
@@ -820,20 +938,35 @@ class ReputationSim(Model):
             inequity = -1.00
 
         if self.daynum % 30 == 0 and self.daynum >= self.parameters["statistics_initialization"]:
-            print("""\n time:{11}, bsl:{0:.4f}, sgp:{1:.4f},  sgp2:{12:.4f}, sgl:{2:.4f}, asp:{3:.4f}, utility:{9:.4}, bsl_daily:{13:.4f}, sgp_daily:{14:.4f},  sgp2_daily:{15:.4f}, sgl_daily:{16:.4f}, asp_daily:{17:.4f}, utility_daily:{18:.4}, bsl_window:{19:.4f}, sgp_window:{20:.4f},  sgp2_window:{21:.4f}, sgl_window:{22:.4f}, asp_window:{23:.4f}, utility_window:{24:.4}, omut:{4:.4f}, market volume:{5:.4f}, maxproduct:{6:.4f}, lts:{7:.4f}, pfs:{8:.4f}, inequity:{10:.4f}\n""".format(
-                bsl, sgp, sgl, asp, omut, market_volume, maxproduct, lts, pfs, utility, inequity, self.daynum, sgp2,
-                bsl_daily, sgp_daily, sgp2_daily, sgl_daily, asp_daily, utility_daily,
-                bsl_window, sgp_window, sgp2_window, sgl_window, asp_window, utility_window
-            ))
+            print(
+                """\n time:{11}, bsl:{0:.4f}, sgp:{1:.4f},  sgp2:{12:.4f}, sgl:{2:.4f}, asp:{3:.4f}, utility:{9:.4},num_name_changes:{25:.4f},num_decisions_to_scam:{26:.4f} ,num_bought_reviews:{27:.4f},num_products_switched:{28:.4f},bsl_daily:{13:.4f}, sgp_daily:{14:.4f},sgp2_daily:{15:.4f}, sgl_daily:{16:.4f}, asp_daily:{17:.4f}, utility_daily:{18:.4},num_name_changes_daily:{29:.4f},num_decisions_to_scam_daily:{30:.4f} ,num_bought_reviews_daily:{31:.4f},num_products_switched_daily:{32:.4f},bsl_window:{19:.4f}, sgp_window:{20:.4f},  sgp2_window:{21:.4f}, sgl_window:{22:.4f}, asp_window:{23:.4f}, utility_window:{24:.4},num_name_changes_window:{33:.4f},num_decisions_to_scam_window:{34:.4f} ,num_bought_reviews_window:{35:.4f},num_products_switched_window:{36:.4f} omut:{4:.4f}, market volume:{5:.4f}, maxproduct:{6:.4f}, lts:{7:.4f}, pfs:{8:.4f}, inequity:{10:.4f}\n""".format(
+                    bsl, sgp, sgl, asp, omut, market_volume, maxproduct, lts, pfs, utility, inequity, self.daynum,
+                    sgp2,
+                    bsl_daily, sgp_daily, sgp2_daily, sgl_daily, asp_daily, utility_daily,
+                    bsl_window, sgp_window, sgp2_window, sgl_window, asp_window, utility_window,
+                    num_name_changes, num_decisions_to_scam, num_bought_reviews, num_products_switched,
+                    num_name_changes_daily, num_decisions_to_scam_daily, num_bought_reviews_daily,
+                    num_products_switched_daily,
+                    num_name_changes_window, num_decisions_to_scam_window, num_bought_reviews_window,
+                    num_products_switched_window
+                ))
         if self.error_log and self.daynum >= self.parameters["statistics_initialization"]:
-            self.error_log.write("""\n time:{11}, bsl:{0:.4f}, sgp:{1:.4f},  sgp2:{12:.4f}, sgl:{2:.4f}, asp:{3:.4f}, utility:{9:.4}, bsl_daily:{13:.4f}, sgp_daily:{14:.4f},  sgp2_daily:{15:.4f}, sgl_daily:{16:.4f}, asp_daily:{17:.4f}, utility_daily:{18:.4}, bsl_window:{19:.4f}, sgp_window:{20:.4f},  sgp2_window:{21:.4f}, sgl_window:{22:.4f}, asp_window:{23:.4f}, utility_window:{24:.4}, omut:{4:.4f}, market volume:{5:.4f}, maxproduct:{6:.4f}, lts:{7:.4f}, pfs:{8:.4f}, inequity:{10:.4f}\n""".format(
-                bsl, sgp, sgl, asp, omut, market_volume, maxproduct, lts, pfs, utility, inequity, self.daynum, sgp2,
-                bsl_daily, sgp_daily, sgp2_daily, sgl_daily, asp_daily, utility_daily,
-                bsl_window, sgp_window, sgp2_window, sgl_window, asp_window, utility_window
-            ))
+            self.error_log.write(
+                """\n time:{11}, bsl:{0:.4f}, sgp:{1:.4f},  sgp2:{12:.4f}, sgl:{2:.4f}, asp:{3:.4f}, utility:{9:.4},num_name_changes:{25:.4f},num_decisions_to_scam:{26:.4f} ,num_bought_reviews:{27:.4f},num_products_switched:{28:.4f},bsl_daily:{13:.4f}, sgp_daily:{14:.4f},sgp2_daily:{15:.4f}, sgl_daily:{16:.4f}, asp_daily:{17:.4f}, utility_daily:{18:.4},num_name_changes_daily:{29:.4f},num_decisions_to_scam_daily:{30:.4f} ,num_bought_reviews_daily:{31:.4f},num_products_switched_daily:{32:.4f},bsl_window:{19:.4f}, sgp_window:{20:.4f},  sgp2_window:{21:.4f}, sgl_window:{22:.4f}, asp_window:{23:.4f}, utility_window:{24:.4},,num_name_changes_window:{33:.4f},num_decisions_to_scam_window:{34:.4f} ,num_bought_reviews_window:{35:.4f},num_products_switched_window:{36:.4f} omut:{4:.4f}, market volume:{5:.4f}, maxproduct:{6:.4f}, lts:{7:.4f}, pfs:{8:.4f}, inequity:{10:.4f}\n""".format(
+                    bsl, sgp, sgl, asp, omut, market_volume, maxproduct, lts, pfs, utility, inequity, self.daynum,
+                    sgp2,
+                    bsl_daily, sgp_daily, sgp2_daily, sgl_daily, asp_daily, utility_daily,
+                    bsl_window, sgp_window, sgp2_window, sgl_window, asp_window, utility_window,
+                    num_name_changes, num_decisions_to_scam, num_bought_reviews, num_products_switched,
+                    num_name_changes_daily, num_decisions_to_scam_daily, num_bought_reviews_daily,
+                    num_products_switched_daily,
+                    num_name_changes_window, num_decisions_to_scam_window, num_bought_reviews_window,
+                    num_products_switched_window
+                ))
 
     def write_output_stats_line(self):
         line = []
+        line.append(self.study_path)
         for new_val in self.config['output_columns']:
             # old_val = configfile['parameters']
             old_val = self.config
@@ -844,19 +977,19 @@ class ReputationSim(Model):
                 old_old_val = old_val
                 old_val = old_val[nextKey]
                 new_val = new_val[nextKey]
-            #old_old_val[nextKey] = new_val
+            # old_old_val[nextKey] = new_val
             paramlist = new_val
             for param in paramlist:
-                length = len(old_old_val[nextKey][param])if isinstance(old_old_val[nextKey][param],list)else 1
-
+                length = len(old_old_val[nextKey][param]) if isinstance(old_old_val[nextKey][param],
+                                                                        list) else 1
                 if length > 1:
                     for i in range(length):
-                        new_param = "{0}{1}".format(param,i)
+                        new_param = "{0}{1}".format(param, i)
                         line.append(old_old_val[nextKey][param][i])
                 else:
                     line.append(old_old_val[nextKey][param])
-        for test,_ in self.config['tests']['default'].items():
-            v=""
+        for test, _ in self.config['tests']['default'].items():
+            v = ""
             if test == "OMUT":
                 v = self.omut()
             elif test == "maxproduct":
@@ -871,6 +1004,14 @@ class ReputationSim(Model):
                 v = self.sgl()
             elif test == "asp":
                 v = self.asp()
+            elif test == "num_name_changes":
+                v = self.num_name_changes
+            elif test == "num_decisions_to_scam":
+                v = self.num_decisions_to_scam
+            elif test == "num_bought_reviews":
+                v = self.num_bought_reviews
+            elif test == "num_products_switched":
+                v = self.num_products_switched
             elif test == "utility":
                 v = self.utility()
             elif test == "bsl_daily":
@@ -883,6 +1024,14 @@ class ReputationSim(Model):
                 v = self.sgl_daily()
             elif test == "asp_daily":
                 v = self.asp_daily()
+            elif test == "num_name_changes_daily":
+                v = self.num_name_changes_daily
+            elif test == "num_decisions_to_scam_daily":
+                v = self.num_decisions_to_scam_daily
+            elif test == "num_bought_reviews_daily":
+                v = self.num_bought_reviews_daily
+            elif test == "num_products_switched_daily":
+                v = self.num_products_switched_daily
             elif test == "utility_daily":
                 v = self.utility_daily()
             elif test == "bsl_window":
@@ -895,6 +1044,14 @@ class ReputationSim(Model):
                 v = self.sgl_window()
             elif test == "asp_window":
                 v = self.asp_window()
+            elif test == "num_name_changes_window":
+                v = self.window_sum(self.num_name_changes_window)
+            elif test == "num_decisions_to_scam_window":
+                v = self.window_sum(self.num_decisions_to_scam_window)
+            elif test == "num_bought_reviews_window":
+                v = self.window_sum(self.num_bought_reviews_window)
+            elif test == "num_products_switched_window":
+                v = self.window_sum(self.num_products_switched_window)
             elif test == "utility_window":
                 v = self.utility_window()
             elif test == "loss_to_scam":
@@ -905,9 +1062,9 @@ class ReputationSim(Model):
                 v = self.market_volume()
             elif test == "inequity":
                 v = self.inequity()
-            line.append(v)
+        line.append(v)
         line.append("\n")
-        linestr = "\t".join(map (str, line))
+        linestr = "\t".join(map(str, line))
         self.output_stats.write(linestr)
         self.output_stats.flush()
 
@@ -1688,6 +1845,7 @@ class Runner():
 
     def get_output_stats_header(self):
         heading = []
+        heading.append("study")
         for new_val in self.config['output_columns']:
             # old_val = configfile['parameters']
             old_val = self.config

@@ -10,7 +10,7 @@
         "NIg": 1,
         "NIb": 1,
         "NA": 1000,
-        "D": 361,
+        "D": 91,
         "SP": 10,
         "SIP": 0,
         "PLRg": 60,
@@ -69,6 +69,22 @@
         "lower": 0,
         "upper": 1
       },
+      "num_name_changes": {
+        "lower": 0,
+        "upper": 1
+      },
+      "num_decisions_to_scam": {
+        "lower": 0,
+        "upper": 1
+      },
+      "num_bought_reviews": {
+        "lower": 0,
+        "upper": 1
+      },
+      "num_products_switched": {
+        "lower": 0,
+        "upper": 1
+      },
       "utility": {
         "lower": 0,
         "upper": 1
@@ -93,6 +109,22 @@
         "lower": 0,
         "upper": 1
       },
+      "num_name_changes_daily": {
+        "lower": 0,
+        "upper": 1
+      },
+      "num_decisions_to_scam_daily": {
+        "lower": 0,
+        "upper": 1
+      },
+      "num_bought_reviews_daily": {
+        "lower": 0,
+        "upper": 1
+      },
+      "num_products_switched_daily": {
+        "lower": 0,
+        "upper": 1
+      },
       "utility_daily": {
         "lower": 0,
         "upper": 1
@@ -114,6 +146,22 @@
         "upper": 1
       },
       "asp_window": {
+        "lower": 0,
+        "upper": 1
+      },
+      "num_name_changes_window": {
+        "lower": 0,
+        "upper": 1
+      },
+      "num_decisions_to_scam_window": {
+        "lower": 0,
+        "upper": 1
+      },
+      "num_bought_reviews_window": {
+        "lower": 0,
+        "upper": 1
+      },
+      "num_products_switched_window": {
         "lower": 0,
         "upper": 1
       },
@@ -1042,7 +1090,7 @@
     "run_automatic_tests": false,
     "statistics_initialization": 0,
     "port": 1181,
-    "output_path": "amazonBayesStressors50/",
+    "output_path": "amazonBayesStressors50_1/",
     "seed": 9573,
     "observer_mode": false,
     "randomize_initial_needs": true,
@@ -1051,7 +1099,7 @@
     "deterministic_mode": true,
     "supplier_chance_of_leaving_and_entering": 0.0,
     "consumer_chance_of_leaving_and_entering": 0.0,
-    "chance_lose_external_reputation_each_scam": 0.001,
+    "chance_lose_external_reputation_each_scam": 0.1,
     "num_users": 10000,
     "initial_date": "01.01.2018 11:05:02",
     "final_date": "30.06.2018 11:05:02",
@@ -1259,8 +1307,8 @@
       0.3
     ],
     "num_products_supplied": [
-      50,
       8,
+      3,
       1,
       20
     ],
@@ -1889,112 +1937,112 @@
               "supplier_min_score",
               "supplier_profit",
               "supplier_switch",
-              0.0001
+              0.00001
             ],
             [
               "supplier_exogenousReputation",
+              "supplier_min_scoreNot",
+              "supplier_profit",
+              "supplier_switch",
+              0.00005
+            ],
+            [
+              "supplier_exogenousReputation",
+              "supplier_min_score",
+              "supplier_profitNot",
+              "supplier_switch",
+              0.00015
+            ],
+            [
+              "supplier_exogenousReputation",
+              "supplier_min_scoreNot",
+              "supplier_profitNot",
+              "supplier_switch",
+              0.00025
+            ],
+            [
+              "supplier_exogenousReputation",
+              "supplier_min_score",
+              "supplier_profit",
+              "supplier_switchNot",
+              0.99999
+            ],
+            [
+              "supplier_exogenousReputation",
+              "supplier_min_scoreNot",
+              "supplier_profit",
+              "supplier_switchNot",
+              0.99995
+            ],
+            [
+              "supplier_exogenousReputation",
+              "supplier_min_score",
+              "supplier_profitNot",
+              "supplier_switchNot",
+              0.99985
+            ],
+            [
+              "supplier_exogenousReputation",
+              "supplier_min_scoreNot",
+              "supplier_profitNot",
+              "supplier_switchNot",
+              0.99975
+            ],
+            [
+              "supplier_exogenousReputationNot",
+              "supplier_min_score",
+              "supplier_profit",
+              "supplier_switch",
+              0.0001
+            ],
+            [
+              "supplier_exogenousReputationNot",
               "supplier_min_scoreNot",
               "supplier_profit",
               "supplier_switch",
               0.0005
             ],
             [
-              "supplier_exogenousReputation",
+              "supplier_exogenousReputationNot",
               "supplier_min_score",
               "supplier_profitNot",
               "supplier_switch",
               0.0015
             ],
             [
-              "supplier_exogenousReputation",
+              "supplier_exogenousReputationNot",
               "supplier_min_scoreNot",
               "supplier_profitNot",
               "supplier_switch",
               0.0025
             ],
             [
-              "supplier_exogenousReputation",
+              "supplier_exogenousReputationNot",
               "supplier_min_score",
               "supplier_profit",
               "supplier_switchNot",
               0.9999
             ],
             [
-              "supplier_exogenousReputation",
+              "supplier_exogenousReputationNot",
               "supplier_min_scoreNot",
               "supplier_profit",
               "supplier_switchNot",
               0.9995
             ],
             [
-              "supplier_exogenousReputation",
+              "supplier_exogenousReputationNot",
               "supplier_min_score",
               "supplier_profitNot",
               "supplier_switchNot",
               0.9985
             ],
             [
-              "supplier_exogenousReputation",
+              "supplier_exogenousReputationNot",
               "supplier_min_scoreNot",
               "supplier_profitNot",
               "supplier_switchNot",
               0.9975
-            ],
-            [
-              "supplier_exogenousReputationNot",
-              "supplier_min_score",
-              "supplier_profit",
-              "supplier_switch",
-              0.001
-            ],
-            [
-              "supplier_exogenousReputationNot",
-              "supplier_min_scoreNot",
-              "supplier_profit",
-              "supplier_switch",
-              0.005
-            ],
-            [
-              "supplier_exogenousReputationNot",
-              "supplier_min_score",
-              "supplier_profitNot",
-              "supplier_switch",
-              0.015
-            ],
-            [
-              "supplier_exogenousReputationNot",
-              "supplier_min_scoreNot",
-              "supplier_profitNot",
-              "supplier_switch",
-              0.025
-            ],
-            [
-              "supplier_exogenousReputationNot",
-              "supplier_min_score",
-              "supplier_profit",
-              "supplier_switchNot",
-              0.999
-            ],
-            [
-              "supplier_exogenousReputationNot",
-              "supplier_min_scoreNot",
-              "supplier_profit",
-              "supplier_switchNot",
-              0.995
-            ],
-            [
-              "supplier_exogenousReputationNot",
-              "supplier_min_score",
-              "supplier_profitNot",
-              "supplier_switchNot",
-              0.985
-            ],
-            [
-              "supplier_exogenousReputationNot",
-              "supplier_min_scoreNot",
-              "supplier_profitNot",
-              "supplier_switchNot",
-              0.975
             ]
           ]
         }
@@ -2022,49 +2070,49 @@
               "product_min_score",
               "product_profit_current",
               "product_switch",
-              0.001
+              0.0001
             ],
             [
               "product_min_scoreNot",
               "product_profit_current",
               "product_switch",
-              0.005
+              0.0005
             ],
             [
               "product_min_score",
               "product_profit_currentNot",
               "product_switch",
-              0.015
+              0.0015
             ],
             [
               "product_min_scoreNot",
               "product_profit_currentNot",
               "product_switch",
-              0.025
+              0.0025
             ],
             [
               "product_min_score",
               "product_profit_current",
               "product_switchNot",
-              0.999
+              0.9999
             ],
             [
               "product_min_scoreNot",
               "product_profit_current",
               "product_switchNot",
-              0.995
+              0.9995
             ],
             [
               "product_min_score",
               "product_profit_currentNot",
               "product_switchNot",
-              0.985
+              0.9985
             ],
             [
               "product_min_scoreNot",
               "product_profit_currentNot",
               "product_switchNot",
-              0.975
+              0.9975
             ]
           ]
         }
@@ -2136,7 +2184,7 @@
               "supplier_exogenousReputation",
               "product_profit_currentNot",
               "product_initialScam_higher",
-              0.01
+              0.1
             ],
             [
               "product_reputation_topTen",
@@ -2248,7 +2296,7 @@
               "supplier_exogenousReputation",
               "product_profit_currentNot",
               "product_initialScam_even",
-              0.99
+              0.9
             ],
             [
               "product_reputation_topTen",
@@ -2290,7 +2338,7 @@
               "supplier_exogenousReputation",
               "product_profit_currentNot",
               "product_initialScam_higher",
-              0.01
+              0.05
             ],
             [
               "product_reputation_medium",
@@ -2346,7 +2394,7 @@
               "supplier_exogenousReputation",
               "product_profit_currentNot",
               "product_initialScam_even",
-              0.99
+              0.95
             ],
             [
               "product_reputation_medium",
