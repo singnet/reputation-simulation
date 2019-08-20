@@ -399,6 +399,7 @@ class ReputationAgent(Agent):
         self.shopping_rating = {}
 
 
+
     def record_shopping(self,supplier_agent,supplier_id,category,pid,rating):
         good_string = "{0}.{1}".format(category, pid) if self.p['product_mode'] else category
         reputation_string = "{0}.{1}".format(supplier_id, good_string) if self.p['product_mode'] else supplier_id

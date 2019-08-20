@@ -670,14 +670,14 @@
           {
             "parameters": {
               "reputation_parameters": {
-                "spendings": 1.0
+                "ratings": 1.0
               }
             }
           },
           {
             "parameters": {
               "reputation_parameters": {
-                "ratings": 0.0
+                "spendings": 0.0
               }
             }
           }
