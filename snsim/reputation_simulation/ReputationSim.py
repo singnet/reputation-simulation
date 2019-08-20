@@ -1567,7 +1567,7 @@ class ReputationSim(Model):
             if len(unnorm)> 1:
                 remaining_unnorm = list(filter(None, unnorm))
                 min_unnorm = min (remaining_unnorm ) if len(remaining_unnorm) else None
-                positive = [i - min_unnorm if i  else None for i in unnorm] if min_unnorm else []
+                positive = [i - min_unnorm if i is not None  else None for i in unnorm] if min_unnorm is not None else []
                 remaining = list(filter(None, positive))
                 max_positive=max(remaining )if len(remaining) else None
                 norm = [float(i)/ max_positive if i else None for i in positive] if max_positive else []
@@ -1665,7 +1665,7 @@ class ReputationSim(Model):
                 #remaining_unnorm = list(filter(None, unnorm))
                 remaining_unnorm = [i for i in unnorm if i is not None]
                 min_unnorm = min (remaining_unnorm ) if len(remaining_unnorm) else None
-                positive = [i - min_unnorm if i  else None for i in unnorm] if min_unnorm else []
+                positive = [i - min_unnorm if i is not None  else None for i in unnorm] if min_unnorm is not None else []
                 #remaining = list(filter(None, positive))
                 remaining = [i for i in positive if i is not None]
                 max_positive=max(remaining )if len(remaining) else None
