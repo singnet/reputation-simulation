@@ -12,6 +12,7 @@ import time
 import operator
 from scipy.stats import truncnorm
 from pomegranate import *
+import psyneulink as pnl
 
 from ReputationAgent import ReputationAgent
 from Adapters import Adapters
@@ -353,8 +354,14 @@ class ReputationSim(Model):
         self.bottomNPercent = {}
         self.anomaly_net = None
         self.predictiveness_net = None
+        self.hopfield_net = None
         self.conformity_score = {}
         self.predictiveness_score = {}
+        self.hopfield_score = {}
+        self.product_labels = []
+        self.rater_labels = []
+        self.reputation_mech = None
+        self.hopfield_size = 0
 
     #print ('Last line of ReputationSim __init__')
 
@@ -1622,6 +1629,23 @@ class ReputationSim(Model):
                                 #print ("product {0} reputation {1}".format(reputation_entry,sum))
         return(rep_system)
 
+    def find_hopfield_goodness(self):
+        num_iter = 10
+        noise = 0.1
+        self.hopfield_net.run({self.reputation_mech: [
+            np.random.random((1, self.hopfield_size)) * noise
+            for t in range(num_iter)
+        ]}, num_trials=num_iter)
+        all_results = np.squeeze(self.hopfield_net.results)
+        final = all_results[-1,:]
+        self.hopfield_score = {}
+        f=lambda x: 1 if x > 1 else 0
+        for i in range (len(self.rater_labels)):
+            self.hopfield_score [self.rater_labels[i]]= final[i]
+            print('{0}:{1},'.format(self.rater_labels[i],final[i]), end='')
+
+        return self.hopfield_score
+
     def find_predictiveness(self):
 
         if self.daynum > self.parameters["days_until_prediction"]+1:
@@ -1687,9 +1711,14 @@ class ReputationSim(Model):
         elif self.parameters['rep_system']=='anomaly' and (self.daynum - 2) % self.parameters["anomaly_net_creation_period"] == 0:
             self.anomaly_net = self.create_anomaly_net()
 
+        elif self.parameters['rep_system']=='hopfield' and (self.daynum - 1) % self.parameters["hopfield_net_creation_period"] == 0:
+            self.hopfield_net = self.create_hopfield_net()
 
-        self.orig_ranks = (self.reputation_system_stub(self.threshold(self.detect_anomaly(),self.parameters['conformity_threshold'])) if self.parameters['rep_system'] == "anomaly"
-                else self.reputation_system.get_ranks_dict({'date':prev_date}))
+
+        self.orig_ranks = (self.reputation_system_stub(self.threshold(self.detect_anomaly(),self.parameters['conformity_threshold'])
+                ) if self.parameters['rep_system'] == "anomaly"
+                else (self.reputation_system_stub(self.threshold(self.find_hopfield_goodness(),self.parameters['hopfield_threshold'])
+                ) if self.parameters['rep_system'] == "hopfield" else self.reputation_system.get_ranks_dict({'date':prev_date})))
         predictive_ranks = None
         min_days = self.daynum - (2 + self.parameters["days_until_prediction"])
         if (self.parameters['rep_system_booster'] == "predictiveness" and
@@ -1717,6 +1746,61 @@ class ReputationSim(Model):
         #generation_increment = (self.model.daynum // self.p['scam_period']) * self.p['num_users']
         #if self.p['scam_inactive_period']:  #there is a campaign in which ids are shifted, so subtract the increment
 
+
+    def create_hopfield_net(self):
+        #create 2 sets of labels for raters and for products they rate,
+        #sort them into a list
+        #and then make a list of list of ratings of ratings in that sorted order
+        #raters as cols and products as rows, for a numpy array, mapped to -1 and 1
+        product_labels = set()
+        rater_labels = set()
+        for agent in self.schedule.agents:
+            for category, product_dict in agent.products.items():
+                for product, product_info_dict in product_dict.items():
+                    product_labels.add(product)
+                    for rater, rating in product_info_dict["ratings"].items():
+                        rater_labels.add(rater)
+        self.product_labels = sorted(list(product_labels))
+        product_map = {label:num for num,label in enumerate(self.product_labels)}
+        self.rater_labels = sorted(list(rater_labels))
+        rater_map = {label:num for num,label in enumerate(self.rater_labels)}
+        num_rows = len(product_labels)
+        num_cols = len(rater_labels)
+        ratings = np.zeros((num_rows,num_cols))
+        f = lambda x: (-1 if self.parameters['ratings_bayesian_map'][str(x)] - 3 < 0
+                       else 0 if self.parameters['ratings_bayesian_map'][str(x)] - 3 == 0
+                        else 1)
+
+        for agent in self.schedule.agents:
+            for category, product_dict in agent.products.items():
+                for product, product_info_dict in product_dict.items():
+                    for rater, rating in product_info_dict["ratings"].items():
+                        ratings[product_map[product],rater_map[rater]]= f(rating)
+
+        ratings_transpose = ratings.transpose()
+        raters = np.eye(num_cols)
+        products = np.eye(num_rows)
+        matrix = np.vstack([
+            np.hstack([raters,ratings_transpose]),
+            np.hstack([ratings,products])
+        ])
+
+
+        function = pnl.Linear
+        noise = 0
+        integration_rate = .5
+        self.hopfield_size = num_rows+num_cols
+        self.reputation_mech = pnl.RecurrentTransferMechanism(
+            size=self.hopfield_size,
+            function=function,
+            matrix=matrix,
+            integration_rate=integration_rate,
+            noise=noise,
+            name='reputation rnn'
+        )
+        reputation_process = pnl.Process(pathway=[self.reputation_mech])
+        hopfield_net = pnl.System(processes=[reputation_process])
+        return hopfield_net
 
     def create_anomaly_net(self):
         X = []

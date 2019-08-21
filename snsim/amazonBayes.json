@@ -438,6 +438,27 @@
           {
             "parameters": {
               "reputation_parameters": {
+                "decayed": 0.1
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "default": 0.1
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "conservatism": 0.9
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
                 "predictiveness": 1.0
               }
             }
@@ -483,6 +504,27 @@
             "parameters": {
               "reputation_parameters": {
                 "predictiveness": 1.0
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "decayed": 0.1
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "default": 0.1
+              }
+            }
+          },
+          {
+            "parameters": {
+              "reputation_parameters": {
+                "conservatism": 0.9
               }
             }
           },
