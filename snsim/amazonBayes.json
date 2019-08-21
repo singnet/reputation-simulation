@@ -424,6 +424,20 @@
             }
           }
         ],
+
+        "hopfield": [
+          {
+            "parameters": {
+              "rep_system": "hopfield"
+            }
+          },
+          {
+            "parameters": {
+              "rep_system_booster": "predictiveness-not"
+            }
+          }
+        ],
+
         "predictiveness": [
           {
             "parameters": {
@@ -1132,7 +1146,7 @@
     "run_automatic_tests": false,
     "statistics_initialization": 0,
     "port": 1181,
-    "output_path": "amazonBayesStressors50_1/",
+    "output_path": "amazonBayes/",
     "seed": 9573,
     "observer_mode": false,
     "randomize_initial_needs": true,
@@ -1412,8 +1426,9 @@
     "criminal_suppliers_change_names": true,
     "criminal_suppliers_purchase_reviewers": true,
     "criminal_suppliers_replace_products": true,
-    "conformity_threshold": 0.8,
-    "predictiveness_threshold": 0.8,
+    "conformity_threshold": 0.6,
+    "predictiveness_threshold": 0.6,
+    "hopfield_threshold": 0.6,
     "PLRo_overall": "PLRo_overall_30",
     "num_stars": {
       "0.0": "product_quality_onestars",
@@ -1435,6 +1450,8 @@
     "days_until_prediction": 15,
     "anomaly_net_creation_period": 1,
     "predictiveness_net_creation_period": 1,
+    "hopfield_net_creation_period": 1,
+    "hopfield_net_iterations": 10,
     "rep_system": "aigents",
     "rep_system_booster": "predictiveness-not",
     "statistics_window_size": 10
