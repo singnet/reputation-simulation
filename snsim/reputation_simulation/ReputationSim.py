@@ -1637,6 +1637,7 @@ class ReputationSim(Model):
         noise = 0.1
         num_samples = self.parameters['hopfield_num_samples']
         firsttime = True
+        self.hopfield_score = {}
         for _ in range(num_samples):
             self.hopfield_net.run({self.reputation_mech: [
                 np.random.random((1, self.hopfield_size)) * noise
@@ -1644,7 +1645,6 @@ class ReputationSim(Model):
             ]}, num_trials=num_iter)
             all_results = np.squeeze(self.hopfield_net.results)
             final = all_results[-1,:]
-            self.hopfield_score = {}
             f=lambda x: 1 if x > 1 else 0
             #print('\n\n')
             for i in range (len(self.agent_labels)):
