@@ -5,6 +5,7 @@ import sys
 import re
 import random
 import numpy as np
+np.set_printoptions(threshold=np.inf)
 from collections import OrderedDict
 import copy
 import datetime as dt
@@ -360,6 +361,7 @@ class ReputationSim(Model):
         self.hopfield_score = {}
         self.product_labels = []
         self.rater_labels = []
+        self.agent_labels = []
         self.reputation_mech = None
         self.hopfield_size = 0
 
@@ -1630,19 +1632,30 @@ class ReputationSim(Model):
         return(rep_system)
 
     def find_hopfield_goodness(self):
-        num_iter = 10
+        #to be run n times and averaged to get final score
+        num_iter = self.parameters['hopfield_num_iters']
         noise = 0.1
-        self.hopfield_net.run({self.reputation_mech: [
-            np.random.random((1, self.hopfield_size)) * noise
-            for t in range(num_iter)
-        ]}, num_trials=num_iter)
-        all_results = np.squeeze(self.hopfield_net.results)
-        final = all_results[-1,:]
-        self.hopfield_score = {}
-        f=lambda x: 1 if x > 1 else 0
-        for i in range (len(self.rater_labels)):
-            self.hopfield_score [self.rater_labels[i]]= final[i]
-            print('{0}:{1},'.format(self.rater_labels[i],final[i]), end='')
+        num_samples = self.parameters['hopfield_num_samples']
+        firsttime = True
+        for _ in range(num_samples):
+            self.hopfield_net.run({self.reputation_mech: [
+                np.random.random((1, self.hopfield_size)) * noise
+                for t in range(num_iter)
+            ]}, num_trials=num_iter)
+            all_results = np.squeeze(self.hopfield_net.results)
+            final = all_results[-1,:]
+            self.hopfield_score = {}
+            f=lambda x: 1 if x > 1 else 0
+            #print('\n\n')
+            for i in range (len(self.agent_labels)):
+                self.hopfield_score [self.agent_labels[i]] = final[i] if firsttime else self.hopfield_score [self.agent_labels[i]] + final[i]
+                #print('{0}:{1},'.format(self.agent_labels[i],final[i]), end='')
+            firsttime = False
+
+        print('\n\n')
+        for i in range (len(self.agent_labels)):
+            self.hopfield_score [self.agent_labels[i]]/= num_samples
+            print('{0}:{1},'.format(self.agent_labels[i],final[i]), end='')
 
         return self.hopfield_score
 
@@ -1747,7 +1760,8 @@ class ReputationSim(Model):
         #if self.p['scam_inactive_period']:  #there is a campaign in which ids are shifted, so subtract the increment
 
 
-    def create_hopfield_net(self):
+    def create_hopfield_net_products(self):
+        #this is the product version that took too long
         #create 2 sets of labels for raters and for products they rate,
         #sort them into a list
         #and then make a list of list of ratings of ratings in that sorted order
@@ -1778,8 +1792,11 @@ class ReputationSim(Model):
                         ratings[product_map[product],rater_map[rater]]= f(rating)
 
         ratings_transpose = ratings.transpose()
-        raters = np.eye(num_cols)
-        products = np.eye(num_rows)
+        #no need to reinforce the self, it is conservative
+        #raters = np.eye(num_cols)
+        #products = np.eye(num_rows)
+        raters = np.zeros((num_cols,num_cols))
+        products = np.zeros((num_rows,num_rows))
         matrix = np.vstack([
             np.hstack([raters,ratings_transpose]),
             np.hstack([ratings,products])
@@ -1800,6 +1817,50 @@ class ReputationSim(Model):
         )
         reputation_process = pnl.Process(pathway=[self.reputation_mech])
         hopfield_net = pnl.System(processes=[reputation_process])
+        return hopfield_net
+
+    def create_hopfield_net(self):
+        #this is the supplier judge version that should take shorter
+        #create 2 sets of labels for raters and for products they rate,
+        #sort them into a list
+        #and then make a list of list of ratings of ratings in that sorted order
+        #raters as cols and products as rows, for a numpy array, mapped to -1 and 1
+
+        self.agent_labels = [a.unique_id for a in self.schedule.agents]
+        agent_map = {label:num for num,label in enumerate(self.agent_labels)}
+        num_rows = num_cols = len(self.agent_labels)
+        ratings = np.zeros((num_rows,num_cols))
+        f = lambda x: (self.parameters['ratings_bayesian_map'][str(x)] - 3 )
+
+        for agent in self.schedule.agents:
+            for other_agent in self.schedule.agents:
+                if agent.unique_id != other_agent.unique_id:
+                    rating = agent.consumer_to_supplier_avg_rating(other_agent.unique_id)
+                    if rating is not None:
+                        rate = f(rating)
+                        ratings[agent_map[agent.unique_id],agent_map[other_agent.unique_id]]= rate
+                        ratings[agent_map[other_agent.unique_id],agent_map[agent.unique_id]]= rate
+
+
+        matrix = np.array(ratings)
+        #print("\n\n")
+        #print(matrix)
+
+        function = pnl.Linear
+        noise = 0
+        integration_rate = .5
+        self.hopfield_size = num_rows
+        self.reputation_mech = pnl.RecurrentTransferMechanism(
+            size=self.hopfield_size,
+            function=function,
+            matrix=matrix,
+            integration_rate=integration_rate,
+            noise=noise,
+            name='reputation rnn'
+        )
+        reputation_process = pnl.Process(pathway=[self.reputation_mech])
+        hopfield_net = pnl.System(processes=[reputation_process])
+
         return hopfield_net
 
     def create_anomaly_net(self):
@@ -2194,8 +2255,6 @@ def main():
         else:
             repsim = ReputationSim(sys.argv[1]) if len(sys.argv) > 1 else ReputationSim()
             repsim.go()
-
-
 
 if __name__ == '__main__':
     main()

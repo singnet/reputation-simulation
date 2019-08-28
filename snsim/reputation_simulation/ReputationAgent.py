@@ -271,6 +271,17 @@ class ReputationAgent(Agent):
         day_to_add_data = self.model.daynum + int(self.p["days_until_prediction"])
         self.pending_predictiveness_data[day_to_add_data] = (t0,t1,ratings)
 
+    def standardize_perception(self,perception):
+
+        rating = None
+        if perception >= 0:
+            dd = self.p['ratings_goodness_thresholds']
+            for rating_val, threshold in dd.items():
+                if (perception < threshold or threshold == dd[next(reversed(dd))])and rating is None:
+                    rating = rating_val
+
+        return rating
+
     def map_rank_to_bayesian_number(self,rank):
         bayesian_number = 0
         rating = None
@@ -831,6 +842,21 @@ class ReputationAgent(Agent):
                     self.criminal_needs = self.criminal_needs[:num_criminal_trades]
                 elif self.criminal_needs:
                     self.criminal_multiplier = int(round(num_criminal_trades/len (self.criminal_needs)))
+
+
+    def consumer_to_supplier_avg_rating(self,supplier):
+        sum = 0
+        count = 0
+        for category,supplierdict in self.personal_experience.items():
+            if supplier in supplierdict:
+                sum += supplierdict[supplier][1]
+                count += supplierdict[supplier][0]
+        perception = sum/count if count > 0 else -1
+
+        rating = self.standardize_perception(perception)
+
+        return rating
+
 
 
     def update_personal_experience(self, good, supplier, rating):
