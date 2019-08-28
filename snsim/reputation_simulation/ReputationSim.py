@@ -1605,6 +1605,20 @@ class ReputationSim(Model):
                 normalized ={k:(v/sum_pos) for k,v in positive.items()}
         return normalized
 
+
+    def normP(self,score_weights):
+        #threhold the socore weights then normalize so sum == 1
+        normalized = {}
+        if len(score_weights) > 0:
+            cleaned = [v for v in score_weights.values() if (v is not None) and (not math.isinf(v)) and (not math.isnan(v))]
+            min_unnorm = min(cleaned)
+            positive = {k:v - min_unnorm for k,v in score_weights.items() if (v is not None) and (not math.isinf(v)) and (not math.isnan(v)) }
+            max_pos = max(positive.values())
+            if max_pos >0:
+                normalized ={k:((v/max_pos) if  ((v is not None) and (not math.isinf(v)) and (not math.isnan(v)))
+                                else (1 if math.isinf(v)and v >0 else 0) ) for k,v in positive.items()}
+        return normalized
+
     def reputation_system_stub(self,score_weights):
         rep_system = {}
         if len(score_weights)> 0:
@@ -1644,18 +1658,22 @@ class ReputationSim(Model):
                 for t in range(num_iter)
             ]}, num_trials=num_iter)
             all_results = np.squeeze(self.hopfield_net.results)
-            final = all_results[-1,:]
-            f=lambda x: 1 if x > 1 else 0
+            nonan = all_results[~np.isnan(all_results).any(axis=1)]
+            final = nonan[-1,:]
+            f=lambda x: 1 if x > 0 else 0
             #print('\n\n')
             for i in range (len(self.agent_labels)):
-                self.hopfield_score [self.agent_labels[i]] = final[i] if firsttime else self.hopfield_score [self.agent_labels[i]] + final[i]
+                self.hopfield_score [self.agent_labels[i]] = (f(final[i])
+                    if firsttime else self.hopfield_score [self.agent_labels[i]] + f(final[i]))
                 #print('{0}:{1},'.format(self.agent_labels[i],final[i]), end='')
             firsttime = False
 
         print('\n\n')
         for i in range (len(self.agent_labels)):
-            self.hopfield_score [self.agent_labels[i]]/= num_samples
+            if not math.isinf( self.hopfield_score [self.agent_labels[i]]):
+                self.hopfield_score [self.agent_labels[i]]/=  num_samples
             print('{0}:{1},'.format(self.agent_labels[i],final[i]), end='')
+        self.hopfield_score = self.normP(self.hopfield_score)
 
         return self.hopfield_score
 
