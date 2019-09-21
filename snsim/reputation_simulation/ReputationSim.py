@@ -1653,10 +1653,13 @@ class ReputationSim(Model):
         firsttime = True
         self.hopfield_score = {}
         for _ in range(num_samples):
+            print("Enter System.run")
             self.hopfield_net.run({self.reputation_mech: [
                 np.random.random((1, self.hopfield_size)) * noise
                 for t in range(num_iter)
             ]}, num_trials=num_iter)
+
+            print("Exit System.run")
             all_results = np.squeeze(self.hopfield_net.results)
             nonan = all_results[~np.isnan(all_results).any(axis=1)]
             final = nonan[-1,:]
@@ -1825,6 +1828,7 @@ class ReputationSim(Model):
         noise = 0
         integration_rate = .5
         self.hopfield_size = num_rows+num_cols
+        print ("Enter pnl.RecurrentTransferMechanism")
         self.reputation_mech = pnl.RecurrentTransferMechanism(
             size=self.hopfield_size,
             function=function,
@@ -1833,8 +1837,11 @@ class ReputationSim(Model):
             noise=noise,
             name='reputation rnn'
         )
+        print ("Exit pnl.RecurrentTransferMechanism, enter pnl.Process")
         reputation_process = pnl.Process(pathway=[self.reputation_mech])
+        print ("Exit pnl.Process, enter pnl.System")
         hopfield_net = pnl.System(processes=[reputation_process])
+        print ("Exit pnl.System")
         return hopfield_net
 
     def create_hopfield_net(self):
@@ -1868,6 +1875,7 @@ class ReputationSim(Model):
         noise = 0
         integration_rate = .5
         self.hopfield_size = num_rows
+        print("Enter pnl.RecurrentTransferMechanism")
         self.reputation_mech = pnl.RecurrentTransferMechanism(
             size=self.hopfield_size,
             function=function,
@@ -1876,9 +1884,11 @@ class ReputationSim(Model):
             noise=noise,
             name='reputation rnn'
         )
+        print("Exit pnl.RecurrentTransferMechanism, enter pnl.Process")
         reputation_process = pnl.Process(pathway=[self.reputation_mech])
+        print("Exit pnl.Process, enter pnl.System")
         hopfield_net = pnl.System(processes=[reputation_process])
-
+        print("Exit pnl.System")
         return hopfield_net
 
     def create_anomaly_net(self):
